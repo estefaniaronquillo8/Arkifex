@@ -1,12 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
-const userController = require('./controllers/userController');
+
+// NO MOVER
+const dotenv = require('dotenv');
+// NO MOVER
+dotenv.config();
+
 const { User, Role } = require('./models/index')
+const authRoutes = require('./routes/auth.routes');
+const authenticatedRoutes = require('./routes/authenticated.routes');
+
 const app = express();
 
-// Implementar repositorio
 const addRoles = async () => {
   await Role.findOrCreate({ where: { name: 'admin' } });
   await Role.findOrCreate({ where: { name: 'client' } });
@@ -16,7 +22,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/auth', authRoutes);
-app.get('/users', userController.getUsers);
+app.use('/api', authenticatedRoutes);
 
 User.belongsTo(Role, { foreignKey: 'roleId' });
 Role.hasMany(User, { foreignKey: 'roleId' });
@@ -29,4 +35,3 @@ app.listen(PORT, async () => {
   await User.sync();
   await addRoles(); // Agrega roles al iniciar la aplicación
 });
-

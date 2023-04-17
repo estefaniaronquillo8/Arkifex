@@ -1,9 +1,8 @@
-const Sequelize = require('sequelize');
 const sequelize = require('../config/database');
 
 const models = {
-  User: require('./User'),
-  Role: require('./Role'),
+  User: require('./user'),
+  Role: require('./role'),
 };
 
 Object.keys(models).forEach((modelName) => {

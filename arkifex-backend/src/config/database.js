@@ -1,7 +1,11 @@
 const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize('arkifex', 'sa', 'admin', {
-  host: 'localhost',
+console.log(
+  process.env.DATABASE, process.env.USER_DB, process.env.PASSWORD_DB, process.env.HOST_DB
+)
+
+const sequelize = new Sequelize(process.env.DATABASE, process.env.USER_DB, process.env.PASSWORD_DB, {
+  server: process.env.HOST_DB,
   dialect: 'mssql'
 });
 
