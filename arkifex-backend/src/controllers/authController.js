@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User, Role } = require("../models/index");
+const { Role } = require("../models");
 const { createUser, findUser } = require("../repositories/userRepository");
 
 const createToken = (userId) => {
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
       .status(response.status)
       .json({ token, user, message: "Ingreso exitoso!" });
   } catch (error) {
-    res.status(500).json({ message: "Error interno del servidor" });
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 
@@ -54,8 +54,8 @@ exports.register = async (req, res) => {
       roleId: userRole.id,
     });
 
-    res.status(response.status).json(response);
+    return res.status(response.status).json(response);
   } catch (error) {
-    res.status(500).json({ message: "Error interno del servidor" });
+    return res.status(500).json({ message: "Error interno del servidor" });
   }
 };

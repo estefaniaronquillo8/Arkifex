@@ -1,8 +1,6 @@
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { handleRegister } from "../../services/auth.api.routes";
 
 const Register = () => {
   const {
@@ -12,34 +10,12 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("client");
   const navigate = useNavigate();
-
-  const handleRegister = async (data) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:3001/auth/register",
-        data
-      );
-
-      toast.success(response.data.message);
-      navigate("/login");
-    } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Error al comunicarse con el servidor");
-      }
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <form
-        onSubmit={handleSubmit(handleRegister)}
+        onSubmit={handleSubmit((data) => handleRegister(data, navigate))}
         className="bg-white shadow-md w-[500px] rounded px-8 pt-6 pb-8 mb-4"
       >
         <h1 className="mb-6 text-2xl font-bold text-center">Registro</h1>

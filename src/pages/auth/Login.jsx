@@ -1,8 +1,6 @@
-import { useState } from "react";
-import axios from "axios";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { handleLogin } from "../../services/auth.api.routes";
 
 const Login = () => {
   const {
@@ -11,34 +9,13 @@ const Login = () => {
     control,
     formState: { errors },
   } = useForm();
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  
   const navigate = useNavigate();
-
-  const handleLogin = async ({ email, password }) => {
-    try {
-      const response = await axios.post("http://localhost:3001/auth/login", {
-        email,
-        password,
-      });
-
-      localStorage.setItem("token", response.data.token);
-      toast.success(response.data.message);
-      navigate("/users");
-    } catch (error) {
-      if (error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("Error al comunicarse con el servidor");
-      }
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <form
-        onSubmit={handleSubmit(handleLogin)}
+        onSubmit={handleSubmit((data) => handleLogin(data, navigate))}
         className="bg-white shadow-md w-[450px] rounded px-8 pt-6 pb-8 mb-4"
       >
         <h1 className="mb-6 text-2xl font-bold text-center">Login</h1>

@@ -1,38 +1,24 @@
-// src/pages/users/Index.js
-import React, { useEffect, useState } from "react";
-import { useGlobalContext } from "../../contexts/GlobalContext";
-import { getAllUsers } from "../../services/user.api.routes";
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
-const UserIndex = () => {
-  const { users, setUsers, showNotification } = useGlobalContext();
-  const [success, setSuccess] = useState();
-  const [error, setError] = useState();
+const Index = () => {
+  const users = []
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const { response, success, error } = await getAllUsers();
-      console.log(response)
-      if (response?.users) {
-        setUsers(response.users);
-      }
+    const errorMessage = localStorage.getItem("errorMessage");
+    const successMessage = localStorage.getItem("successMessage");
 
-      setError(error);
-      setSuccess(success);
-    };
-
-    fetchUsers();
+    if (errorMessage) {
+      toast.error(errorMessage);
+      localStorage.removeItem("errorMessage");
+    }
+    if (successMessage) {
+      toast.success(successMessage);
+      localStorage.removeItem("successMessage");
+    }
   }, []);
-
-  useEffect(() => {
-    if (success) {
-      showNotification(success, true);
-    }
-    if (error) {
-      showNotification(error, false);
-    }
-  }, [success, error, showNotification]);
-
+  
   return (
     <div className="container mx-auto">
       <h1 className="text-4xl font-semibold mb-6 pl-2">Usuarios protegidos</h1>
@@ -67,4 +53,4 @@ const UserIndex = () => {
   );
 };
 
-export default UserIndex;
+export default Index;

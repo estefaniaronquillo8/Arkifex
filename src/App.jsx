@@ -1,16 +1,18 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useState } from "react";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import UserIndex from "./pages/users/Index";
+//import UserIndex from "./pages/users/Index1";
 import UserEdit from "./pages/users/Edit";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
+import UserIndex from "./pages/users/Index";
+import { GlobalProvider } from "./contexts/GlobalContext";
 
 function App() {
   return (
     <Router>
+      <GlobalProvider>
       <div className="App">
         <Navbar />
         <Routes>
@@ -21,6 +23,7 @@ function App() {
         </Routes>
         <ToastContainer />
       </div>
+      </GlobalProvider>
     </Router>
   );
 }

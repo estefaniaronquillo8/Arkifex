@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { handleLogout } from "../services/auth.api.routes";
 
 const Navbar = () => {
-
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  const handleLogoutClick = () => {
+    handleLogout(navigate);
   };
 
   return (
@@ -23,7 +22,7 @@ const Navbar = () => {
           <Link to="/register" className="text-white mr-4">
             Register
           </Link>
-          <button onClick={handleLogout} className="text-white">
+          <button onClick={handleLogoutClick} className="text-white">
             Logout
           </button>
         </div>

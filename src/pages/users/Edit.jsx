@@ -1,82 +1,74 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { useGlobalContext } from "../../contexts/GlobalContext";
+import { handleEdit, handleUpdate } from "../../services/user.api.routes";
 
 function UserEdit() {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const fetchUser = async (id) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:3001/api/users/edit/${id}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      setUsername(response.data.user.username);
-      setEmail(response.data.user.email);
-    } catch (error) {
-      localStorage.setItem('errorMessage', error.response.data.message);
-      navigate('/users');
-    }
-  };
+  const { user, setUser, showNotification } = useGlobalContext();
+  const [ success, setSuccess ] = useState();
+  const [ error, setError ] = useState();
 
   useEffect(() => {
-    if (!username) {
-      fetchUser(id);
+    const fetchUser = async () => {
+      const { response, success, error } = await handleEdit(id);
+      if (response?.user) {
+        setUser(response.user);
+      }
+      setError(error);
+      setSuccess(success);
     }
-  }, [id, navigate]);
 
-  const saveUserChanges = async (id, username, email) => {
-    try {
-      await axios.put(
-        `http://localhost:3001/api/users/edit/${id}`,
-        { username, email },
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+    fetchUser();
+  }, []);
 
-      localStorage.setItem('successMessage', 'Usuario actualizado correctamente');
-      navigate('/users');
-    } catch (error) {
-      toast.error(error.response.data.message);
+  useEffect(() => {
+    if (success){
+      showNotification(success, true);
     }
+
+    if(error){
+      showNotification(error, false);
+    }
+  }, [success, error, showNotification])
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { success, error } = await handleUpdate(id, user);
+    setError(error);
+    setSuccess(success);
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    navigate('/users');
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    saveUserChanges(id, username, email);
+  const handleChange = (event) => {
+    setUser({ ...user, [event.target.name]: event.target.value });
   };
 
   return (
     <div>
       <h2>Edit User</h2>
-      {username && (
+      {user && (
         <form onSubmit={handleSubmit}>
-          <label>
+          <label htmlFor="username">
             Username:
             <input
+              id="username"
               type="text"
-              value={username}
-              onChange={(event) => setUsername(event.target.value)}
+              name="username"
+              value={user.username}
+              onChange={handleChange}
             />
           </label>
-          <label>
+          <label htmlFor="email">
             Email:
             <input
+              id="email"
               type="text"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
+              name="email"
+              value={user.email}
+              onChange={handleChange}
             />
           </label>
           <button type="submit">Save</button>
