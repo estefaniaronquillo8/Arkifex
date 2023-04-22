@@ -12,11 +12,6 @@ const {
     userController
 } = require('../controllers/index');
 
-// Users
-router.get('/users', isAuthenticated, userController.getUsers);
-router.get('/users/edit/:id', isAuthenticated, userController.edit);
-router.put('/users/edit/:id', isAuthenticated, userController.update);
-router.delete("/users/delete/:id", isAuthenticated, userController.delete);
 
 // Costs
 /* router.get('/costs', isAuthenticated, costController.getUsers);

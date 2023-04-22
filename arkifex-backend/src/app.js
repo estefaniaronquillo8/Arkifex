@@ -5,17 +5,15 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { syncDatabase } = require('./models/index')
-const authRoutes = require('./routes/auth.routes');
-const authenticatedRoutes = require('./routes/authenticated.routes');
+const { syncDatabase } = require('./models/index');
+const routes = require('./routes/index.routes');
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/auth', authRoutes);
-app.use('/api', authenticatedRoutes);
+app.use('/api', routes);
 
 const PORT = process.env.PORT || 3001;
 

@@ -6,7 +6,7 @@ const createUser = async (userData) => {
   const transaction = await sequelize.transaction();
   try {
     const response = await findUserByEmail(userData.email);
-    if (response.user) {
+    if (response?.user) {
       return { status: 409, message: "Email already exists" };
     }
     const user = await User.create(userData, { transaction });
@@ -60,13 +60,14 @@ const getAllUsers = async () => {
     return { status: 404, message: "No se ha encontrado ningún registro." };
   }
 
-  return { status: 200, users: users, message: "Información de usuarios recuperada con éxito."};
+  /* return { status: 200, users: users, message: "Información de usuarios recuperada con éxito."}; */
+  return { status: 200, users: users };
 };
 
 const findUserByEmail = async (email) => {
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    return { status: 404, message: "User not found" };
+    return { status: 404 };
   }
   return { status: 200, user };
 };

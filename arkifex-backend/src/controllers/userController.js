@@ -40,7 +40,7 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { name, lastname, email, password, role } = req.body;
   const roleName = role || "client";
   const roleResponse = await findRole({ where: { name: roleName } });
   
@@ -49,7 +49,8 @@ exports.register = async (req, res) => {
   }
   
   const response = await createUser({
-    username,
+    name,
+    lastname,
     email,
     password: encryptPassword(password),
     roleId: roleResponse.role.id,

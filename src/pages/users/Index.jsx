@@ -1,7 +1,7 @@
 // src/pages/users/Index.js
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { getAllUsers } from "../../services/user.api.routes";
+import { getAllUsers, handleDelete } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
 
 const UserIndex = () => {
@@ -12,7 +12,6 @@ const UserIndex = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const { response, success, error } = await getAllUsers();
-      console.log(response)
       if (response?.users) {
         setUsers(response.users);
       }
@@ -33,18 +32,29 @@ const UserIndex = () => {
     }
   }, [success, error, showNotification]);
 
+  const deleteHandler = async(id) => {
+    const { response, success, error } = await handleDelete(id);
+    if (response?.status === 200) {
+      setUsers(response.users);
+    }
+    setSuccess(success);
+    setError(error);
+  }
+
   return (
-    <div className="container mx-auto">
-      <h1 className="text-4xl font-semibold mb-6 pl-2">Usuarios protegidos</h1>
-      <>
-        <div className="grid grid-cols-4 gap-4 font-semibold mb-2">
-          <div className="col-span-1 pl-2">Nombre de usuario</div>
+    <div className="container mx-auto px-4 py-6">
+      <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
+      <div className="bg-white shadow-md rounded-lg">
+        <div className="grid grid-cols-5 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+          <div className="col-span-1 pl-2">Nombre</div>
+          <div className="col-span-1">Apellido</div>
           <div className="col-span-1">Correo electrónico</div>
           <div className="col-span-2">Acciones</div>
         </div>
-        {users.map((user) => (
-          <div key={user.id} className="grid grid-cols-4 gap-4 py-2">
-            <div className="col-span-1 pl-3">{user.username}</div>
+        {users && users.map((user) => (
+          <div key={user.id} className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200">
+            <div className="col-span-1 pl-3">{user.name}</div>
+            <div className="col-span-1">{user.lastname}</div>
             <div className="col-span-1">{user.email}</div>
             <div className="col-span-2">
               <Link
@@ -54,7 +64,7 @@ const UserIndex = () => {
                 Editar
               </Link>
               <button
-                //onClick={() => handleDelete(user.id)}
+                onClick={async() => await deleteHandler(user.id)}
                 className="inline-block bg-red-500 text-white px-4 py-2 rounded"
               >
                 Eliminar
@@ -62,7 +72,7 @@ const UserIndex = () => {
             </div>
           </div>
         ))}
-      </>
+      </div>
     </div>
   );
 };

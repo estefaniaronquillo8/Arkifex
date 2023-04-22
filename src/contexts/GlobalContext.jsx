@@ -12,7 +12,8 @@ export const GlobalProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [user, setUser] = useState({
     id: 0,
-    username: "",
+    name: "",
+    lastname: "",
     email: "",
   });
   const [lastNotification, setLastNotification] = useState(null);

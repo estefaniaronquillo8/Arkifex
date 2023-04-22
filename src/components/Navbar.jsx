@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { handleLogout } from "../services/auth.api.routes";
+import { handleLogout } from "../services/user.api.routes";
+import { useGlobalContext } from "../contexts/GlobalContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { setUsers } = useGlobalContext();
 
   const handleLogoutClick = () => {
+    setUsers(null);
     handleLogout(navigate);
   };
 

@@ -1,6 +1,19 @@
 // src/services/user.api.routes.js
 import { requestHandler } from "./requestService";
 
+export const handleRegister = (data) => {
+  return requestHandler('post', '/auth/register', data);
+}
+
+export const handleLogin = (data) => {
+  return requestHandler('post', '/auth/login', data);
+}
+
+export const handleLogout = (navigate) => {
+  localStorage.removeItem("token");
+  navigate("/login");
+};
+
 export const getAllUsers = () => {
   return requestHandler("get", "/users");
 };
@@ -16,3 +29,11 @@ export const handleEdit = (id) => {
 export const handleUpdate = (id, user) => {
   return requestHandler("put", `/users/edit/${id}`, user);
 };
+
+export const handleDelete = async (id) => {
+  const { response, success, error } = await requestHandler("delete", `/users/delete/${id}`);
+  if (response?.status === 200){
+    return { ... await getAllUsers() };
+  }
+  return { response, success, error };
+}

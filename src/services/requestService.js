@@ -18,14 +18,12 @@ export const requestHandler = async (method, url, data) => {
       response: response.data,
       success: response?.data?.message,
       error: null,
-      loading: false,
     };
   } catch (error) {
     return {
       response: null,
       success: null,
       error: error?.response?.data?.message ?? "Ha ocurrido un error inesperado.",
-      loading: false,
     };
   }
 };

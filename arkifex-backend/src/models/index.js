@@ -12,31 +12,31 @@ const Location = require('./location');
 const Cost = require('./cost');
 
 // Establecer las asociaciones entre los modelos
-User.belongsTo(Role, { foreignKey: 'roleId' });
+User.belongsTo(Role, { foreignKey: 'roleId', onDelete: 'CASCADE' });
 Role.hasMany(User, { foreignKey: 'roleId' });
 
-Project.hasMany(Project, { foreignKey: 'parentId', as: 'subprojects' });
+Project.hasMany(Project, { foreignKey: 'parentId', as: 'subprojects', onDelete: 'CASCADE' });
 Project.belongsTo(Project, { foreignKey: 'parentId', as: 'parent' });
 
-Project.hasOne(InitialPlanning, { foreignKey: 'projectId' });
+Project.hasOne(InitialPlanning, { foreignKey: 'projectId', onDelete: 'CASCADE' });
 InitialPlanning.belongsTo(Project, { foreignKey: 'projectId' });
 
-Project.hasMany(ResourceAssignment, { foreignKey: 'projectId' });
+Project.hasMany(ResourceAssignment, { foreignKey: 'projectId', onDelete: 'NO ACTION' });
 ResourceAssignment.belongsTo(Project, { foreignKey: 'projectId' });
 
-Resource.hasMany(ResourceAssignment, { foreignKey: 'resourceId' });
+Resource.hasMany(ResourceAssignment, { foreignKey: 'resourceId', onDelete: 'NO ACTION' });
 ResourceAssignment.belongsTo(Resource, { foreignKey: 'resourceId' });
 
-Project.hasMany(Report, { foreignKey: 'projectId' });
+Project.hasMany(Report, { foreignKey: 'projectId', onDelete: 'CASCADE' });
 Report.belongsTo(Project, { foreignKey: 'projectId' });
 
-Project.hasOne(Location, { foreignKey: 'projectId' });
+Project.hasOne(Location, { foreignKey: 'projectId', onDelete: 'CASCADE' });
 Location.belongsTo(Project, { foreignKey: 'projectId' });
 
-Project.hasMany(Resource, { foreignKey: 'projectId' });
+Project.hasMany(Resource, { foreignKey: 'projectId', onDelete: 'CASCADE' });
 Resource.belongsTo(Project, { foreignKey: 'projectId' });
 
-Resource.hasMany(Cost, { foreignKey: 'resourceId' });
+Resource.hasMany(Cost, { foreignKey: 'resourceId', onDelete: 'CASCADE' });
 Cost.belongsTo(Resource, { foreignKey: 'resourceId' });
 
 // Función para añadir roles por defecto
