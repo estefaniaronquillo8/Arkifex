@@ -1,4 +1,3 @@
-const authController = require('../controllers/authController');
 const costController = require('../controllers/costController');
 const initialPlanningController = require('../controllers/initialPlanningController');
 const locationController = require('../controllers/locationController');
@@ -10,7 +9,6 @@ const roleController = require('../controllers/roleController');
 const userController = require('../controllers/userController');
 
 module.exports = {
-    authController,
     costController,
     initialPlanningController,
     locationController,

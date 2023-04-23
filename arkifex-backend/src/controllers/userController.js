@@ -1,5 +1,14 @@
 const { findRole } = require("../repositories/roleRepository");
-const { getAllUsers, findById, updateUser, createUser, deleteUser, createToken, validatePassword, encryptPassword } = require("../repositories/userRepository");
+const {
+  getAllUsers,
+  findById,
+  updateUser,
+  createUser,
+  deleteUser,
+  createToken,
+  validatePassword,
+  encryptPassword,
+} = require("../repositories/userRepository");
 
 exports.getUsers = async (req, res) => {
   const response = await getAllUsers();
@@ -36,18 +45,20 @@ exports.login = async (req, res) => {
 
   const { user } = response;
   const token = createToken(user.id);
-  return res.status(response.status).json({ token, user, message: "Ingreso exitoso!" });
+  return res
+    .status(response.status)
+    .json({ token, user, message: "Ingreso exitoso!" });
 };
 
 exports.register = async (req, res) => {
   const { name, lastname, email, password, role } = req.body;
   const roleName = role || "client";
   const roleResponse = await findRole({ where: { name: roleName } });
-  
+
   if (!roleResponse.role) {
     return res.status(400).json({ message: roleResponse.message });
   }
-  
+
   const response = await createUser({
     name,
     lastname,

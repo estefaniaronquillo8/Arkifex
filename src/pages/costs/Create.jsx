@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { handleRegister } from "../../services/user.api.routes";
+import { handleCreate } from "../../services/cost.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-const Register = () => {
+const CostCreate = () => {
   const navigate = useNavigate();
   const { showNotification } = useGlobalContext();
   const {
@@ -12,44 +12,44 @@ const Register = () => {
     control,
     formState: { errors },
   } = useForm();
-  
 
-  const registerHandler = async (data) => {
-    const { response, success, error } = await handleRegister(data);
-    if (success){
+  const createHandler = async (data) => {
+    const { response, success, error } = await handleCreate(data);
+    if (success) {
       showNotification(success, true);
     }
-    
-    if (error){
+
+    if (error) {
       showNotification(error, false);
     }
 
-    if (response?.status === 200){
-      navigate("/login");
+    if (response?.status === 200) {
+      navigate("/costs");
     }
-  } 
+  };
 
- 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
           <form
-            onSubmit={handleSubmit(async (data) => await registerHandler(data))}
+            onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
-            <h1 className="mb-6 text-2xl font-bold text-center">Registro</h1>
+            <h1 className="mb-6 text-2xl font-bold text-center">
+              Creación de Costos
+            </h1>
             <div className="mb-4">
               <label
                 htmlFor="name"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Nombres
+                Nombre
               </label>
               <input
                 type="text"
                 id="name"
-                placeholder="Nombres"
+                placeholder="Nombre del Costo"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("name", {
                   required: "El campo es requerido.",
@@ -65,74 +65,98 @@ const Register = () => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="lastname"
+                htmlFor="description"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Apellidos
+                Descripción
               </label>
               <input
                 type="text"
-                id="lastname"
-                placeholder="Apellidos"
+                id="description"
+                placeholder="Descripción"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("lastname", {
+                {...register("description", {
                   required: "El campo es requerido.",
                   minLength: {
-                    value: 2,
-                    message: "El apellido debe tener al menos 2 caracteres.",
+                    value: 10,
+                    message:
+                      "La descripción debe tener al menos 10 caracteres.",
                   },
                 })}
               />
-              {errors.lastname && (
-                <p className="text-red-800">{errors.lastname.message}</p>
+              {errors.description && (
+                <p className="text-red-800">{errors.description.message}</p>
               )}
             </div>
             <div className="mb-4">
               <label
-                htmlFor="email"
+                htmlFor="amount"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Correo Electrónico
+                Cantidad
               </label>
               <input
-                type="email"
-                id="email"
-                placeholder="Correo Electrónico"
+                type="number"
+                id="amount"
+                min={1}
+                placeholder="Cantidad"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("email", {
-                  required: "El campo es requerido.",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                    message: "Ingrese una dirección de correo válida.",
-                  },
-                })}
-              />
-              {errors.email && (
-                <p className="text-red-800">{errors.email.message}</p>
-              )}
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Contraseña
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="Contraseña"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("password", {
+                {...register("amount", {
                   required: "El campo es requerido.",
                   minLength: {
-                    value: 6,
-                    message: "La contraseña debe tener al menos 6 caracteres.",
+                    value: 1,
+                    message: "La cantidad debe tener al menos 1 valor.",
                   },
                 })}
               />
-              {errors.password && (
-                <p className="text-red-800">{errors.password.message}</p>
+              {errors.amount && (
+                <p className="text-red-800">{errors.amount.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="frequency"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Frecuencia
+              </label>
+              <select
+                id="frequency"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("frequency", {
+                  required: "El campo es requerido.",
+                })}
+              >
+                <option value="">Selecciona una frecuencia</option>
+                <option value="Diario">Diario</option>
+                <option value="Semanal">Semanal</option>
+                <option value="Mensual">Mensual</option>
+                <option value="Anual">Anual</option>
+              </select>
+              {errors.frequency && (
+                <p className="text-red-800">{errors.frequency.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="status"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Estado
+              </label>
+              <select
+                id="status"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("status", {
+                  required: "El campo es requerido.",
+                })}
+              >
+                <option value="">Selecciona el status</option>
+                <option value="Activo">Activo</option>
+                <option value="Inactivo">Inactivo</option>
+              </select>
+              {errors.status && (
+                <p className="text-red-800">{errors.status.message}</p>
               )}
             </div>
             <div className="flex flex-col items-center justify-center">
@@ -140,17 +164,8 @@ const Register = () => {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Registrarse
+                Crear Costo
               </button>
-              <span className="text-center">
-                ¿Ya tienes cuenta?
-                <a
-                  href="/login"
-                  className="text-blue-800 underline underline-offset-2 px-1"
-                >
-                  Ingresa
-                </a>
-              </span>
             </div>
           </form>
         </div>
@@ -159,4 +174,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default CostCreate;

@@ -1,8 +1,9 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
+const { Resource } = require("./index");
 
 const Cost = sequelize.define(
-  'Cost',
+  "Cost",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -12,6 +13,11 @@ const Cost = sequelize.define(
     resourceId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      unique: true,
+      references: { 
+        model: Resource, 
+        key: "id" 
+      },
     },
     description: {
       type: DataTypes.STRING,
@@ -22,12 +28,17 @@ const Cost = sequelize.define(
       allowNull: false,
     },
     frequency: {
-      type: DataTypes.ENUM('Daily', 'Weekly', 'Monthly', 'Annually'),
+      type: DataTypes.ENUM("Diario", "Semanal", "Mensual", "Anual"),
       allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM("Activo", "Inactivo"),
+      allowNull: false,
+      defaultValue: "activo",
     },
   },
   {
-    tableName: 'costs',
+    tableName: "Costs",
   }
 );
 

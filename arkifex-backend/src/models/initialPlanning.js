@@ -1,23 +1,25 @@
 // InitialPlanning.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const { Project } = require("./index");
 
-const InitialPlanning = sequelize.define('InitialPlanning', {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+const InitialPlanning = sequelize.define("InitialPlanning", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  projectId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Project,
+      key: "id",
     },
-    projectId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Projects',
-        key: 'id'
-      }
-    },
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
-    estimatedBudget: DataTypes.FLOAT
-  });
+  },
+  startDate: { type: DataTypes.DATE, allowNull: false },
+  endDate: { type: DataTypes.DATE, allowNull: false },
+  estimatedBudget: { type: DataTypes.FLOAT, allowNull: false },
+});
 
-  module.exports = InitialPlanning;
+module.exports = InitialPlanning;

@@ -1,13 +1,14 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/auth/Login";
-import Register from "./pages/auth/Register";
-//import UserIndex from "./pages/users/Index1";
-import UserEdit from "./pages/users/Edit";
 import { ToastContainer } from "react-toastify";
+import { GlobalProvider } from "./contexts/GlobalContext";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
-import UserIndex from "./pages/users/Index";
-import { GlobalProvider } from "./contexts/GlobalContext";
+// User
+import { Login, Register, UserEdit, UserIndex } from './pages/users/Users';
+// Cost
+import { CostCreate } from './pages/costs/Costs';
+// Resource
+import { ResourceCreate } from './pages/resources/Resources';
 
 function App() {
   return (
@@ -20,6 +21,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/users" element={<UserIndex />} />
           <Route path="/users/edit/:id" element={<UserEdit />} />
+          
+          <Route path="/costs/create" element={<CostCreate />} />
+          
+          <Route path="/resources/create" element={<ResourceCreate />} />
         </Routes>
         <ToastContainer />
       </div>

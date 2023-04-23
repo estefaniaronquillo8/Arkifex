@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const { Project, Resource } = require("./index");
 
 const ResourceAssignment = sequelize.define("ResourceAssignment", {
   id: {
@@ -9,19 +10,21 @@ const ResourceAssignment = sequelize.define("ResourceAssignment", {
   },
   resourceId: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     references: {
-      model: "Resources",
+      model: Resource,
       key: "id",
     },
   },
   projectId: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     references: {
-      model: "Projects",
+      model: Project,
       key: "id",
     },
   },
-  quantity: DataTypes.INTEGER,
+  quantity: { type: DataTypes.INTEGER, allowNull: false},
 });
 
 module.exports = ResourceAssignment;

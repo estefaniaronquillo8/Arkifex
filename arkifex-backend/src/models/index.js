@@ -33,9 +33,6 @@ Report.belongsTo(Project, { foreignKey: 'projectId' });
 Project.hasOne(Location, { foreignKey: 'projectId', onDelete: 'CASCADE' });
 Location.belongsTo(Project, { foreignKey: 'projectId' });
 
-Project.hasMany(Resource, { foreignKey: 'projectId', onDelete: 'CASCADE' });
-Resource.belongsTo(Project, { foreignKey: 'projectId' });
-
 Resource.hasMany(Cost, { foreignKey: 'resourceId', onDelete: 'CASCADE' });
 Cost.belongsTo(Resource, { foreignKey: 'resourceId' });
 
@@ -47,6 +44,8 @@ const addRoles = async () => {
 
 // Función para sincronizar la base de datos
 const syncDatabase = async () => {
+  // Si se hace algún cambio en los modelos, para que se sincronice
+  // con la bd poner aquí await sequelize.sync({force: true});
   await sequelize.sync();
   await addRoles();
 };

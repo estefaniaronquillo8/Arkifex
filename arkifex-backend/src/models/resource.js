@@ -9,10 +9,6 @@ const Resource = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    projectId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -26,11 +22,11 @@ const Resource = sequelize.define(
       allowNull: true,
     },
     quantity: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     unit: {
-      type: DataTypes.ENUM('kg', 'm²', 'hours'),
+      type: DataTypes.ENUM('kg', 'm²', 'horas'),
       allowNull: false,
     },
     costPerUnit: {
@@ -39,7 +35,7 @@ const Resource = sequelize.define(
     },
   },
   {
-    tableName: 'resources',
+    tableName: 'Resources',
   }
 );
 

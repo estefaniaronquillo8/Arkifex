@@ -2,22 +2,22 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
-const Project = sequelize.define('Project', {
+const Project = sequelize.define("Project", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   parentId: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
       model: 'Projects',
-      key: 'id'
-    }
+      key: "id",
+    },
   },
-  name: DataTypes.STRING,
-  description: DataTypes.TEXT
+  name: { type: DataTypes.STRING, allowNull: false },
+  description: { type: DataTypes.TEXT, allowNull: false },
 });
 
 module.exports = Project;

@@ -1,23 +1,25 @@
 // report.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
+const { Project } = require("./index");
 
-const Report = sequelize.define('Report', {
+const Report = sequelize.define("Report", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   projectId: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     references: {
-      model: 'Projects',
-      key: 'id'
-    }
+      model: Project,
+      key: "id",
+    },
   },
-  title: DataTypes.STRING,
-  content: DataTypes.TEXT,
-  date: DataTypes.DATE
+  title: { type: DataTypes.STRING, allowNull: false },
+  content: { type: DataTypes.TEXT, allowNull: false },
+  date: { type: DataTypes.DATE, allowNull: false },
 });
 
 module.exports = Report;

@@ -18,6 +18,17 @@ const createUser = async (userData) => {
   }
 };
 
+const getAllUsers = async () => {
+  const users = await User.findAll({ attributes: { exclude: ["password"] } });
+  
+  if (!users || users.length === 0) {
+    return { status: 404, message: "No se ha encontrado ningún registro." };
+  }
+
+  /* return { status: 200, users: users, message: "Información de usuarios recuperada con éxito."}; */
+  return { status: 200, users: users };
+};
+
 const updateUser = async (id, userData) => {
   const transaction = await sequelize.transaction();
   try {
@@ -53,16 +64,6 @@ const deleteUser = async (id) => {
   }
 };
 
-const getAllUsers = async () => {
-  const users = await User.findAll({ attributes: { exclude: ["password"] } });
-
-  if (!users || users.length === 0) {
-    return { status: 404, message: "No se ha encontrado ningún registro." };
-  }
-
-  /* return { status: 200, users: users, message: "Información de usuarios recuperada con éxito."}; */
-  return { status: 200, users: users };
-};
 
 const findUserByEmail = async (email) => {
   const user = await User.findOne({ where: { email } });
