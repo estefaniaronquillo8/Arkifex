@@ -25,6 +25,12 @@ const Navbar = () => {
           <Link to="/register" className="text-white mr-4">
             Register
           </Link>
+          <Link to="/resources/create" className="text-white mr-4">
+            Resources
+          </Link>
+          <Link to="/costs/create" className="text-white mr-4">
+            Costs
+          </Link>
           <button onClick={handleLogoutClick} className="text-white">
             Logout
           </button>
