@@ -8,16 +8,18 @@ const UserIndex = () => {
   const { users, setUsers, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
+  const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const { response, success, error } = await getAllUsers();
+      const { response, success, error, notificationType } = await getAllUsers();
       if (response?.users) {
         setUsers(response.users);
       }
 
       setError(error);
       setSuccess(success);
+      setNotificationType(notificationType);
     };
 
     fetchUsers();
@@ -25,20 +27,21 @@ const UserIndex = () => {
 
   useEffect(() => {
     if (success) {
-      showNotification(success, true);
+      showNotification(success, notificationType);
     }
     if (error) {
-      showNotification(error, false);
+      showNotification(error, notificationType);
     }
-  }, [success, error, showNotification]);
+  }, [success, error, notificationType, showNotification]);
 
   const deleteHandler = async(id) => {
-    const { response, success, error } = await handleDelete(id);
+    const { response, success, error, notificationType } = await handleDelete(id);
     if (response?.status === 200) {
-      setUsers(response.users);
+      setResources(response.resources);
     }
-    setSuccess(success);
     setError(error);
+    setSuccess(success);
+    setNotificationType(notificationType);
   }
 
   return (

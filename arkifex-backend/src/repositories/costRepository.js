@@ -3,49 +3,84 @@ const { Cost, sequelize } = require("../models");
 const createCost = async (costData) => {
   const transaction = await sequelize.transaction();
   try {
-    const foundCost = await findCostByResource(costData.resourceId);
-    if (foundCost) {
+    const response = await findCostByDescription(costData.description);
+    if (response?.cost) {
       return {
         status: 409,
-        message: "Ya existe un costo asociado a este recurso.",
+        message: "Cost already exists",
+        notificationType: "info",
       };
     }
     const cost = await Cost.create(costData, { transaction });
     await transaction.commit();
-    return { status: 200, cost: cost, message: "Cost created successfully!" };
+    return {
+      status: 200,
+      cost: cost,
+      message: "Cost created successfully!",
+      notificationType: "success",
+    };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Internal server error" };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
 const getAllCosts = async () => {
-  const costs = await Cost.findAll();
+  try {
+    const costs = await Cost.findAll();
 
-  if (costs?.length === 0) {
-    return { status: 404, message: "No existe ningún costo." };
+    if (costs?.length === 0) {
+      return {
+        status: 200,
+        costs: costs,
+        message: "Actualmente no existen costos",
+        notificationType: "info",
+      };
+    }
+    return { status: 200, costs: costs };
+  } catch (error) {
+    return {
+      status: 500,
+      costs: [],
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
-
-  return { status: 200, costs: costs };
 };
 
 const updateCost = async (id, costData) => {
   const transaction = await sequelize.transaction();
   try {
-    if (costData.resourceId) {
-      const foundCost = await findCostByResource(costData.resourceId);
-      if (foundCost.id !== parseInt(id)) {
-        return { status: 409, message: "Cost already exists" };
+    if (costData.description) {
+      const response = await findCostByDescription(costData.description);
+      if (response.status === 200 && response.cost.id !== parseInt(id)) {
+        return {
+          status: 409,
+          message: "Description already exists",
+          notificationType: "info",
+        };
       }
     }
     await Cost.update(costData, { where: { id }, transaction });
     await transaction.commit();
     const updatedCost = await findById(id);
-    updatedCost.message = "Costo actualizado con éxito.";
-    return updateCost;
+    return {
+      status: 200,
+      message: "Resorce updated successfully",
+      user: updatedCost.cost,
+      notificationType: "success",
+    };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Internal server error" };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
@@ -54,28 +89,44 @@ const deleteCost = async (id) => {
   try {
     await Cost.destroy({ where: { id }, transaction });
     await transaction.commit();
-    return { status: 200, message: "Cost deleted successfully!" };
+    return {
+      status: 200,
+      message: "Cost deleted successfully!",
+      notificationType: "success",
+    };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Internal server error" };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
-const findCostByResource = async (resourceId) => {
-  return await Cost.findOne({ where: { resourceId } });
+const findCostByDescription = async (description) => {
+  const cost = await Cost.findOne({ where: { description } });
+  if (!cost) {
+    return { status: 404 };
+  }
+  return { status: 200, cost };
 };
 
 const findById = async (id) => {
   const cost = await Cost.findByPk(id);
 
   if (!cost) {
-    return { status: 404, message: "Registro no encontrado." };
+    return {
+      status: 404,
+      message: "Registro no encontrado.",
+      notificationType: "info",
+    };
   }
-
   return {
     status: 200,
     cost: cost,
-    message: "Información de costo recuperada con éxito.",
+    message: "Información del costo recuperada con éxito.",
+    notificationType: "success",
   };
 };
 
@@ -84,6 +135,6 @@ module.exports = {
   getAllCosts,
   updateCost,
   deleteCost,
-  findCostByResource,
+  findCostByDescription,
   findById,
 };

@@ -11,16 +11,25 @@ const ResourceCreate = () => {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    name: "",
+    type: "",
+    role: "",
+    quantity: 0,
+    unit: "",
+    unitPerCost: 0,
+  });
 
   const createHandler = async (data) => {
-    const { response, success, error } = await handleCreate(data);
+    const { response, success, error, notificationType } = await handleCreate(
+      data
+    );
     if (success) {
-      showNotification(success, true);
+      showNotification(success, notificationType);
     }
 
     if (error) {
-      showNotification(error, false);
+      showNotification(error, notificationType);
     }
 
     if (response?.status === 200) {
@@ -31,7 +40,6 @@ const ResourceCreate = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
           <form
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
@@ -101,8 +109,7 @@ const ResourceCreate = () => {
                   required: "El campo es requerido.",
                   minLength: {
                     value: 5,
-                    message:
-                      "El rol debe tener al menos 5 caracteres.",
+                    message: "El rol debe tener al menos 5 caracteres.",
                   },
                 })}
               />

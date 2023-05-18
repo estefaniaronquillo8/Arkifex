@@ -1,9 +1,9 @@
 const {
-    createCost,
-    getAllCosts,
-    updateCost,
-    deleteCost,
-    findById,
+  createCost,
+  getAllCosts,
+  updateCost,
+  deleteCost,
+  findById,
 } = require("../repositories/costRepository");
 
 exports.getCosts = async (req, res) => {

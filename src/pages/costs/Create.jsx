@@ -1,26 +1,53 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/cost.api.routes";
+import { getAllResources } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useState, useEffect } from "react";
 
 const CostCreate = () => {
   const navigate = useNavigate();
-  const { showNotification } = useGlobalContext();
+  const { resources, setResources, showNotification } = useGlobalContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    resourceId: 0,
+    description: "",
+    amount: 0,
+    frequency: "",
+    status: "",
+  });
+
+  const loadResources = async () => {
+    try {
+      const { response } =
+        await getAllResources();
+      if (response?.resources) {
+        setResources(response.resources);
+      }
+    } catch (error) {
+      console.error("Error al cargar los recursos:", error);
+    }
+  };
+
+  // Función para cargar los recursos
+  useEffect(() => {
+    loadResources();
+  }, []);
 
   const createHandler = async (data) => {
-    const { response, success, error } = await handleCreate(data);
+    const { response, success, error, notificationType } = await handleCreate(
+      data
+    );
     if (success) {
-      showNotification(success, true);
+      showNotification(success, notificationType);
     }
 
     if (error) {
-      showNotification(error, false);
+      showNotification(error, notificationType);
     }
 
     if (response?.status === 200) {
@@ -31,7 +58,6 @@ const CostCreate = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
           <form
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
@@ -41,26 +67,31 @@ const CostCreate = () => {
             </h1>
             <div className="mb-4">
               <label
-                htmlFor="name"
+                htmlFor="resourceId"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Nombre
+                Recurso
               </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Nombre del Costo"
+              <select
+                id="resourceId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("name", {
+                {...register("resourceId", {
                   required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "El nombre debe tener al menos 3 caracteres.",
-                  },
                 })}
-              />
-              {errors.name && (
-                <p className="text-red-800">{errors.name.message}</p>
+              >
+                <option value="">Selecciona un recurso</option>
+                {resources && resources.length > 0 ? (
+                  resources.map((resource) => (
+                    <option key={resource.id} value={resource.id}>
+                      {resource.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>Cargando recursos...</option>
+                )}
+              </select>
+              {errors.resourceId && (
+                <p className="text-red-800">{errors.resourceId.message}</p>
               )}
             </div>
             <div className="mb-4">
@@ -73,14 +104,13 @@ const CostCreate = () => {
               <input
                 type="text"
                 id="description"
-                placeholder="Descripción"
+                placeholder="Descripción del Costo"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("description", {
                   required: "El campo es requerido.",
                   minLength: {
-                    value: 10,
-                    message:
-                      "La descripción debe tener al menos 10 caracteres.",
+                    value: 3,
+                    message: "La descripción debe tener al menos 3 caracteres.",
                   },
                 })}
               />
@@ -98,14 +128,15 @@ const CostCreate = () => {
               <input
                 type="number"
                 id="amount"
-                min={1}
+                min={0}
+                step="0.01"
                 placeholder="Cantidad"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("amount", {
                   required: "El campo es requerido.",
-                  minLength: {
-                    value: 1,
-                    message: "La cantidad debe tener al menos 1 valor.",
+                  min: {
+                    value: 0,
+                    message: "La cantidad debe ser un valor no negativo.",
                   },
                 })}
               />
@@ -151,7 +182,7 @@ const CostCreate = () => {
                   required: "El campo es requerido.",
                 })}
               >
-                <option value="">Selecciona el status</option>
+                <option value="">Selecciona un estado</option>
                 <option value="Activo">Activo</option>
                 <option value="Inactivo">Inactivo</option>
               </select>

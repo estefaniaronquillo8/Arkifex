@@ -5,10 +5,10 @@ import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
 // User
 import { Login, Register, UserEdit, UserIndex } from './pages/users/Users';
-// Cost
-import { CostCreate } from './pages/costs/Costs';
 // Resource
-import { ResourceCreate } from './pages/resources/Resources';
+import { ResourceCreate, ResourceIndex, ResourceEdit } from './pages/resources/Resources';
+// Cost
+import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
 
 function App() {
   return (
@@ -22,9 +22,14 @@ function App() {
           <Route path="/users" element={<UserIndex />} />
           <Route path="/users/edit/:id" element={<UserEdit />} />
           
-          <Route path="/costs/create" element={<CostCreate />} />
-          
+          <Route path="/resources" element={<ResourceIndex />} />
           <Route path="/resources/create" element={<ResourceCreate />} />
+          <Route path="/resources/edit/:id" element={<ResourceEdit />} />
+          
+          <Route path="/costs" element={<CostIndex />} />
+          <Route path="/costs/create" element={<CostCreate />} />
+          <Route path="/costs/edit/:id" element={<CostEdit />} />
+          
         </Routes>
         <ToastContainer />
       </div>

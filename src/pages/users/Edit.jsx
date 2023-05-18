@@ -7,39 +7,44 @@ function UserEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, setUser, showNotification } = useGlobalContext();
-  const [ success, setSuccess ] = useState();
-  const [ error, setError ] = useState();
+  const [success, setSuccess] = useState();
+  const [error, setError] = useState();
+  const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { response, success, error } = await handleEdit(id);
+      const { response, success, error, notificationType } = await handleEdit(
+        id
+      );
       if (response?.user) {
         setUser(response.user);
       }
       setError(error);
       setSuccess(success);
-    }
+      setNotificationType(notificationType);
+    };
 
     fetchUser();
   }, []);
 
   useEffect(() => {
-    if (success){
-      showNotification(success, true);
+    if (success) {
+      showNotification(success, notificationType);
     }
 
-    if(error){
-      showNotification(error, false);
+    if (error) {
+      showNotification(error, notificationType);
     }
-  }, [success, error, showNotification])
+  }, [success, error, notificationType, showNotification]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { success, error } = await handleUpdate(id, user);
+    const { success, error, notificationType } = await handleUpdate(id, user);
     setError(error);
     setSuccess(success);
+    setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate('/users');
+    navigate("/users");
   };
 
   const handleChange = (event) => {
@@ -54,7 +59,10 @@ function UserEdit() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Nombre:
                 </label>
                 <input
@@ -67,7 +75,10 @@ function UserEdit() {
                 />
               </div>
               <div>
-                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="lastname"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Apellido:
                 </label>
                 <input
@@ -80,7 +91,10 @@ function UserEdit() {
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Correo electrónico:
                 </label>
                 <input

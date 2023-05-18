@@ -12,6 +12,7 @@ const Resource = sequelize.define(
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     type: {
       type: DataTypes.ENUM('Material', 'Personal'),

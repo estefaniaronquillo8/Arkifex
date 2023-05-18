@@ -13,15 +13,14 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   
-
   const registerHandler = async (data) => {
-    const { response, success, error } = await handleRegister(data);
+    const { response, success, error, notificationType } = await handleRegister(data);
     if (success){
-      showNotification(success, true);
+      showNotification(success, notificationType);
     }
     
     if (error){
-      showNotification(error, false);
+      showNotification(error, notificationType);
     }
 
     if (response?.status === 200){

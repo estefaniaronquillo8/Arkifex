@@ -31,9 +31,9 @@ export const handleUpdate = (id, user) => {
 };
 
 export const handleDelete = async (id) => {
-  const { response, success, error } = await requestHandler("delete", `/users/delete/${id}`);
+  const { response, success, error, notificationType } = await requestHandler("delete", `/users/delete/${id}`);
   if (response?.status === 200){
     return { ... await getAllUsers() };
   }
-  return { response, success, error };
+  return { response, success, error, notificationType };
 }

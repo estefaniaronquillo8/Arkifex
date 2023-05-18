@@ -16,16 +16,52 @@ export const GlobalProvider = ({ children }) => {
     lastname: "",
     email: "",
   });
+
+  const [resources, setResources] = useState([]);
+  const [resource, setResource] = useState({
+    id: 0,
+    name: "",
+    type: "",
+    role: "",
+    quantity: 0,
+    unit: "",
+    costPerUnit: 0,
+  });
+
+  const [costs, setCosts] = useState([]);
+  const [cost, setCost] = useState({
+    id: 0,
+    resourceId: 0,
+    description: "",
+    amount: 0,
+    frequency: "",
+    status: "",
+  });
+
   const [lastNotification, setLastNotification] = useState(null);
 
-  const showNotification = (currentNotification, isSuccess) => {
+  const showNotification = (currentNotification, type) => {
     if (currentNotification !== lastNotification) {
-      if (isSuccess) {
-        toast.success(currentNotification, { autoClose: 1250 });
-        setLastNotification(currentNotification);
-      } else {
-        toast.error(currentNotification, { autoClose: 1250 });
-        setLastNotification(currentNotification);
+      switch (type) {
+        case "success":
+          toast.success(currentNotification, { autoClose: 1250 });
+          setLastNotification(currentNotification);
+          break;
+        case "info":
+          toast.info(currentNotification, { autoClose: 1250 });
+          setLastNotification(currentNotification);
+          break;
+        case "error":
+          toast.error(currentNotification, { autoClose: 1250 });
+          setLastNotification(currentNotification);
+          break;
+        case "warn":
+          toast.warn(currentNotification, { autoClose: 1250 });
+          setLastNotification(currentNotification);
+          break;
+
+        default:
+          break;
       }
     }
   };
@@ -35,6 +71,14 @@ export const GlobalProvider = ({ children }) => {
     setUsers,
     user,
     setUser,
+    resource,
+    setResource,
+    resources,
+    setResources,
+    cost,
+    setCost,
+    costs,
+    setCosts,
     showNotification,
   };
 

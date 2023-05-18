@@ -5,22 +5,22 @@ export const getAllResources = () => {
   return requestHandler("get", "/resources");
 };
 
-export const handleCreate = (data) => {
-  return requestHandler("post", "/resources/create", data);
+export const handleCreate = (resource) => {
+  return requestHandler("post", "/resources/create", resource);
 };
 
 export const handleEdit = (id) => {
   return requestHandler("get", `/resources/edit/${id}`);
 };
 
-export const handleUpdate = (id, cost) => {
-  return requestHandler("put", `/resources/edit/${id}`, cost);
+export const handleUpdate = (id, resource) => {
+  return requestHandler("put", `/resources/edit/${id}`, resource);
 };
 
 export const handleDelete = async (id) => {
-  const { response, success, error } = await requestHandler("delete", `/resources/delete/${id}`);
+  const { response, success, error, notificationType } = await requestHandler("delete", `/resources/delete/${id}`);
   if (response?.status === 200){
     return { ... await getAllResources() };
   }
-  return { response, success, error };
+  return { response, success, error, notificationType };
 }

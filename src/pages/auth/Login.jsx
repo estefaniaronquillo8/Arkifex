@@ -14,19 +14,18 @@ const Login = () => {
   } = useForm();
 
   const loginHandler = async (data) => {
-    const { response, success, error } = await handleLogin(data);
+    const { response, success, error, notificationType } = await handleLogin(data);
 
     if (success){
-      showNotification(success, true);
+      showNotification(success, notificationType);
       localStorage.setItem("token", response.token);
       navigate("/users");
     }
     
     if (error){
-      showNotification(error, false);
+      showNotification(error, notificationType);
     }
   }
-
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">

@@ -1,5 +1,5 @@
 const costController = require('../controllers/costController');
-const initialPlanningController = require('../controllers/initialPlanningController');
+const projectPlanningController = require('../controllers/projectPlanningController');
 const locationController = require('../controllers/locationController');
 const projectController = require('../controllers/projectController');
 const reportController = require('../controllers/reportController');
@@ -10,7 +10,7 @@ const userController = require('../controllers/userController');
 
 module.exports = {
     costController,
-    initialPlanningController,
+    projectPlanningController,
     locationController,
     projectController,
     reportController,

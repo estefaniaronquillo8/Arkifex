@@ -4,7 +4,7 @@ const sequelize = require('../config/database');
 const User = require('./user');
 const Role = require('./role');
 const Project = require('./project');
-const InitialPlanning = require('./initialPlanning');
+const ProjectPlanning = require('./projectPlanning');
 const Resource = require('./resource');
 const ResourceAssignment = require('./resourceAssignment');
 const Report = require('./report');
@@ -18,8 +18,8 @@ Role.hasMany(User, { foreignKey: 'roleId' });
 Project.hasMany(Project, { foreignKey: 'parentId', as: 'subprojects', onDelete: 'CASCADE' });
 Project.belongsTo(Project, { foreignKey: 'parentId', as: 'parent' });
 
-Project.hasOne(InitialPlanning, { foreignKey: 'projectId', onDelete: 'CASCADE' });
-InitialPlanning.belongsTo(Project, { foreignKey: 'projectId' });
+Project.hasOne(ProjectPlanning, { foreignKey: 'projectId', onDelete: 'CASCADE' });
+ProjectPlanning.belongsTo(Project, { foreignKey: 'projectId' });
 
 Project.hasMany(ResourceAssignment, { foreignKey: 'projectId', onDelete: 'NO ACTION' });
 ResourceAssignment.belongsTo(Project, { foreignKey: 'projectId' });
@@ -54,8 +54,9 @@ const syncDatabase = async () => {
 module.exports = {
   User,
   Role,
+  Cost,
   Project,
-  InitialPlanning,
+  ProjectPlanning,
   Resource,
   ResourceAssignment,
   Report,

@@ -1,9 +1,9 @@
-// InitialPlanning.js
+// ProjectPlanning.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { Project } = require("./index");
 
-const InitialPlanning = sequelize.define("InitialPlanning", {
+const ProjectPlanning = sequelize.define("ProjectPlanning", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -22,4 +22,4 @@ const InitialPlanning = sequelize.define("InitialPlanning", {
   estimatedBudget: { type: DataTypes.FLOAT, allowNull: false },
 });
 
-module.exports = InitialPlanning;
+module.exports = ProjectPlanning;
