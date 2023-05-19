@@ -1,21 +1,21 @@
-// src/pages/projects.js
+// src/pages/projectPlannings.js
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { getAllProjects, handleDelete } from "../../services/project.api.routes";
+import { getAllProjectPlannings, handleDelete } from "../../services/projectPlanning.api.routes";
 import { Link } from "react-router-dom";
 
-const ProjectIndex = () => {
-  const { projects, setProjects, showNotification } = useGlobalContext();
+const ProjectPlanningIndex = () => {
+  const { projectPlannings, setProjectPlannings, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
-    const fetchProjects = async () => {
+    const fetchProjectPlannings = async () => {
       const { response, success, error, notificationType } =
-        await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
+        await getAllProjectPlannings();
+      if (response?.projectPlannings) {
+        setProjectPlannings(response.projectPlannings);
       }
 
       setError(error);
@@ -23,7 +23,7 @@ const ProjectIndex = () => {
       setNotificationType(notificationType);
     };
 
-    fetchProjects();
+    fetchProjectPlannings();
   }, []);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const ProjectIndex = () => {
       id
     );
     if (response?.status === 200) {
-      setProjects(response.projects);
+      setProjectPlannings(response.projectPlannings);
     }
     setError(error);
     setSuccess(success);
@@ -49,39 +49,43 @@ const ProjectIndex = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-4xl font-semibold mb-6">Proyectos</h1>
+      <h1 className="text-4xl font-semibold mb-6">Planificación de Proyectos</h1>
       <Link
-        to="/projects/create"
+        to="/projectPlannings/create"
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
       >
-        Crear Proyecto
+        Crear Planificación de Proyecto
       </Link>
       <div className="bg-white shadow-md rounded-lg">
-        <div className="grid grid-cols-5 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-          <div className="col-span-1 pl-2">Padre</div>
+        <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+          <div className="col-span-1 pl-2">Proyecto</div>
           <div className="col-span-1">Nombre</div>
-          <div className="col-span-1">Descripción</div>
+          <div className="col-span-1">Fecha Estimada Inicio</div>
+          <div className="col-span-1">Fecha Estimada Final</div>
+          <div className="col-span-1">Presupuesto Estimado</div>
           <div className="col-span-2">Acciones</div>
         </div>
-        {projects &&
-          projects.map((project) => (
+        {projectPlannings &&
+          projectPlannings.map((projectPlanning) => (
             <div
-              key={project.id}
+              key={projectPlanning.id}
               className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
             >
-              <div className="col-span-1 pl-3">{project.parentId}</div>
-              <div className="col-span-1">{project.name}</div>
-              <div className="col-span-1">{project.description}</div>
-              
+              <div className="col-span-1 pl-3">{projectPlanning.projectId}</div>
+              <div className="col-span-1">{projectPlanning.name}</div>
+              <div className="col-span-1">{projectPlanning.startDate}</div>
+              <div className="col-span-1">{projectPlanning.endDate}</div>
+              <div className="col-span-1">{projectPlanning.estimatedBudget}</div>
+
               <div className="col-span-2">
                 <Link
-                  to={`/projects/edit/${project.id}`}
+                  to={`/projectPlannings/edit/${projectPlanning.id}`}
                   className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                 >
                   Editar
                 </Link>
                 <button
-                  onClick={async () => await deleteHandler(project.id)}
+                  onClick={async () => await deleteHandler(projectPlanning.id)}
                   className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Eliminar
@@ -94,4 +98,4 @@ const ProjectIndex = () => {
   );
 };
 
-export default ProjectIndex;
+export default ProjectPlanningIndex;

@@ -70,7 +70,7 @@ const updateCost = async (id, costData) => {
     const updatedCost = await findById(id);
     return {
       status: 200,
-      message: "Resorce updated successfully",
+      message: "Cost updated successfully",
       user: updatedCost.cost,
       notificationType: "success",
     };

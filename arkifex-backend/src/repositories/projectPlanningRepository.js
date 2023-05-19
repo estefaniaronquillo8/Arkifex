@@ -1,23 +1,54 @@
 const { ProjectPlanning, sequelize } = require("../models");
-// const { Sequelize, Transaction } = require('sequelize');
 
 const createProjectPlanning = async (projectPlanningData) => {
   const transaction = await sequelize.transaction();
   try {
-    const response = await findProjectByName(projectPlanningData.name);
-    if (response.project) {
-      return { status: 409, message: "Ya existe un proyecto con ese nombre." };
+    const response = await findProjectPlanningByName(projectPlanningData.name);
+    if (response?.projectPlanning) {
+      return {
+        status: 409,
+        message: "ProjectPlanning already exists",
+        notificationType: "info",
+      };
     }
-    const project = await Project.create(projectPlanningData, { transaction });
+    const projectPlanning = await ProjectPlanning.create(projectPlanningData, { transaction });
     await transaction.commit();
     return {
       status: 200,
-      project: project,
-      message: "¡Proyecto creado exitosamente!",
+      projectPlanning: projectPlanning,
+      message: "ProjectPlanning created successfully!",
+      notificationType: "success",
     };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Error interno del servidor." };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+};
+
+const getAllProjectPlannings = async () => {
+  try {
+    const projectPlannings = await ProjectPlanning.findAll();
+
+    if (projectPlannings?.length === 0) {
+      return {
+        status: 200,
+        projectPlannings: projectPlannings,
+        message: "Actualmente no existen projectPlanning",
+        notificationType: "info",
+      };
+    }
+    return { status: 200, projectPlannings: projectPlannings };
+  } catch (error) {
+    return {
+      status: 500,
+      projectPlannings: [],
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
@@ -25,25 +56,31 @@ const updateProjectPlanning = async (id, projectPlanningData) => {
   const transaction = await sequelize.transaction();
   try {
     if (projectPlanningData.name) {
-      const response = await findProjectByName(projectPlanningData.name);
-      if (response.status === 200 && response.project.id !== parseInt(id)) {
+      const response = await findProjectPlanningByName(projectPlanningData.name);
+      if (response.status === 200 && response.projectPlanning.id !== parseInt(id)) {
         return {
           status: 409,
-          message: "Ya existe un proyecto con ese nombre.",
+          message: "Name already exists",
+          notificationType: "info",
         };
       }
     }
     await ProjectPlanning.update(projectPlanningData, { where: { id }, transaction });
     await transaction.commit();
-    const updatedProject = await findById(id);
+    const updatedProjectPlanning = await findById(id);
     return {
       status: 200,
-      message: "¡Proyecto actualizado exitosamente!",
-      project: updatedProject.project,
+      message: "ProjectPlanning updated successfully",
+      user: updatedProjectPlanning.projectPlanning,
+      notificationType: "success",
     };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Error interno del servidor." };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
@@ -52,56 +89,52 @@ const deleteProjectPlanning = async (id) => {
   try {
     await ProjectPlanning.destroy({ where: { id }, transaction });
     await transaction.commit();
-    return { status: 200, message: "¡Proyecto eliminado exitosamente!" };
+    return {
+      status: 200,
+      message: "ProjectPlanning deleted successfully!",
+      notificationType: "success",
+    };
   } catch (error) {
     await transaction.rollback();
-    return { status: 500, message: "Error interno del servidor." };
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
   }
 };
 
-const getAllProjectsPlanning = async () => {
-    const projects = await ProjectPlanning.findAll();
-  
-    if (!projects || projects.length === 0) {
-      return { status: 404, message: "No existen registros." };
-    }
-  
-    return { status: 200, projects: projects };
+const findProjectPlanningByName = async (name) => {
+  const projectPlanning = await ProjectPlanning.findOne({ where: { name } });
+  if (!projectPlanning) {
+    return { status: 404 };
+  }
+  return { status: 200, projectPlanning };
+};
+
+const findById = async (id) => {
+  const projectPlanning = await ProjectPlanning.findByPk(id);
+
+  if (!projectPlanning) {
+    return {
+      status: 404,
+      message: "Registro no encontrado.",
+      notificationType: "info",
+    };
+  }
+  return {
+    status: 200,
+    projectPlanning: projectPlanning,
+    message: "Información del projectPlanning recuperada con éxito.",
+    notificationType: "success",
   };
-  
-  const findProjectByNamePlanning = async (name) => {
-    const project = await ProjectPlanning.findOne({ where: { name } });
-    if (!project) {
-      return { status: 404, message: 'Proyecto no encontrado.' };
-    }
-    return { status: 200, project };
-  };
-  
-  const findProjectPlanning = async (where) => {
-    const project = await ProjectPlanning.findOne(where);
-    if (!project) {
-      return { status: 404, message: "Proyecto no encontrado." };
-    }
-  
-    return { status: 200, project: project };
-  };
-  
-  const findById = async (id) => {
-    const project = await ProjectPlanning.findByPk(id);
-  
-    if (!project) {
-      return { status: 404, message: "Proyecto no encontrado." };
-    }
-  
-    return { status: 200, project: project };
-  };
+};
 
 module.exports = {
   createProjectPlanning,
+  getAllProjectPlannings,
   updateProjectPlanning,
   deleteProjectPlanning,
-  getAllProjectsPlanning,
-  findProjectByNamePlanning,
-  findProjectPlanning,
+  findProjectPlanningByName,
   findById,
 };

@@ -1,5 +1,4 @@
 // src/services/project.api.routes.js
-import { getAllProjects } from "../../arkifex-backend/src/repositories/projectRepository";
 import { requestHandler } from "./requestService";
 
 export const getAllProjects = () => {

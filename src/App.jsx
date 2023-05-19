@@ -9,8 +9,10 @@ import { Login, Register, UserEdit, UserIndex } from './pages/users/Users';
 import { ResourceCreate, ResourceIndex, ResourceEdit } from './pages/resources/Resources';
 // Cost
 import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
-
-import { ProjectIndex } from './pages/projects/Projects';
+// Project
+import { ProjectCreate, ProjectIndex } from './pages/projects/Projects';
+// ProjectPlanning
+import { ProjectPlanningCreate, ProjectPlanningIndex } from './pages/projectPlanning/ProjectPlanning';
 
 function App() {
   return (
@@ -33,8 +35,11 @@ function App() {
           <Route path="/costs/create" element={<CostCreate />} />
           <Route path="/costs/edit/:id" element={<CostEdit />} />
 
+          <Route path="/projectPlannings" element={<ProjectPlanningIndex />} />
+          <Route path="/projectPlannings/create" element={<ProjectPlanningCreate />} />
 
           <Route path="/projects" element={<ProjectIndex />} />
+          <Route path="/projects/create" element={<ProjectCreate />} />
           
         </Routes>
         <ToastContainer />

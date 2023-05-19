@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const router = express.Router();
 const { isAuthenticated } = require('../middlewares/authentication');
 const {
@@ -10,7 +10,7 @@ const {
     resourceAssignmentController,
     resourceController,
     userController
-} = require('../controllers/index');
+} = require('../controllers/index');*/
 
 
 // Costs
@@ -32,10 +32,10 @@ router.put('/locations/edit/:id', isAuthenticated, locationController.update);
 router.delete("/locations/delete/:id", isAuthenticated, locationController.delete);
  */
 // Project
-router.get('/projects', isAuthenticated, projectController.getProjects);
+/*router.get('/projects', isAuthenticated, projectController.getProjects);
 router.get('/projects/edit/:id', isAuthenticated, projectController.edit);
 router.put('/projects/edit/:id', isAuthenticated, projectController.update);
-router.delete("/projects/delete/:id", isAuthenticated, projectController.delete);
+router.delete("/projects/delete/:id", isAuthenticated, projectController.delete);*/
 
 /* // Report
 router.get('/reports', isAuthenticated, reportController.getUsers);
@@ -55,4 +55,4 @@ router.get('/resource-assignments/edit/:id', isAuthenticated, resourceAssignment
 router.put('/resource-assignments/edit/:id', isAuthenticated, resourceAssignmentController.update);
 router.delete("/resource-assignments/delete/:id", isAuthenticated, resourceAssignmentController.delete);
  */
-module.exports = router;
+//module.exports = router;

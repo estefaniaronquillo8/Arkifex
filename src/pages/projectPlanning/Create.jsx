@@ -1,25 +1,28 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { handleCreate } from "../../services/project.api.routes";
-import { getAllProjects } from "../../services/project.api.routes";
+import { handleCreate } from "../../services/projectPlanning.api.routes";
+//import { getAllProjects } from "../../services/project.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 
-const ProjectCreate = () => {
+const ProjectPlanningCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  //const { projects, setProjects, showNotification } = useGlobalContext();
+  const { showNotification } = useGlobalContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    parentId: 0,
+    projectId: 0,
     name: "",
-    description: "",
+    startDate: null,
+    endDate: null,
+    estimatedBudget: 0,
   });
 
-  const loadProjects = async () => {
+  /* const loadProjects = async () => {
     try {
       const { response } = await getAllProjects();
       if (response?.projects) {
@@ -33,7 +36,7 @@ const ProjectCreate = () => {
   // Función para cargar los proyectos
   useEffect(() => {
     loadProjects();
-  }, []);
+  }, []); */
 
   const createHandler = async (data) => {
     const { response, success, error, notificationType } = await handleCreate(
@@ -48,7 +51,7 @@ const ProjectCreate = () => {
     }
 
     if (response?.status === 200) {
-      navigate("/projects");
+      navigate("/projectPlannings");
     }
   };
 
@@ -60,18 +63,21 @@ const ProjectCreate = () => {
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
             <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Proyectos
+              Creación de Planificación de Proyectos
             </h1>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="projectId"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Parent ID
+                Proyecto
               </label>
               <select
                 id="projectId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("projectId", {
+                  required: "El campo es requerido.",
+                })}
               >
                 <option value="">Selecciona un proyecto</option>
                 {projects && projects.length > 0 ? (
@@ -87,7 +93,7 @@ const ProjectCreate = () => {
               {errors.projectId && (
                 <p className="text-red-800">{errors.projectId.message}</p>
               )}
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -98,7 +104,7 @@ const ProjectCreate = () => {
               <input
                 type="text"
                 id="name"
-                placeholder="Nombre del Proyecto"
+                placeholder="Nombre de Planificación de Proyecto"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("name", {
                   required: "El campo es requerido.",
@@ -114,26 +120,66 @@ const ProjectCreate = () => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="description"
+                htmlFor="startDate"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Descripción
+                Fecha estimada de inicio
               </label>
               <input
-                type="text"
-                id="description"
-                placeholder="Descripción del Proyecto"
+                type="date"
+                id="startDate"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("description", {
+                {...register("startDate", {
                   required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "La descripción debe tener al menos 3 caracteres.",
+                })}
+              />
+              {errors.startDate && (
+                <p className="text-red-800">{errors.startDate.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="endDate"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Fecha estimada de finalización
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("endDate", {
+                  required: "El campo es requerido.",
+                })}
+              />
+              {errors.endDate && (
+                <p className="text-red-800">{errors.endDate.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="estimatedBudget"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Presupuesto estimado
+              </label>
+              <input
+                type="number"
+                id="estimatedBudget"
+                min={0}
+                step="0.01"
+                placeholder="Presupuesto estimado"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("estimatedBudget", {
+                  required: "El campo es requerido.",
+                  min: {
+                    value: 0,
+                    message: "El presupuesto debe ser un valor no negativo.",
                   },
                 })}
               />
-              {errors.description && (
-                <p className="text-red-800">{errors.description.message}</p>
+              {errors.estimatedBudget && (
+                <p className="text-red-800">{errors.estimatedBudget.message}</p>
               )}
             </div>
             <div className="flex flex-col items-center justify-center">
@@ -141,7 +187,7 @@ const ProjectCreate = () => {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear Proyectos
+                Crear Planificación de Proyecto
               </button>
             </div>
           </form>
@@ -151,4 +197,4 @@ const ProjectCreate = () => {
   );
 };
 
-export default ProjectCreate;
+export default ProjectPlanningCreate;

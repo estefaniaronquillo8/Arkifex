@@ -38,6 +38,24 @@ export const GlobalProvider = ({ children }) => {
     status: "",
   });
 
+  const [projects, setProjects] = useState([]);
+  const [project, setProject] = useState({
+    id: 0,
+    parentId: 0,
+    name: "",
+    description: "",
+  });
+
+  const [projectPlannings, setProjectPlannings] = useState([]);
+  const [projectPlanning, setProjectPlanning] = useState({
+    id: 0,
+    projectId: 0,
+    name: "",
+    startDate: null,
+    endDate: null,
+    estimatedBudget: 0,
+  });
+
   const [lastNotification, setLastNotification] = useState(null);
 
   const showNotification = (currentNotification, type) => {
@@ -67,18 +85,33 @@ export const GlobalProvider = ({ children }) => {
   };
 
   const value = {
+    // Users
     users,
     setUsers,
     user,
     setUser,
+    // Resources
     resource,
     setResource,
     resources,
     setResources,
+    // Costs
     cost,
     setCost,
     costs,
     setCosts,
+    // Project Plannings
+    projectPlannings,
+    setProjectPlannings,
+    projectPlanning,
+    setProjectPlanning,
+    // Projects
+    projects,
+    setProjects,
+    project,
+    setProject,
+    
+    
     showNotification,
   };
 

@@ -39,8 +39,8 @@ const Navbar = () => {
               <Link to="/projects" className="text-white mr-4">
                 Projects
               </Link>
-              <Link to="/projectspl" className="text-white mr-4">
-                Planning Projects
+              <Link to="/projectPlannings" className="text-white mr-4">
+              Projects Plannings
               </Link>
               <button onClick={handleLogoutClick} className="text-white">
                 Logout

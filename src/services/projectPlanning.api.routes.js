@@ -1,27 +1,26 @@
-// src/services/cost.api.routes.js
-import { getAllProjectsPlanning } from "../../arkifex-backend/src/repositories/projectPlanningRepository";
+// src/services/projectPlanning.api.routes.js
 import { requestHandler } from "./requestService";
 
-export const getAllProjectsPlanning = () => {
-  return requestHandler("get", "/projectspl");
+export const getAllProjectPlannings = () => {
+  return requestHandler("get", "/projectPlannings");
 };
 
-export const handleCreate = (cost) => {
-  return requestHandler("post", "/projectspl/create", cost);
+export const handleCreate = (projectPlanning) => {
+  return requestHandler("post", "/projectPlannings/create", projectPlanning);
 };
 
 export const handleEdit = (id) => {
-  return requestHandler("get", `/projectspl/edit/${id}`);
+  return requestHandler("get", `/projectPlannings/edit/${id}`);
 };
 
-export const handleUpdate = (id, cost) => {
-  return requestHandler("put", `/projectspl/edit/${id}`, cost);
+export const handleUpdate = (id, projectPlanning) => {
+  return requestHandler("put", `/projectPlannings/edit/${id}`, projectPlanning);
 };
 
 export const handleDelete = async (id) => {
-  const { response, success, error, notificationType } = await requestHandler("delete", `/projectspl/delete/${id}`);
+  const { response, success, error, notificationType } = await requestHandler("delete", `/projectPlannings/delete/${id}`);
   if (response?.status === 200){
-    return { ... await getAllProjectsPlanning() };
+    return { ... await getAllProjectPlannings() };
   }
   return { response, success, error, notificationType };
 }

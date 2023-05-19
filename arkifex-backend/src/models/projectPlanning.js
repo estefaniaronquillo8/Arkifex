@@ -17,6 +17,11 @@ const ProjectPlanning = sequelize.define("ProjectPlanning", {
       key: "id",
     },
   },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+  },
   startDate: { type: DataTypes.DATE, allowNull: false },
   endDate: { type: DataTypes.DATE, allowNull: false },
   estimatedBudget: { type: DataTypes.FLOAT, allowNull: false },
