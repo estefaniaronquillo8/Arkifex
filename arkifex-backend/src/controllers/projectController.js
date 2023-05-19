@@ -1,4 +1,9 @@
-const { getAllProjects, findById, updateProject, createProject, deleteProject } = require("../repositories/projectRepository");
+const { getAllProjects, 
+  findById, 
+  updateProject, 
+  createProject, 
+  deleteProject 
+} = require("../repositories/projectRepository");
 
 exports.getProjects = async (req, res) => {
   const response = await getAllProjects();

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { handleLogout } from "../services/user.api.routes";
 import { useGlobalContext } from "../contexts/GlobalContext";
 
@@ -35,6 +35,12 @@ const Navbar = () => {
               </Link>
               <Link to="/costs" className="text-white mr-4">
                 Costs
+              </Link>
+              <Link to="/projects" className="text-white mr-4">
+                Projects
+              </Link>
+              <Link to="/projectspl" className="text-white mr-4">
+                Planning Projects
               </Link>
               <button onClick={handleLogoutClick} className="text-white">
                 Logout

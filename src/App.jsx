@@ -10,6 +10,8 @@ import { ResourceCreate, ResourceIndex, ResourceEdit } from './pages/resources/R
 // Cost
 import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
 
+import { ProjectIndex } from './pages/projects/Projects';
+
 function App() {
   return (
     <Router>
@@ -30,6 +32,9 @@ function App() {
           <Route path="/costs" element={<CostIndex />} />
           <Route path="/costs/create" element={<CostCreate />} />
           <Route path="/costs/edit/:id" element={<CostEdit />} />
+
+
+          <Route path="/projects" element={<ProjectIndex />} />
           
         </Routes>
         <ToastContainer />
