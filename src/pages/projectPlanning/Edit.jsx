@@ -1,23 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { handleEdit, handleUpdate } from "../../services/cost.api.routes";
-import { getAllResources } from "../../services/resource.api.routes";
+import {
+  handleEdit,
+  handleUpdate,
+} from "../../services/projectPlanning.api.routes";
+import { getAllProjects } from "../../services/project.api.routes";
 
-function CostEdit() {
+function ProjectPlanningEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { cost, setCost, showNotification } = useGlobalContext();
-  const { resources, setResources } = useGlobalContext();
+  const { projectPlanning, setProjectPlanning, showNotification } =
+    useGlobalContext();
+  const { projects, setProjects } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
 
-  const loadResources = async () => {
+  const loadProjects = async () => {
     try {
-      const { response } = await getAllResources();
-      if (response?.resources) {
-        setResources(response.resources);
+      const { response } = await getAllProjects();
+      if (response?.projects) {
+        setProjects(response.projects);
       }
     } catch (error) {
       console.error("Error al cargar los recursos:", error);
@@ -26,23 +30,23 @@ function CostEdit() {
 
   // Función para cargar los recursos
   useEffect(() => {
-    loadResources();
+    loadProjects();
   }, []);
 
   useEffect(() => {
-    const fetchCost = async () => {
+    const fetchProjectPlanning = async () => {
       const { response, success, error, notificationType } = await handleEdit(
         id
       );
-      if (response?.cost) {
-        setCost(response.cost);
+      if (response?.projectPlanning) {
+        setProjectPlanning(response.projectPlanning);
       }
       setError(error);
       setSuccess(success);
       setNotificationType(notificationType);
     };
 
-    fetchCost();
+    fetchProjectPlanning();
   }, []);
 
   useEffect(() => {
@@ -57,43 +61,49 @@ function CostEdit() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { success, error, notificationType } = await handleUpdate(id, cost);
+    const { success, error, notificationType } = await handleUpdate(
+      id,
+      projectPlanning
+    );
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/costs");
+    navigate("/projectPlannings");
   };
 
   const handleChange = (event) => {
-    setCost({ ...cost, [event.target.name]: event.target.value });
+    setProjectPlanning({
+      ...projectPlanning,
+      [event.target.name]: event.target.value,
+    });
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Editar costo</h2>
-      {cost && (
+      <h2 className="text-4xl font-semibold mb-6">Editar projectPlanning</h2>
+      {projectPlanning && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
               <div>
                 <label
-                  htmlFor="resourceId"
+                  htmlFor="projectId"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Recurso:
+                  Proyecto:
                 </label>
                 <select
-                  id="resourceId"
-                  name="resourceId"
-                  value={cost.resourceId}
+                  id="projectId"
+                  name="projectId"
+                  value={projectPlanning.projectId}
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
-                  {resources && resources.length > 0 ? (
-                    resources.map((resource) => (
-                      <option key={resource.id} value={resource.id}>
-                        {resource.name}
+                  {projects && projects.length > 0 ? (
+                    projects.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.name}
                       </option>
                     ))
                   ) : (
@@ -103,73 +113,67 @@ function CostEdit() {
               </div>
               <div>
                 <label
-                  htmlFor="description"
+                  htmlFor="name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Descripción:
+                  Nombre:
                 </label>
                 <input
-                  id="description"
+                  id="name"
                   type="text"
-                  name="description"
-                  value={cost.description}
+                  name="name"
+                  value={projectPlanning.name}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="amount"
+                  htmlFor="startDate"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Cantidad:
+                  Fecha estimada de inicio:
                 </label>
                 <input
-                  id="amount"
-                  type="number"
-                  name="amount"
-                  value={cost.amount}
+                  id="startDate"
+                  type="date"
+                  name="startDate"
+                  value={projectPlanning.startDate}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="frequency"
+                  htmlFor="endDate"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Frecuencia:
+                  Fecha estimada de finalización:
                 </label>
-                <select
-                  id="frequency"
-                  name="frequency"
-                  value={cost.frequency}
+                <input
+                  id="endDate"
+                  type="date"
+                  name="endDate"
+                  value={projectPlanning.endDate}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                >
-                  <option>Diario</option>
-                  <option>Semanal</option>
-                  <option>Mensual</option>
-                  <option>Anual</option>
-                </select>
+                />
               </div>
               <div>
                 <label
-                  htmlFor="status"
+                  htmlFor="estimatedBudget"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Estado:
+                  Presupuesto estimado:
                 </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={cost.status}
+                <input
+                  id="estimatedBudget"
+                  type="number"
+                  name="estimatedBudget"
+                  value={projectPlanning.estimatedBudget}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                >
-                  <option>Activo</option>
-                  <option>Inactivo</option>
-                </select>
+                />
               </div>
             </div>
             <button
@@ -185,4 +189,4 @@ function CostEdit() {
   );
 }
 
-export default CostEdit;
+export default ProjectPlanningEdit;

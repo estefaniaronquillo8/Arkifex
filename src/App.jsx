@@ -12,7 +12,7 @@ import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
 // Project
 import { ProjectCreate, ProjectIndex } from './pages/projects/Projects';
 // ProjectPlanning
-import { ProjectPlanningCreate, ProjectPlanningIndex } from './pages/projectPlanning/ProjectPlanning';
+import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit } from './pages/projectPlanning/ProjectPlanning';
 
 function App() {
   return (
@@ -37,6 +37,7 @@ function App() {
 
           <Route path="/projectPlannings" element={<ProjectPlanningIndex />} />
           <Route path="/projectPlannings/create" element={<ProjectPlanningCreate />} />
+          <Route path="/projectPlannings/edit/:id" element={<ProjectPlanningEdit />} />
 
           <Route path="/projects" element={<ProjectIndex />} />
           <Route path="/projects/create" element={<ProjectCreate />} />

@@ -1,26 +1,27 @@
 const { Project, sequelize } = require("../models");
 
-const createProject = async (ProjectData) => {
+const createProject = async (projectData) => {
   const transaction = await sequelize.transaction();
   try {
-    const response = await findProjectByName(ProjectData.name);
-    if (response?.Project) {
+    const response = await findProjectByName(projectData.name);
+    if (response?.project) {
       return {
         status: 409,
         message: "Project already exists",
         notificationType: "info",
       };
     }
-    const Project = await Project.create(ProjectData, { transaction });
+    const project = await Project.create(projectData, { transaction });
     await transaction.commit();
     return {
       status: 200,
-      Project: Project,
+      Project: project,
       message: "Project created successfully!",
       notificationType: "success",
     };
   } catch (error) {
     await transaction.rollback();
+    console.log(error)
     return {
       status: 500,
       message: "Internal server error",
@@ -31,17 +32,17 @@ const createProject = async (ProjectData) => {
 
 const getAllProjects = async () => {
   try {
-    const Projects = await Project.findAll();
+    const projects = await Project.findAll();
 
-    if (Projects?.length === 0) {
+    if (projects?.length === 0) {
       return {
         status: 200,
-        Projects: Projects,
+        Projects: projects,
         message: "Actualmente no existen proyectos",
         notificationType: "info",
       };
     }
-    return { status: 200, Projects: Projects };
+    return { status: 200, projects: projects };
   } catch (error) {
     return {
       status: 500,
@@ -52,12 +53,12 @@ const getAllProjects = async () => {
   }
 };
 
-const updateProject = async (id, ProjectData) => {
+const updateProject = async (id, projectData) => {
   const transaction = await sequelize.transaction();
   try {
-    if (ProjectData.name) {
-      const response = await findProjectByName(ProjectData.name);
-      if (response.status === 200 && response.Project.id !== parseInt(id)) {
+    if (projectData.name) {
+      const response = await findProjectByName(projectData.name);
+      if (response.status === 200 && response.project.id !== parseInt(id)) {
         return {
           status: 409,
           message: "name already exists",
@@ -65,13 +66,13 @@ const updateProject = async (id, ProjectData) => {
         };
       }
     }
-    await Project.update(ProjectData, { where: { id }, transaction });
+    await Project.update(projectData, { where: { id }, transaction });
     await transaction.commit();
     const updatedProject = await findById(id);
     return {
       status: 200,
       message: "Project updated successfully",
-      user: updatedProject.Project,
+      user: updatedProject.project,
       notificationType: "success",
     };
   } catch (error) {
@@ -105,17 +106,17 @@ const deleteProject = async (id) => {
 };
 
 const findProjectByName = async (name) => {
-  const Project = await Project.findOne({ where: { name } });
-  if (!Project) {
+  const project = await Project.findOne({ where: { name } });
+  if (!project) {
     return { status: 404 };
   }
-  return { status: 200, Project };
+  return { status: 200, project };
 };
 
 const findById = async (id) => {
-  const Project = await Project.findByPk(id);
+  const project = await Project.findByPk(id);
 
-  if (!Project) {
+  if (!project) {
     return {
       status: 404,
       message: "Registro no encontrado.",
@@ -124,7 +125,7 @@ const findById = async (id) => {
   }
   return {
     status: 200,
-    Project: Project,
+    project: project,
     message: "Información del proyecto recuperada con éxito.",
     notificationType: "success",
   };

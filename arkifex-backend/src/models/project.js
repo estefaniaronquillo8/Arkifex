@@ -12,7 +12,7 @@ const Project = sequelize.define("Project", {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: 'Projects',
+      model: 'Project',
       key: "id",
     },
   },

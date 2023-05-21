@@ -69,7 +69,7 @@ const ProjectPlanningIndex = () => {
           projectPlannings.map((projectPlanning) => (
             <div
               key={projectPlanning.id}
-              className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
+              className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
             >
               <div className="col-span-1 pl-3">{projectPlanning.projectId}</div>
               <div className="col-span-1">{projectPlanning.name}</div>

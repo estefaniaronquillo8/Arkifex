@@ -39,6 +39,9 @@ const ProjectCreate = () => {
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
+
+    console.log(data);
+
     if (success) {
       showNotification(success, notificationType);
     }
@@ -64,14 +67,16 @@ const ProjectCreate = () => {
             </h1>
             <div className="mb-4">
               <label
-                htmlFor="projectId"
+                htmlFor="parentId"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Parent ID
               </label>
               <select
-                id="projectId"
+                id="parentId"
+                name="parentId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("parentId")}
               >
                 <option value="">Selecciona un proyecto</option>
                 {projects && projects.length > 0 ? (
@@ -84,8 +89,8 @@ const ProjectCreate = () => {
                   <option disabled>Cargando proyectos...</option>
                 )}
               </select>
-              {errors.projectId && (
-                <p className="text-red-800">{errors.projectId.message}</p>
+              {errors.parentId && (
+                <p className="text-red-800">{errors.parentId.message}</p>
               )}
             </div>
             <div className="mb-4">

@@ -32,7 +32,6 @@ const createProjectPlanning = async (projectPlanningData) => {
 const getAllProjectPlannings = async () => {
   try {
     const projectPlannings = await ProjectPlanning.findAll();
-
     if (projectPlannings?.length === 0) {
       return {
         status: 200,

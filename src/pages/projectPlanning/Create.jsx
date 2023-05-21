@@ -1,14 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/projectPlanning.api.routes";
-//import { getAllProjects } from "../../services/project.api.routes";
+import { getAllProjects } from "../../services/project.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 
 const ProjectPlanningCreate = () => {
   const navigate = useNavigate();
-  //const { projects, setProjects, showNotification } = useGlobalContext();
-  const { showNotification } = useGlobalContext();
+  const { projects, setProjects, showNotification } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -22,7 +21,7 @@ const ProjectPlanningCreate = () => {
     estimatedBudget: 0,
   });
 
-  /* const loadProjects = async () => {
+  const loadProjects = async () => {
     try {
       const { response } = await getAllProjects();
       if (response?.projects) {
@@ -36,12 +35,23 @@ const ProjectPlanningCreate = () => {
   // Función para cargar los proyectos
   useEffect(() => {
     loadProjects();
-  }, []); */
+  }, []);
+
+  const formatDate = (date) => {
+    return date.toISOString().slice(0, 10);
+  };
 
   const createHandler = async (data) => {
+    /* data.startDate = formatDate(new Date(data.startDate));
+    data.endDate = formatDate(new Date(data.endDate)); */
+
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
+
+    console.log(data.startDate);
+    console.log(data.endDate);
+
     if (success) {
       showNotification(success, notificationType);
     }
@@ -65,7 +75,7 @@ const ProjectPlanningCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Planificación de Proyectos
             </h1>
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <label
                 htmlFor="projectId"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -93,7 +103,7 @@ const ProjectPlanningCreate = () => {
               {errors.projectId && (
                 <p className="text-red-800">{errors.projectId.message}</p>
               )}
-            </div> */}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="name"

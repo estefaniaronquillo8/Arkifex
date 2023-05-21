@@ -6,6 +6,7 @@ export const getAllProjectPlannings = () => {
 };
 
 export const handleCreate = (projectPlanning) => {
+  console.log(projectPlanning)
   return requestHandler("post", "/projectPlannings/create", projectPlanning);
 };
 
