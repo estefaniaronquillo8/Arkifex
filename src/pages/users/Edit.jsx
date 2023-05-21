@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/user.api.routes";
+import { routesProtection } from "../../assets/routesProtection";
 
 function UserEdit() {
   const { id } = useParams();
@@ -10,6 +11,10 @@ function UserEdit() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {

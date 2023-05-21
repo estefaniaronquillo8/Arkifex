@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import { routesProtection } from "../../assets/routesProtection";
 
 const ResourceCreate = () => {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ const ResourceCreate = () => {
     unit: "",
     unitPerCost: 0,
   });
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   const createHandler = async (data) => {
     const { response, success, error, notificationType } = await handleCreate(

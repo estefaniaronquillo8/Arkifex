@@ -5,10 +5,9 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { users, setUsers } = useGlobalContext();
+  const sessionId = localStorage.getItem("token");
 
   const handleLogoutClick = () => {
-    setUsers(null);
     handleLogout(navigate);
   };
 
@@ -16,7 +15,7 @@ const Navbar = () => {
     <nav className="bg-blue-500 p-6">
       <div className="flex items-center justify-between">
         <div>
-          {!users ? (
+          {!sessionId ? (
             <>
               <Link to="/login" className="text-white mr-4">
                 Login

@@ -3,12 +3,19 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllProjects, handleDelete } from "../../services/project.api.routes";
 import { Link } from "react-router-dom";
+import { routesProtection } from "../../assets/routesProtection";
+import { useNavigate } from "react-router-dom";
 
 const ProjectIndex = () => {
   const { projects, setProjects, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   useEffect(() => {
     const fetchProjects = async () => {

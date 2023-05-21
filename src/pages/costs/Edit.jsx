@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/cost.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
+import { routesProtection } from "../../assets/routesProtection";
 
 function CostEdit() {
   const { id } = useParams();
@@ -12,6 +13,10 @@ function CostEdit() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   const loadResources = async () => {
     try {

@@ -4,6 +4,7 @@ import { handleCreate } from "../../services/project.api.routes";
 import { getAllProjects } from "../../services/project.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
+import { routesProtection } from "../../assets/routesProtection";
 
 const ProjectCreate = () => {
   const navigate = useNavigate();
@@ -18,6 +19,10 @@ const ProjectCreate = () => {
     name: "",
     description: "",
   });
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   const loadProjects = async () => {
     try {

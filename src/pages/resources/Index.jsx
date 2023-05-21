@@ -6,12 +6,19 @@ import {
   handleDelete,
 } from "../../services/resource.api.routes";
 import { Link } from "react-router-dom";
+import { routesProtection } from "../../assets/routesProtection";
+import { useNavigate } from "react-router-dom";
 
 const ResourceIndex = () => {
   const { resources, setResources, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   useEffect(() => {
     const fetchResources = async () => {

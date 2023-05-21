@@ -4,6 +4,7 @@ import { handleCreate } from "../../services/cost.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
+import { routesProtection } from "../../assets/routesProtection";
 
 const CostCreate = () => {
   const navigate = useNavigate();
@@ -20,7 +21,11 @@ const CostCreate = () => {
     frequency: "",
     status: "",
   });
-
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
+  
   const loadResources = async () => {
     try {
       const { response } =

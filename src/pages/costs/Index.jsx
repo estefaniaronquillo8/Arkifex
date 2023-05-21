@@ -3,12 +3,19 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllCosts, handleDelete } from "../../services/cost.api.routes";
 import { Link } from "react-router-dom";
+import { routesProtection } from "../../assets/routesProtection";
+import { useNavigate } from "react-router-dom";
 
 const CostIndex = () => {
   const { costs, setCosts, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
 
   useEffect(() => {
     const fetchCosts = async () => {

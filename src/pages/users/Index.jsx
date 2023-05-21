@@ -3,13 +3,20 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllUsers, handleDelete } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
+import { routesProtection } from "../../assets/routesProtection";
+import { useNavigate } from "react-router-dom";
 
 const UserIndex = () => {
   const { users, setUsers, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(!routesProtection()) navigate("/login");
+  }, []);
+  
   useEffect(() => {
     const fetchUsers = async () => {
       const { response, success, error, notificationType } = await getAllUsers();
