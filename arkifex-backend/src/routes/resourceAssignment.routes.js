@@ -3,10 +3,10 @@ const router = express.Router();
 const { resourceAssignmentController } = require('../controllers');
 const { isAuthenticated } = require('../middlewares/authentication');
 
-router.get('/assignments', isAuthenticated, resourceAssignmentController.getAllAsignments);
-router.post('/assignments/create', isAuthenticated, resourceAssignmentController.createResourceAssignment);
-router.get('/assignments/edit/:id', isAuthenticated, resourceAssignmentController.editAssigments);
-router.put('/assignments/edit/:id', isAuthenticated, resourceAssignmentController.updateResourceAssignment);
-router.delete("/assignments/delete/:id", isAuthenticated, resourceAssignmentController.deleteAssignment);
+router.get('/resourceAssignments', isAuthenticated, resourceAssignmentController.getResourceAssignments);
+router.post('/resourceAssignments/create', isAuthenticated,  resourceAssignmentController.create);
+router.get('/resourceAssignments/edit/:id', isAuthenticated,  resourceAssignmentController.edit);
+router.put('/resourceAssignments/edit/:id', isAuthenticated,  resourceAssignmentController.update);
+router.delete("/resourceAssignments/delete/:id", isAuthenticated,  resourceAssignmentController.delete);
 
 module.exports = router;

@@ -4,14 +4,14 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import {
   handleEdit,
   handleUpdate,
-} from "../../services/project.api.routes";
+} from "../../services/location.api.routes";
 import { getAllProjects } from "../../services/project.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
 
-function ProjectEdit() {
+function LocationEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { project, setProject, showNotification } =
+  const { location, setLocation, showNotification } =
   useGlobalContext();
   const { projects, setProjects } = useGlobalContext();
   const [success, setSuccess] = useState();
@@ -39,19 +39,19 @@ function ProjectEdit() {
   }, []);
 
   useEffect(() => {
-    const fetchProject = async () => {
+    const fetchLocation = async () => {
       const { response, success, error, notificationType } = await handleEdit(
         id
       );
-      if (response?.project) {
-        setProject(response.project);
+      if (response?.location) {
+        setLocation(response.location);
       }
       setError(error);
       setSuccess(success);
       setNotificationType(notificationType);
     };
 
-    fetchProject();
+    fetchLocation();
   }, []);
 
   useEffect(() => {
@@ -68,26 +68,26 @@ function ProjectEdit() {
     event.preventDefault();
     const { success, error, notificationType } = await handleUpdate(
       id,
-      project
+      location
     );
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/projects");
+    navigate("/locations");
   };
 
   const handleChange = (event) => {
-    setProject({
-      ...project,
+    setLocation({
+      ...location,
       [event.target.name]: event.target.value,
     });
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Editar project</h2>
-      {project && (
+      <h2 className="text-4xl font-semibold mb-6">Editar location</h2>
+      {location && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
@@ -101,7 +101,7 @@ function ProjectEdit() {
                 <select
                   id="projectId"
                   name="projectId"
-                  value={project.projectId}
+                  value={location.projectId}
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
@@ -118,37 +118,68 @@ function ProjectEdit() {
               </div>
               <div>
                 <label
-                  htmlFor="name"
+                  htmlFor="address"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Nombre:
+                  Dirección:
                 </label>
                 <input
-                  id="name"
+                  id="address"
                   type="text"
-                  name="name"
-                  value={project.name}
+                  name="address"
+                  value={location.address}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>              
+              <div>
+                <label
+                  htmlFor="latitude"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Latitud:
+                </label>
+                <input
+                  id="latitude"
+                  type="number"
+                  name="latitude"
+                  value={location.latitude}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="description"
+                  htmlFor="longitude"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Descripción:
+                  Longitud:
                 </label>
                 <input
-                  id="description"
-                  type="text"
-                  name="description"
-                  value={project.description}
+                  id="longitude"
+                  type="number"
+                  name="longitude"
+                  value={location.longitude}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
-              
+              <div>
+                <label
+                  htmlFor="area"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Area:
+                </label>
+                <input
+                  id="area"
+                  type="number"
+                  name="area"
+                  value={location.area}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
             </div>
             <button
               type="submit"
@@ -163,4 +194,4 @@ function ProjectEdit() {
   );
 }
 
-export default ProjectEdit;
+export default LocationEdit;

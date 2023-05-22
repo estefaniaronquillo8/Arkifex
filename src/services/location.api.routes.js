@@ -1,4 +1,4 @@
-// src/services/user.api.routes.js
+// src/services/location.api.routes.js
 import { requestHandler } from "./requestService";
 
 export const getAllLocations = () => {
@@ -6,6 +6,7 @@ export const getAllLocations = () => {
 };
 
 export const handleCreate = (location) => {
+  console.log(location)
   return requestHandler("post", "/locations/create", location);
 };
 

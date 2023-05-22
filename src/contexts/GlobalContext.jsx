@@ -56,6 +56,24 @@ export const GlobalProvider = ({ children }) => {
     estimatedBudget: 0,
   });
 
+  const [locations, setLocations] = useState([]);
+  const [location, setLocation] = useState({
+    id: 0,
+    projectId: 0,
+    address: "",
+    latitude: 0,
+    longitude: 0,
+    area: 0,
+  });
+
+  const [resourceAssignments, setResourceAssignments] = useState([]);
+  const [resourceAssignment, setResourceAssignment] = useState({
+    id: 0,
+    resourceId: 0,
+    projectId: 0,
+    quantity: 0,
+  });
+
   const [lastNotification, setLastNotification] = useState(null);
 
   const showNotification = (currentNotification, type) => {
@@ -110,7 +128,16 @@ export const GlobalProvider = ({ children }) => {
     setProjects,
     project,
     setProject,
-    
+    // Locations
+    locations,
+    setLocations,
+    location,
+    setLocation,
+    // Resource Assignments
+    resourceAssignments,
+    setResourceAssignments,
+    resourceAssignment,
+    setResourceAssignment,
     
     showNotification,
   };

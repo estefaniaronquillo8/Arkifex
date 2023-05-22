@@ -10,9 +10,14 @@ import { ResourceCreate, ResourceIndex, ResourceEdit } from './pages/resources/R
 // Cost
 import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
 // Project
-import { ProjectCreate, ProjectIndex } from './pages/projects/Projects';
+import { ProjectCreate, ProjectIndex, ProjectEdit } from './pages/projects/Projects';
 // ProjectPlanning
 import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit } from './pages/projectPlanning/ProjectPlanning';
+// Locations
+import { LocationCreate, LocationIndex, LocationEdit } from './pages/location/Location';
+// ResourceAssignment
+//import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from './pages/resourceAssignment/ResourceAssignment';
+import { ResourceAssignmentCreate, ResourceAssignmentIndex } from './pages/resourceAssignment/ResourceAssignment';
 
 function App() {
   return (
@@ -41,7 +46,15 @@ function App() {
 
           <Route path="/projects" element={<ProjectIndex />} />
           <Route path="/projects/create" element={<ProjectCreate />} />
+          <Route path="/projects/edit/:id" element={<ProjectEdit />} />
           
+          <Route path="/locations" element={<LocationIndex />} />
+          <Route path="/locations/create" element={<LocationCreate />} />
+          <Route path="/locations/edit/:id" element={<LocationEdit />} />          
+
+          <Route path="/resourceAssignments" element={<ResourceAssignmentIndex />} />
+          <Route path="/resourceAssignments/create" element={<ResourceAssignmentCreate />} />
+
         </Routes>
         <ToastContainer />
       </div>

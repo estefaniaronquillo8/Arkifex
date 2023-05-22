@@ -1,30 +1,41 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { handleCreate } from "../../services/location.api.routes";
+import { handleCreate } from "../../services/resourceAssignment.api.routes";
 import { getAllProjects } from "../../services/project.api.routes";
+import { getAllResources } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
 
-const LocationCreate = () => {
+const ResourceAssignmentCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  const { projects, setProjects, resources, setResources, showNotification } = useGlobalContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
+    resourceId: 0,
     projectId: 0,
-    address: "",
-    latitude: 0,
-    longitude: 0,
-    area: 0,
+    quantity: 0,
   });
   
   useEffect(() => {
     if(!routesProtection()) navigate("/login");
   }, []);
+
+  const loadResources = async () => {
+    try {
+      const { response } =
+        await getAllResources();
+      if (response?.resources) {
+        setResources(response.resources);
+      }
+    } catch (error) {
+      console.error("Error al cargar los recursos:", error);
+    }
+  };
   
   const loadProjects = async () => {
     try {
@@ -39,6 +50,7 @@ const LocationCreate = () => {
 
   // Función para cargar los proyectos
   useEffect(() => {
+    loadResources();
     loadProjects();
   }, []);
 
@@ -46,9 +58,6 @@ const LocationCreate = () => {
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
-
-    console.log(data.startDate);
-    console.log(data.endDate);
 
     if (success) {
       showNotification(success, notificationType);
@@ -59,7 +68,7 @@ const LocationCreate = () => {
     }
 
     if (response?.status === 200) {
-      navigate("/locations");
+      navigate("/resourceAssignments");
     }
   };
 
@@ -71,8 +80,37 @@ const LocationCreate = () => {
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
             <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Localización
+              Creación de Resource Assignment
             </h1>
+            <div className="mb-4">
+              <label
+                htmlFor="resourceId"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Recurso
+              </label>
+              <select
+                id="resourceId"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("resourceId", {
+                  required: "El campo es requerido.",
+                })}
+              >
+                <option value="">Selecciona un recurso</option>
+                {resources && resources.length > 0 ? (
+                  resources.map((resource) => (
+                    <option key={resource.id} value={resource.id}>
+                      {resource.name}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>Cargando recursos...</option>
+                )}
+              </select>
+              {errors.resourceId && (
+                <p className="text-red-800">{errors.resourceId.message}</p>
+              )}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="projectId"
@@ -104,104 +142,28 @@ const LocationCreate = () => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="address"
+                htmlFor="quantity"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Dirección
-              </label>
-              <input
-                type="text"
-                id="address"
-                placeholder="Dirección"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("address", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 6,
-                    message: "La dirección debe tener al menos 6 caracteres.",
-                  },
-                })}
-              />
-              {errors.address && (
-                <p className="text-red-800">{errors.address.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="latitude"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Latitud
+                Cantidad
               </label>
               <input
                 type="number"
-                id="latitude"
+                id="quantity"
                 min={0}
                 step="0.01"
-                placeholder="Latitud"
+                placeholder="quantity"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("latitude", {
+                {...register("quantity", {
                   required: "El campo es requerido.",
                   minLength: {
-                    value: 2,
-                    message: "La latitud debe tener al menos 2 caracteres.",
+                    value: 1,
+                    message: "La cantidad debe tener al menos 1 caracter.",
                   },
                 })}
               />
-              {errors.latitude && (
-                <p className="text-red-800">{errors.latitude.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="longitude"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Longitud
-              </label>
-              <input
-                type="number"
-                id="longitude"
-                min={0}
-                step="0.01"
-                placeholder="Longitud"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("longitude", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 2,
-                    message: "La longitud debe tener al menos 2 caracteres.",
-                  },
-                })}
-              />
-              {errors.longitude && (
-                <p className="text-red-800">{errors.longitude.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="area"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Area
-              </label>
-              <input
-                type="number"
-                id="area"
-                min={0}
-                step="0.01"
-                placeholder="Area"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("area", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 2,
-                    message: "La dirección debe tener al menos 2 caracteres.",
-                  },
-                })}
-              />
-              {errors.area && (
-                <p className="text-red-800">{errors.area.message}</p>
+              {errors.quantity && (
+                <p className="text-red-800">{errors.quantity.message}</p>
               )}
             </div>
             <div className="flex flex-col items-center justify-center">
@@ -209,7 +171,7 @@ const LocationCreate = () => {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear localización
+                Crear resource assignment
               </button>
             </div>
           </form>
@@ -219,4 +181,4 @@ const LocationCreate = () => {
   );
 };
 
-export default LocationCreate;
+export default ResourceAssignmentCreate;

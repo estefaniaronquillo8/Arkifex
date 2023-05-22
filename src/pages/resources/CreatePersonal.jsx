@@ -1,14 +1,13 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { routesProtection } from "../../assets/routesProtection";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const ResourceCreate = () => {
+const ResourceCreatePersonal = () => {
   const navigate = useNavigate();
   const { showNotification } = useGlobalContext();
-  const { state } = useLocation();
   const {
     register,
     handleSubmit,
@@ -22,18 +21,16 @@ const ResourceCreate = () => {
     unit: "",
     unitPerCost: 0,
   });
-  
+
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
 
   const createHandler = async (data) => {
-    if (state.type === "Material") {
-      data.role = "";
-    } else if (state.type === "Personal") {
-      data.quantity = 1;
-      data.unit = "horas";
-    }
+    data.type = "Personal";
+    data.quantity = 1;
+    data.unit = "horas";
+
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -58,7 +55,7 @@ const ResourceCreate = () => {
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
             <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Recursos
+              Creación de Personal
             </h1>
             <div className="mb-4">
               <label
@@ -70,7 +67,7 @@ const ResourceCreate = () => {
               <input
                 type="text"
                 id="name"
-                placeholder="Nombre del Recurso"
+                placeholder="Nombre del personal"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("name", {
                   required: "El campo es requerido.",
@@ -82,28 +79,6 @@ const ResourceCreate = () => {
               />
               {errors.name && (
                 <p className="text-red-800">{errors.name.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="type"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Tipo
-              </label>
-              <select
-                id="type"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("type", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona un tipo</option>
-                <option value="Material">Material</option>
-                <option value="Personal">Personal</option>
-              </select>
-              {errors.type && (
-                <p className="text-red-800">{errors.type.message}</p>
               )}
             </div>
             <div className="mb-4">
@@ -132,58 +107,10 @@ const ResourceCreate = () => {
             </div>
             <div className="mb-4">
               <label
-                htmlFor="quantity"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Cantidad
-              </label>
-              <input
-                type="number"
-                id="quantity"
-                min={1}
-                placeholder="Cantidad"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("quantity", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 1,
-                    message: "La cantidad debe tener al menos 1 valor.",
-                  },
-                })}
-              />
-              {errors.quantity && (
-                <p className="text-red-800">{errors.quantity.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="unit"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Unidad
-              </label>
-              <select
-                id="unit"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("unit", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona una unidad</option>
-                <option value="kg">kg</option>
-                <option value="m²">m²</option>
-                <option value="horas">horas</option>
-              </select>
-              {errors.unit && (
-                <p className="text-red-800">{errors.unit.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
                 htmlFor="costPerUnit"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Costo por Unidad
+                Pago por horas
               </label>
               <input
                 type="number"
@@ -208,7 +135,7 @@ const ResourceCreate = () => {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear Recurso
+                Añadir Personal
               </button>
             </div>
           </form>
@@ -218,4 +145,4 @@ const ResourceCreate = () => {
   );
 };
 
-export default ResourceCreate;
+export default ResourceCreatePersonal;

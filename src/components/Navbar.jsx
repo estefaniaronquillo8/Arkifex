@@ -39,7 +39,13 @@ const Navbar = () => {
                 Projects
               </Link>
               <Link to="/projectPlannings" className="text-white mr-4">
-              Projects Plannings
+                Projects Plannings
+              </Link>
+              <Link to="/locations" className="text-white mr-4">
+                Locations
+              </Link>
+              <Link to="/resourceAssignments" className="text-white mr-4">
+                Resource Assignments
               </Link>
               <button onClick={handleLogoutClick} className="text-white">
                 Logout

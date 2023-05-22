@@ -17,7 +17,7 @@ const ResourceIndex = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
 
   useEffect(() => {
@@ -60,12 +60,25 @@ const ResourceIndex = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-4xl font-semibold mb-6">Recursos</h1>
-      <Link
+      {/* <Link
         to="/resources/create"
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
       >
         Crear Recurso
+      </Link> */}
+      <Link
+        to={{ pathname: "/resources/create", state: { type: "Material" } }}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+      >
+        Crear Material
       </Link>
+      <Link
+        to={{ pathname: "/resources/create", state: { type: "Personal" } }}
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+      >
+        Crear Personal
+      </Link>
+
       <div className="bg-white shadow-md rounded-lg">
         <div className="grid grid-cols-8 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 pl-2">Nombre</div>

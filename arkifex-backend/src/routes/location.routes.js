@@ -4,9 +4,9 @@ const { locationController } = require('../controllers');
 const { isAuthenticated } = require('../middlewares/authentication');
 
 router.get('/locations', isAuthenticated, locationController.getLocations);
-router.post('/locations/create', isAuthenticated, locationController.createLocation);
-router.get('/locations/edit/:id', isAuthenticated, locationController.editLocations);
-router.put('/locations/edit/:id', isAuthenticated, locationController.updateLocation);
-router.delete("/locations/delete/:id", isAuthenticated, locationController.deleteLocation);
+router.post('/locations/create', isAuthenticated,  locationController.create);
+router.get('/locations/edit/:id', isAuthenticated,  locationController.edit);
+router.put('/locations/edit/:id', isAuthenticated,  locationController.update);
+router.delete("/locations/delete/:id", isAuthenticated,  locationController.delete);
 
 module.exports = router;

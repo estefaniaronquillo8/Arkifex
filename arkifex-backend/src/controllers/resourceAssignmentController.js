@@ -1,40 +1,32 @@
 const {
   createResourceAssignment,
+  getAllResourceAssignments,
   updateResourceAssignment,
-  deleteAssignment,
-  getAllAsignments,
-  findAssignmentByResourceProject,
-  findAssignmentByProject,
+  deleteResourceAssignment,
   findById,
-} = require("../repositories/resourceAssignmentRepository.js");
+} = require("../repositories/resourceAssignmentRepository");
 
-
-exports.getAllAsignments = async (req, res) => {
-  const response = await getAllAsignments();
+exports.getResourceAssignments = async (req, res) => {
+  const response = await getAllResourceAssignments();
   return res.status(response.status).json(response);
 };
 
-exports.findAssignmentByProject = async (req, res) => {
-  const response = await findAssignmentByProject(req.params.projectId);
-  return res.status(response.status).json(response);
-};
-
-exports.editAssigments = async (req, res) => {
+exports.edit = async (req, res) => {
   const response = await findById(req.params.id);
   return res.status(response.status).json(response);
 };
 
-exports.updateResourceAssignment = async (req, res) => {
+exports.update = async (req, res) => {
   const response = await updateResourceAssignment(req.params.id, req.body);
   return res.status(response.status).json(response);
 };
 
-exports.createResourceAssignment = async (req, res) => {
+exports.create = async (req, res) => {
   const response = await createResourceAssignment(req.body);
   return res.status(response.status).json(response);
 };
 
-exports.deleteAssignment = async (req, res) => {
-  const response = await deleteAssignment(req.params.id);
+exports.delete = async (req, res) => {
+  const response = await deleteResourceAssignment(req.params.id);
   return res.status(response.status).json(response);
 };
