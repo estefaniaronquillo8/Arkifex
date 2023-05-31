@@ -2,10 +2,10 @@ import { useNavigate } from "react-router-dom";
 
 export const routesProtection = () => {
   /* const navigate = useNavigate();
-    const sessionId = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     
-    if (!sessionId) navigate("/login"); */
+    if (!token) navigate("/login"); */
 
-  const sessionId = localStorage.getItem("token");
-  return sessionId !== null;
+  const token = localStorage.getItem("token");
+  return token !== null;
 };

@@ -2,27 +2,46 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllCosts, handleDelete } from "../../services/cost.api.routes";
+import { getAllResources } from "../../services/resource.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
 const CostIndex = () => {
-  const { costs, setCosts, showNotification } = useGlobalContext();
+  const { costs, setCosts, showNotification, resources, setResources } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
   const navigate = useNavigate();
-  
+  // Guardar el token del Local Storage en una variable
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
+    // Limpieza del localStorage
+    localStorage.clear();
+    if (token !== null) {
+      // Volver a guardar el token en el localStorage
+      localStorage.setItem("token", token);
+    }
   }, []);
 
   useEffect(() => {
-    const fetchCosts = async () => {
-      const { response, success, error, notificationType } =
-        await getAllCosts();
-      if (response?.costs) {
-        setCosts(response.costs);
+    const fetchResourcesAndCosts = async () => {
+      const { response: resourceResponse } = await getAllResources();
+      const {
+        response: costResponse,
+        success,
+        error,
+        notificationType,
+      } = await getAllCosts();
+
+      if (resourceResponse?.resources) {
+        setResources(resourceResponse.resources);
+      }
+
+      if (costResponse?.costs) {
+        setCosts(costResponse.costs);
       }
 
       setError(error);
@@ -30,7 +49,7 @@ const CostIndex = () => {
       setNotificationType(notificationType);
     };
 
-    fetchCosts();
+    fetchResourcesAndCosts();
   }, []);
 
   useEffect(() => {
@@ -73,33 +92,43 @@ const CostIndex = () => {
           <div className="col-span-2">Acciones</div>
         </div>
         {costs &&
-          costs.map((cost) => (
-            <div
-              key={cost.id}
-              className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
-            >
-              <div className="col-span-1 pl-3">{cost.resourceId}</div>
-              <div className="col-span-1">{cost.description}</div>
-              <div className="col-span-1">{cost.amount}</div>
-              <div className="col-span-1">{cost.frequency}</div>
-              <div className="col-span-1">{cost.status}</div>
+          costs.map((cost) => {
+            // Buscar el recurso correspondiente a este costo
+            const resource = resources.find(
+              (resource) => resource.id === cost.resourceId
+            );
 
-              <div className="col-span-2">
-                <Link
-                  to={`/costs/edit/${cost.id}`}
-                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                >
-                  Editar
-                </Link>
-                <button
-                  onClick={async () => await deleteHandler(cost.id)}
-                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Eliminar
-                </button>
+            return (
+              <div
+                key={cost.id}
+                className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
+              >
+                {/* Mostrar el nombre del recurso, o 'Unknown' si no se encuentra */}
+                <div className="col-span-1 pl-3">
+                  {resource ? resource.name : "Unknown"}
+                </div>
+                <div className="col-span-1">{cost.description}</div>
+                <div className="col-span-1">{cost.amount}</div>
+                <div className="col-span-1">{cost.frequency}</div>
+                <div className="col-span-1">{cost.status}</div>
+
+                <div className="col-span-2">
+                  <Link
+                    to={`/costs/edit/${cost.id}`}
+                    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Editar
+                  </Link>
+                  <button
+                    onClick={async () => await deleteHandler(cost.id)}
+                    className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Eliminar
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </div>
   );

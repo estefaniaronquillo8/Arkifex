@@ -13,9 +13,9 @@ function CostEdit() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
 
   const loadResources = async () => {
@@ -60,6 +60,10 @@ function CostEdit() {
     }
   }, [success, error, notificationType, showNotification]);
 
+  const handleBack = () => {
+    navigate("/resources");
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { success, error, notificationType } = await handleUpdate(id, cost);
@@ -67,7 +71,7 @@ function CostEdit() {
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/costs");
+    navigate("/resources");
   };
 
   const handleChange = (event) => {
@@ -81,31 +85,6 @@ function CostEdit() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
-              <div>
-                <label
-                  htmlFor="resourceId"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Recurso:
-                </label>
-                <select
-                  id="resourceId"
-                  name="resourceId"
-                  value={cost.resourceId}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  {resources && resources.length > 0 ? (
-                    resources.map((resource) => (
-                      <option key={resource.id} value={resource.id}>
-                        {resource.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>Cargando recursos...</option>
-                  )}
-                </select>
-              </div>
               <div>
                 <label
                   htmlFor="description"
@@ -179,9 +158,15 @@ function CostEdit() {
             </div>
             <button
               type="submit"
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex justify-center py-2 px-4 mr-5 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Guardar
+            </button>
+            <button
+              onClick={handleBack}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-auto mb-4"
+            >
+              Volver
             </button>
           </form>
         </div>

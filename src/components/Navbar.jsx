@@ -32,8 +32,8 @@ const Navbar = () => {
               <Link to="/resources" className="text-white mr-4">
                 Resources
               </Link>
-              <Link to="/costs" className="text-white mr-4">
-                Costs
+              <Link to="/resourceAssignments" className="text-white mr-4">
+                Resource Assignments
               </Link>
               <Link to="/projects" className="text-white mr-4">
                 Projects
@@ -44,8 +44,11 @@ const Navbar = () => {
               <Link to="/locations" className="text-white mr-4">
                 Locations
               </Link>
-              <Link to="/resourceAssignments" className="text-white mr-4">
-                Resource Assignments
+
+
+
+              <Link to="/costs" className="text-white mr-4 ml-48">
+                Costs
               </Link>
               <button onClick={handleLogoutClick} className="text-white">
                 Logout

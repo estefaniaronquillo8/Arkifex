@@ -19,7 +19,7 @@ const Report = sequelize.define("Report", {
   },
   title: { type: DataTypes.STRING, allowNull: false },
   content: { type: DataTypes.TEXT, allowNull: false },
-  date: { type: DataTypes.DATE, allowNull: false },
+  date: { type: DataTypes.DATEONLY, allowNull: false },
 });
 
 module.exports = Report;

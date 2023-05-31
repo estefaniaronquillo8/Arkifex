@@ -22,8 +22,8 @@ const ProjectPlanning = sequelize.define("ProjectPlanning", {
     allowNull: false,
     unique: true,
   },
-  startDate: { type: DataTypes.DATE, allowNull: false },
-  endDate: { type: DataTypes.DATE, allowNull: false },
+  startDate: { type: DataTypes.DATEONLY, allowNull: false },
+  endDate: { type: DataTypes.DATEONLY, allowNull: false },
   estimatedBudget: { type: DataTypes.FLOAT, allowNull: false },
 });
 

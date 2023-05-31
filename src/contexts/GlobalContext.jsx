@@ -17,6 +17,8 @@ export const GlobalProvider = ({ children }) => {
     email: "",
   });
 
+  const [selectedResourceId, setSelectedResourceId] = useState(null);
+  
   const [resources, setResources] = useState([]);
   const [resource, setResource] = useState({
     id: 0,
@@ -37,7 +39,9 @@ export const GlobalProvider = ({ children }) => {
     frequency: "",
     status: "",
   });
-
+  
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState({
     id: 0,
@@ -113,6 +117,10 @@ export const GlobalProvider = ({ children }) => {
     setResource,
     resources,
     setResources,
+
+    selectedResourceId,
+    setSelectedResourceId,
+
     // Costs
     cost,
     setCost,
@@ -128,6 +136,10 @@ export const GlobalProvider = ({ children }) => {
     setProjects,
     project,
     setProject,
+
+    selectedProjectId, 
+    setSelectedProjectId,
+
     // Locations
     locations,
     setLocations,

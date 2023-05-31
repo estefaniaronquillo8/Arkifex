@@ -41,11 +41,15 @@ const ProjectCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
+    if (!data.parentId){
+      data.parentId = null;
+    }
+       
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
 
-    console.log(data);
+    console.log("DATA DEL PROJECT",data);
 
     if (success) {
       showNotification(success, notificationType);

@@ -11,9 +11,19 @@ function ResourceEdit() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
+  const [resourceType, setResourceType] = useState("");
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
+
+    // Get the resource type from local storage
+    const typeFromLocalStorage = localStorage.getItem("type");
+    if (!typeFromLocalStorage) {
+      navigate("/resources");
+    } else {
+      setResourceType(typeFromLocalStorage);
+    }
   }, []);
 
   useEffect(() => {
@@ -61,7 +71,16 @@ function ResourceEdit() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Editar recurso</h2>
+      {resourceType === "Personal" && (
+        <>
+          <h2 className="text-4xl font-semibold mb-6">Editar Personal</h2>
+        </>
+      )}
+      {resourceType === "Material" && (
+        <>
+          <h2 className="text-4xl font-semibold mb-6">Editar Material</h2>
+        </>
+      )}
       {resource && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -82,77 +101,83 @@ function ResourceEdit() {
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
+              {resourceType === "Personal" && (
+                <>
+                  <div>
+                    <label
+                      htmlFor="role"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Rol:
+                    </label>
+                    <input
+                      id="role"
+                      type="text"
+                      name="role"
+                      value={resource.role}
+                      onChange={handleChange}
+                      className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                    />
+                  </div>
+                </>
+              )}
+              {resourceType === "Material" && (
+                <>
+                  <div>
+                    <label
+                      htmlFor="quantity"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Cantidad:
+                    </label>
+                    <input
+                      id="quantity"
+                      type="number"
+                      name="quantity"
+                      value={resource.quantity}
+                      onChange={handleChange}
+                      className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="unit"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Unidad:
+                    </label>
+                    <input
+                      id="unit"
+                      type="text"
+                      name="unit"
+                      value={resource.unit}
+                      onChange={handleChange}
+                      className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                    />
+                  </div>
+                </>
+              )}
               <div>
-                <label
-                  htmlFor="type"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Tipo:
-                </label>
-                <input
-                  id="type"
-                  type="text"
-                  name="type"
-                  value={resource.type}
-                  onChange={handleChange}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="role"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Rol:
-                </label>
-                <input
-                  id="role"
-                  type="text"
-                  name="role"
-                  value={resource.role}
-                  onChange={handleChange}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="quantity"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Cantidad:
-                </label>
-                <input
-                  id="quantity"
-                  type="number"
-                  name="quantity"
-                  value={resource.quantity}
-                  onChange={handleChange}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="unit"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Unidad:
-                </label>
-                <input
-                  id="unit"
-                  type="text"
-                  name="unit"
-                  value={resource.unit}
-                  onChange={handleChange}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="costPerUnit"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Costo por Unidad:
-                </label>
+                {resourceType === "Personal" && (
+                  <>
+                    <label
+                      htmlFor="costPerUnit"
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                      Pago por hora
+                    </label>
+                  </>
+                )}
+                {resourceType === "Material" && (
+                  <>
+                    <label
+                      htmlFor="costPerUnit"
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                    >
+                      Costo por Unidad
+                    </label>
+                  </>
+                )}
                 <input
                   id="costPerUnit"
                   type="number"

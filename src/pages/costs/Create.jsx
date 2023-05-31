@@ -8,7 +8,13 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const CostCreate = () => {
   const navigate = useNavigate();
-  const { resources, setResources, showNotification } = useGlobalContext();
+  const {
+    resources,
+    setResources,
+    showNotification,
+    selectedResourceId,
+    setSelectedResourceId,
+  } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -21,15 +27,15 @@ const CostCreate = () => {
     frequency: "",
     status: "",
   });
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    console.log(selectedResourceId);
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
+
   const loadResources = async () => {
     try {
-      const { response } =
-        await getAllResources();
+      const { response } = await getAllResources();
       if (response?.resources) {
         setResources(response.resources);
       }
@@ -43,7 +49,13 @@ const CostCreate = () => {
     loadResources();
   }, []);
 
+  const handleBack = () => {
+    navigate("/resources");
+  };
+
   const createHandler = async (data) => {
+    console.log("Console antes de guardar el dato", selectedResourceId);
+    data.resourceId = selectedResourceId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -55,8 +67,10 @@ const CostCreate = () => {
       showNotification(error, notificationType);
     }
 
+    setSelectedResourceId(0);
+    console.log("Console despues de guardar el dato", selectedResourceId);
     if (response?.status === 200) {
-      navigate("/costs");
+      navigate("/resources");
     }
   };
 
@@ -70,7 +84,7 @@ const CostCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Costos
             </h1>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="resourceId"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -98,7 +112,7 @@ const CostCreate = () => {
               {errors.resourceId && (
                 <p className="text-red-800">{errors.resourceId.message}</p>
               )}
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="description"
@@ -201,6 +215,12 @@ const CostCreate = () => {
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
                 Crear Costo
+              </button>
+              <button
+                onClick={handleBack}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-auto mb-4"
+              >
+                Volver
               </button>
             </div>
           </form>

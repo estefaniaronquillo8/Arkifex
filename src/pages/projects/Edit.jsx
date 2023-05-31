@@ -91,7 +91,7 @@ function ProjectEdit() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
-              <div>
+              {/* <div>
                 <label
                   htmlFor="projectId"
                   className="block text-sm font-medium text-gray-700"
@@ -115,7 +115,7 @@ function ProjectEdit() {
                     <option disabled>Cargando recursos...</option>
                   )}
                 </select>
-              </div>
+              </div> */}
               <div>
                 <label
                   htmlFor="name"

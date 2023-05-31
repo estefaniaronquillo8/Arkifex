@@ -21,7 +21,7 @@ const createProject = async (projectData) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.log(error)
+    console.log("ERROR DEL CREATE PROJECT",error)
     return {
       status: 500,
       message: "Internal server error",

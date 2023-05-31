@@ -42,7 +42,7 @@ const getAllResourceAssignments = async () => {
       return {
         status: 200,
         resourceAssignments: resourceAssignments,
-        message: "Actualmente no existen lugares",
+        message: "Actualmente no existen resourceAssignments",
         notificationType: "info",
       };
     }

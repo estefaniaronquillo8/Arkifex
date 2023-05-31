@@ -6,11 +6,11 @@ import Navbar from "./components/Navbar";
 // User
 import { Login, Register, UserEdit, UserIndex } from './pages/users/Users';
 // Resource
-import { ResourceCreate, ResourceIndex, ResourceEdit } from './pages/resources/Resources';
+import { ResourceCreate, ResourceIndex, ResourceEdit, ResourceDetails } from './pages/resources/Resources';
 // Cost
 import { CostCreate, CostIndex, CostEdit } from './pages/costs/Costs';
 // Project
-import { ProjectCreate, ProjectIndex, ProjectEdit } from './pages/projects/Projects';
+import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails } from './pages/projects/Projects';
 // ProjectPlanning
 import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit } from './pages/projectPlanning/ProjectPlanning';
 // Locations
@@ -35,6 +35,7 @@ function App() {
           <Route path="/resources" element={<ResourceIndex />} />
           <Route path="/resources/create" element={<ResourceCreate />} />
           <Route path="/resources/edit/:id" element={<ResourceEdit />} />
+          <Route path="/resources/details/:id" element={<ResourceDetails />} />
           
           <Route path="/costs" element={<CostIndex />} />
           <Route path="/costs/create" element={<CostCreate />} />
@@ -47,6 +48,7 @@ function App() {
           <Route path="/projects" element={<ProjectIndex />} />
           <Route path="/projects/create" element={<ProjectCreate />} />
           <Route path="/projects/edit/:id" element={<ProjectEdit />} />
+          <Route path="/projects/details/:id" element={<ProjectDetails />} />
           
           <Route path="/locations" element={<LocationIndex />} />
           <Route path="/locations/create" element={<LocationCreate />} />
