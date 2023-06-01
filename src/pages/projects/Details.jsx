@@ -1,5 +1,5 @@
 // src/pages/ProjectDetails.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { routesProtection } from "../../assets/routesProtection";
@@ -8,8 +8,14 @@ import { getAllProjectPlannings } from "../../services/projectPlanning.api.route
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import 'tailwindcss/tailwind.css';
 
-function ProjectDetails() {
+mapboxgl.accessToken = 'pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ'; // Replace with your Mapbox access token
+
+
+const ProjectDetails = () =>{
   const { id } = useParams();
   const navigate = useNavigate();
   const [projectPlannings, setProjectPlannings] = useState([]);
@@ -26,6 +32,8 @@ function ProjectDetails() {
   } = useGlobalContext();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
+  const mapContainer = useRef(null);
+    const map = useRef(null);
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
@@ -171,6 +179,23 @@ function ProjectDetails() {
   const locationButtonText = locationForThisProjectExists
     ? "Editar locación"
     : "Crear locación";
+    
+    useEffect(() => {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/mapbox/satellite-v9',
+        center: [100, 10], // Specify the initial map center
+        zoom: 18 // Specify the initial zoom level
+      });
+  
+      return () => {
+        if (map.current) {
+          map.current.remove();
+        }
+      };
+    }, []);
+    
+  
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -202,28 +227,36 @@ function ProjectDetails() {
             >
               Eliminar
             </button>
-
+            
             {locationForThisProject && (
-              <div className="flex space-x-4">
-                <h1 className="text-4xl font-semibold mb-6">
-                  Localización del Proyecto
-                </h1>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                  <p>{locationForThisProject.address}</p>
+              <div className="flex space-x-8">   
+                
+                <div>  
+                  <h1 className="text-4xl font-semibold mb-6">
+                    Localización del Proyecto
+                  </h1>
+                    <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
+                    <p>{locationForThisProject.address}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
+                    <p>{locationForThisProject.latitude}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
+                    <p>{locationForThisProject.longitude}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Area</h2>
+                    <p>{locationForThisProject.area}</p>
+                  </div>
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                  <p>{locationForThisProject.latitude}</p>
+                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
+                  <div ref={mapContainer} className="w-full h-full" />
                 </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                  <p>{locationForThisProject.longitude}</p>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Area</h2>
-                  <p>{locationForThisProject.area}</p>
-                </div>
+              
               </div>
             )}
 

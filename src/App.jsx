@@ -14,7 +14,7 @@ import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails } from './page
 // ProjectPlanning
 import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit } from './pages/projectPlanning/ProjectPlanning';
 // Locations
-import { LocationCreate, LocationIndex, LocationEdit } from './pages/location/Location';
+import { LocationCreate, LocationIndex, LocationEdit,MapPage } from './pages/location/Location';
 // ResourceAssignment
 //import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from './pages/resourceAssignment/ResourceAssignment';
 import { ResourceAssignmentCreate, ResourceAssignmentIndex } from './pages/resourceAssignment/ResourceAssignment';
@@ -52,7 +52,8 @@ function App() {
           
           <Route path="/locations" element={<LocationIndex />} />
           <Route path="/locations/create" element={<LocationCreate />} />
-          <Route path="/locations/edit/:id" element={<LocationEdit />} />          
+          <Route path="/locations/edit/:id" element={<LocationEdit />} />   
+          <Route path="/locations/map/" element={<MapPage/>} />       
 
           <Route path="/resourceAssignments" element={<ResourceAssignmentIndex />} />
           <Route path="/resourceAssignments/create" element={<ResourceAssignmentCreate />} />
