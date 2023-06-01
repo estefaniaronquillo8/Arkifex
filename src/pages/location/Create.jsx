@@ -8,7 +8,14 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const LocationCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  const {
+    projects,
+    setProjects,
+    showNotification,
+    selectedProjectId,
+    setSelectedProjectId,
+  } = useGlobalContext();
+
   const {
     register,
     handleSubmit,
@@ -21,11 +28,11 @@ const LocationCreate = () => {
     longitude: 0,
     area: 0,
   });
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
+
   const loadProjects = async () => {
     try {
       const { response } = await getAllProjects();
@@ -43,6 +50,7 @@ const LocationCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
+    data.projectId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -58,8 +66,9 @@ const LocationCreate = () => {
       showNotification(error, notificationType);
     }
 
+    setSelectedProjectId(0);
     if (response?.status === 200) {
-      navigate("/locations");
+      navigate(`/projects/details/${data.projectId}`);
     }
   };
 
@@ -73,7 +82,7 @@ const LocationCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Localización
             </h1>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="projectId"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -101,7 +110,7 @@ const LocationCreate = () => {
               {errors.projectId && (
                 <p className="text-red-800">{errors.projectId.message}</p>
               )}
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="address"

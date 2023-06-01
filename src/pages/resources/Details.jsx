@@ -30,7 +30,7 @@ function ResourceDetails() {
   }, []);
 
   useEffect(() => {
-    console.log(selectedResourceId);
+    //console.log(selectedResourceId);
     if (!routesProtection()) navigate("/login");
 
     // Get the resource type from local storage

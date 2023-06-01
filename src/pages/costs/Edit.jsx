@@ -28,7 +28,7 @@ function CostEdit() {
       console.error("Error al cargar los recursos:", error);
     }
   };
-
+  
   // Función para cargar los recursos
   useEffect(() => {
     loadResources();
