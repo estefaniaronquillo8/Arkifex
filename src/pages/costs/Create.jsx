@@ -54,8 +54,8 @@ const CostCreate = () => {
   };
 
   const createHandler = async (data) => {
-    console.log("Console antes de guardar el dato", selectedResourceId);
     data.resourceId = selectedResourceId;
+    console.log("Console antes de guardar el dato ", selectedResourceId);
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -70,7 +70,7 @@ const CostCreate = () => {
     setSelectedResourceId(0);
     console.log("Console despues de guardar el dato", selectedResourceId);
     if (response?.status === 200) {
-      navigate("/resources");
+      navigate(`/resources/details/${data.resourceId}`);
     }
   };
 

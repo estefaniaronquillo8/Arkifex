@@ -32,23 +32,23 @@ const Navbar = () => {
               <Link to="/resources" className="text-white mr-4">
                 Resources
               </Link>
-              <Link to="/resourceAssignments" className="text-white mr-4">
-                Resource Assignments
-              </Link>
               <Link to="/projects" className="text-white mr-4">
                 Projects
-              </Link>
-              <Link to="/projectPlannings" className="text-white mr-4">
-                Projects Plannings
-              </Link>
-              <Link to="/locations" className="text-white mr-4">
-                Locations
               </Link>
 
 
 
               <Link to="/costs" className="text-white mr-4 ml-48">
                 Costs
+              </Link>
+              <Link to="/resourceAssignments" className="text-white mr-4">
+                Resource Assignments
+              </Link>
+              <Link to="/projectPlannings" className="text-white mr-4">
+                Projects Plannings
+              </Link>
+              <Link to="/locations" className="text-white mr-4">
+                Locations
               </Link>
               <button onClick={handleLogoutClick} className="text-white">
                 Logout

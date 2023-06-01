@@ -5,6 +5,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { routesProtection } from "../../assets/routesProtection";
 import { handleDelete, handleEdit } from "../../services/project.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
+import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
 
@@ -14,10 +15,17 @@ function ProjectDetails() {
   const [projectPlannings, setProjectPlannings] = useState([]);
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [locations, setLocations] = useState([]);
-  const { project, setProject, showNotification } = useGlobalContext();
+  const {
+    project,
+    setProject,
+    resources,
+    setResources,
+    selectedProjectId,
+    setSelectedProjectId,
+    showNotification,
+  } = useGlobalContext();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  const { selectedProjectId, setSelectedProjectId } = useGlobalContext();
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
@@ -53,33 +61,40 @@ function ProjectDetails() {
       setNotificationType(notificationType);
     };
 
-    if (project) {
-      // Llamar a fetchProjectPlannings solo si el proyecto ya ha sido establecido
-      fetchProjectPlannings();
-    }
-
     const fetchResourceAssignments = async () => {
       const { response, success, error, notificationType } =
         await getAllResourceAssignments();
       if (response?.resourceAssignments) {
-        setResourceAssignments(response.resourceAssignments);
+        // Filtrar asignaciones de recursos por projectId
+        const relatedResourceAssignments = response.resourceAssignments.filter(
+          (assignment) => assignment.projectId === project.id
+        );
+        setResourceAssignments(relatedResourceAssignments);
       }
       setError(error);
       setNotificationType(notificationType);
     };
 
     const fetchLocations = async () => {
-      const { response, success, error, notificationType } =
-        await getAllLocations();
-      if (response?.locations) {
-        setLocations(response.locations);
-      }
-      setError(error);
-      setNotificationType(notificationType);
-    };
+        const { response, success, error, notificationType } =
+          await getAllLocations();
+        if (response?.locations) {
+            // Filtrar localizaciones por projectId
+            const relatedLocations = response.locations.filter(
+              (location) => location.projectId === project.id
+            );
+          setLocations(relatedLocations);
+        }
+        setError(error);
+        setNotificationType(notificationType);
+      };
 
-    fetchResourceAssignments();
-    fetchLocations();
+    if (project) {
+      // Llamar a estas funciones solo si el proyecto ya ha sido establecido
+      fetchProjectPlannings();
+      fetchResourceAssignments();
+      fetchLocations();
+    }
   }, [project]);
 
   useEffect(() => {
@@ -87,6 +102,17 @@ function ProjectDetails() {
       showNotification(error, notificationType);
     }
   }, [error, notificationType, showNotification]);
+
+  useEffect(() => {
+    const loadResources = async () => {
+      const { response } = await getAllResources();
+      if (response?.resources) {
+        setResources(response.resources);
+      }
+    };
+
+    loadResources();
+  }, []);
 
   const handleBack = () => {
     navigate("/projects");
@@ -104,38 +130,18 @@ function ProjectDetails() {
     }
     setError(error);
     setNotificationType(notificationType);
-  }; 
-
-  /*const handleCreateProjectPlanning = () => {
-    setSelectedProjectId(project.id);
-    navigate("/projectplannings/create");
   };
 
-  const handleEditProjectPlanning = () => {
-    const planningForThisProject = projectPlannings.find(
-      (planning) => planning.projectId === project.id
-    );
-    if (!planningForThisProject) {
-      console.error("No planning found for this project");
-      return;
-    }
+  const handleCreateProjectPlanning = () => {
     setSelectedProjectId(project.id);
-    navigate(`/projectplannings/edit/${planningForThisProject.id}`);
+    navigate("/projectPlannings/create");
   };
 
-  const planningForThisProject = projectPlannings.find(
-    (planning) => planning.projectId === project.id
-  );
-  const planningForProjectExists = projectPlannings.some(
-    (planning) => planning.projectId === project.id
-  );
-  const handlePlanningClick = planningForProjectExists
-    ? handleEditProjectPlanning
-    : handleCreateProjectPlanning;
-  const planningButtonText = planningForProjectExists
-    ? "Editar Planificación"
-    : "Crear Planificación";
- */
+  const handleCreateResourceAssignment = () => {
+    setSelectedProjectId(project.id);
+    navigate("/resourceAssignments/create");
+  };
+
   const handleCreateLocation = () => {
     setSelectedProjectId(project.id);
     navigate("/locations/create");
@@ -183,9 +189,25 @@ function ProjectDetails() {
                 <p>{project.description}</p>
               </div>
             </div>
+            <Link
+              to={`/projects/edit/${project.id}`}
+              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+            >
+              Editar
+            </Link>
+
+            <button
+              onClick={async () => await deleteHandler(project.id)}
+              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Eliminar
+            </button>
 
             {locationForThisProject && (
               <div className="flex space-x-4">
+                <h1 className="text-4xl font-semibold mb-6">
+                  Localización del Proyecto
+                </h1>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Dirección</h2>
                   <p>{locationForThisProject.address}</p>
@@ -211,6 +233,118 @@ function ProjectDetails() {
             >
               {locationButtonText}
             </button>
+
+            <h1 className="text-4xl font-semibold mb-6">
+              Planificación de Proyectos
+            </h1>
+            <button
+              onClick={handleCreateProjectPlanning}
+              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+            >
+              Crear Nueva Planificación
+            </button>
+
+            <div className="bg-white shadow-md rounded-lg">
+              <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+                <div className="col-span-1 pl-3">Nombre</div>
+                <div className="col-span-1">Fecha Estimada Inicio</div>
+                <div className="col-span-1">Fecha Estimada Final</div>
+                <div className="col-span-1">Presupuesto Estimado</div>
+                <div className="col-span-2">Acciones</div>
+              </div>
+              {projectPlannings &&
+                projectPlannings.map((projectPlanning) => (
+                  <div
+                    key={projectPlanning.id}
+                    className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
+                  >
+                    <div className="col-span-1 pl-3">
+                      {projectPlanning.name}
+                    </div>
+                    <div className="col-span-1">
+                      {projectPlanning.startDate}
+                    </div>
+                    <div className="col-span-1">{projectPlanning.endDate}</div>
+                    <div className="col-span-1">
+                      {projectPlanning.estimatedBudget}
+                    </div>
+
+                    <div className="col-span-2">
+                      <Link
+                        to={`/projectPlannings/edit/${projectPlanning.id}`}
+                        className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                      >
+                        Editar
+                      </Link>
+                      <button
+                        onClick={async () =>
+                          await deleteHandler(projectPlanning.id)
+                        }
+                        className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            <h1 className="text-4xl font-semibold mb-6">
+              Asignación de Recursos
+            </h1>
+            <button
+              onClick={handleCreateResourceAssignment}
+              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+            >
+              Asignar Nuevo Recurso
+            </button>
+            
+            <div className="bg-white shadow-md rounded-lg">
+              <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+                <div className="col-span-1 pl-3">Recurso</div>
+                <div className="col-span-1">Cantidad</div>
+                <div className="col-span-2">Acciones</div>
+              </div>
+              {resourceAssignments &&
+                resourceAssignments.map((resourceAssignment) => {
+                  // Buscar el recurso correspondiente a esta asignación
+                  const resource = resources.find(
+                    (resource) => resource.id === resourceAssignment.resourceId
+                  );
+
+                  return (
+                    <div
+                      key={resourceAssignment.id}
+                      className="grid grid-cols-4 gap-4 py-2 pl-3 border-b border-gray-200"
+                    >
+                      {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
+                      <div className="col-span-1">
+                        {resource ? resource.name : "Desconocido"}
+                      </div>
+                      <div className="col-span-1">
+                        {resourceAssignment.quantity}
+                      </div>
+
+                      <div className="col-span-2">
+                        <Link
+                          to={`/resourceAssignments/edit/${resourceAssignment.id}`}
+                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          onClick={async () =>
+                            await deleteHandler(resourceAssignment.id)
+                          }
+                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
 
             {/* <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -273,20 +407,6 @@ function ProjectDetails() {
               className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Volver
-            </button>
-
-            <Link
-              to={`/projects/edit/${project.id}`}
-              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Editar
-            </Link>
-
-            <button
-              onClick={async () => await deleteHandler(project.id)}
-              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-            >
-              Eliminar
             </button>
           </div>
         </div>

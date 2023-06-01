@@ -8,7 +8,13 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const ProjectPlanningCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  const {
+    projects,
+    setProjects,
+    showNotification,
+    selectedProjectId,
+    setSelectedProjectId,
+  } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -21,11 +27,11 @@ const ProjectPlanningCreate = () => {
     endDate: null,
     estimatedBudget: 0,
   });
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
+
   const loadProjects = async () => {
     try {
       const { response } = await getAllProjects();
@@ -42,14 +48,9 @@ const ProjectPlanningCreate = () => {
     loadProjects();
   }, []);
 
-  const formatDate = (date) => {
-    return date.toISOString().slice(0, 10);
-  };
-
   const createHandler = async (data) => {
-    /* data.startDate = formatDate(new Date(data.startDate));
-    data.endDate = formatDate(new Date(data.endDate)); */
-
+    data.projectId = selectedProjectId;
+    console.log(data.projectId)
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -65,8 +66,9 @@ const ProjectPlanningCreate = () => {
       showNotification(error, notificationType);
     }
 
+    setSelectedProjectId(0);
     if (response?.status === 200) {
-      navigate("/projectPlannings");
+      navigate(`/projects/details/${data.projectId}`);
     }
   };
 
@@ -80,7 +82,7 @@ const ProjectPlanningCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Planificación de Proyectos
             </h1>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="projectId"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -108,7 +110,7 @@ const ProjectPlanningCreate = () => {
               {errors.projectId && (
                 <p className="text-red-800">{errors.projectId.message}</p>
               )}
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="name"

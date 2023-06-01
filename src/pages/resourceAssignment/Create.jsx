@@ -3,13 +3,22 @@ import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/resourceAssignment.api.routes";
 import { getAllProjects } from "../../services/project.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
+import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
 
 const ResourceAssignmentCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, resources, setResources, showNotification } = useGlobalContext();
+  const {
+    projects,
+    setProjects,
+    resources,
+    setResources,
+    showNotification,
+    selectedProjectId,
+    setSelectedProjectId,
+  } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -20,41 +29,49 @@ const ResourceAssignmentCreate = () => {
     projectId: 0,
     quantity: 0,
   });
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
 
   const loadResources = async () => {
     try {
-      const { response } =
-        await getAllResources();
-      if (response?.resources) {
-        setResources(response.resources);
+      const { response: resourceResponse } = await getAllResources();
+      const { response: assignmentResponse } = await getAllResourceAssignments();
+  
+      if (resourceResponse?.resources) {
+        let assignableResources = resourceResponse.resources;
+  
+        if (assignmentResponse?.resourceAssignments) {
+          // Filtrar las asignaciones de recursos por projectId
+          const relatedResourceAssignments = assignmentResponse.resourceAssignments.filter(
+            (assignment) => assignment.projectId === selectedProjectId
+          );
+  
+          // Crear una lista de id de recursos asignados
+          const assignedResourceIds = relatedResourceAssignments.map(
+            (assignment) => assignment.resourceId
+          );
+  
+          // Filtrar los recursos que aún no han sido asignados a este proyecto
+          assignableResources = resourceResponse.resources.filter(
+            (resource) => !assignedResourceIds.includes(resource.id)
+          );
+        }
+  
+        setResources(assignableResources);
       }
     } catch (error) {
       console.error("Error al cargar los recursos:", error);
     }
   };
-  
-  const loadProjects = async () => {
-    try {
-      const { response } = await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
-      }
-    } catch (error) {
-      console.error("Error al cargar los proyectos:", error);
-    }
-  };
 
-  // Función para cargar los proyectos
   useEffect(() => {
     loadResources();
-    loadProjects();
   }, []);
 
   const createHandler = async (data) => {
+    data.projectId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -67,8 +84,9 @@ const ResourceAssignmentCreate = () => {
       showNotification(error, notificationType);
     }
 
+    setSelectedProjectId(0);
     if (response?.status === 200) {
-      navigate("/resourceAssignments");
+      navigate(`/projects/details/${data.projectId}`);
     }
   };
 
@@ -111,7 +129,7 @@ const ResourceAssignmentCreate = () => {
                 <p className="text-red-800">{errors.resourceId.message}</p>
               )}
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label
                 htmlFor="projectId"
                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -139,7 +157,7 @@ const ResourceAssignmentCreate = () => {
               {errors.projectId && (
                 <p className="text-red-800">{errors.projectId.message}</p>
               )}
-            </div>
+            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="quantity"
