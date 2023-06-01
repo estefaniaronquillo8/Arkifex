@@ -145,8 +145,7 @@ const LocationCreate = () => {
               <input
                 type="number"
                 id="latitude"
-                min={0}
-                step="0.01"
+                step="0.0000000001"
                 placeholder="Latitud"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("latitude", {
@@ -171,8 +170,7 @@ const LocationCreate = () => {
               <input
                 type="number"
                 id="longitude"
-                min={0}
-                step="0.01"
+                step="0.0000000001"
                 placeholder="Longitud"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("longitude", {
@@ -187,6 +185,7 @@ const LocationCreate = () => {
                 <p className="text-red-800">{errors.longitude.message}</p>
               )}
             </div>
+
             <div className="mb-4">
               <label
                 htmlFor="area"
@@ -205,7 +204,7 @@ const LocationCreate = () => {
                   required: "El campo es requerido.",
                   minLength: {
                     value: 2,
-                    message: "La dirección debe tener al menos 2 caracteres.",
+                    message: "El área debe tener al menos 2 caracteres.",
                   },
                 })}
               />

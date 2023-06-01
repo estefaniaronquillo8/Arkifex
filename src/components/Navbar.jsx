@@ -37,7 +37,6 @@ const Navbar = () => {
               </Link>
 
 
-
               <Link to="/costs" className="text-white mr-4 ml-48">
                 Costs
               </Link>
