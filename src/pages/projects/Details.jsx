@@ -33,7 +33,7 @@ const ProjectDetails = () =>{
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
   const mapContainer = useRef(null);
-    const map = useRef(null);
+  const map = useRef(null);
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
@@ -179,14 +179,68 @@ const ProjectDetails = () =>{
   const locationButtonText = locationForThisProjectExists
     ? "Editar locación"
     : "Crear locación";
+
+    var createGeoJSONCircle = function(center, radiusInKm, points) {
+      if(!points) points = 64;
+  
+      var coords = {
+          latitude: center[1],
+          longitude: center[0]
+      };
+  
+      var km = radiusInKm;
+  
+      var ret = [];
+      var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
+      var distanceY = km/110.574;
+  
+      var theta, x, y;
+      for(var i=0; i<points; i++) {
+          theta = (i/points)*(2*Math.PI);
+          x = distanceX*Math.cos(theta);
+          y = distanceY*Math.sin(theta);
+  
+          ret.push([coords.longitude+x, coords.latitude+y]);
+      }
+      ret.push(ret[0]);
+  
+      return {
+          "type": "geojson",
+          "data": {
+              "type": "FeatureCollection",
+              "features": [{
+                  "type": "Feature",
+                  "geometry": {
+                      "type": "Polygon",
+                      "coordinates": [ret]
+                  }
+              }]
+          }
+      };
+  };
     
     useEffect(() => {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/satellite-v9',
-        center: [100, 10], // Specify the initial map center
-        zoom: 18 // Specify the initial zoom level
-      });
+      if (mapContainer.current) {
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/satellite-streets-v12',
+          center: [locationForThisProject.longitude, locationForThisProject.latitude], // Specify the initial map center
+          zoom: 17 // Specify the initial zoom level
+        });
+
+        const marker = new mapboxgl.Marker()
+        .setLngLat([locationForThisProject.longitude, locationForThisProject.latitude]) // Set the marker's coordinates to the center
+        .addTo(map.current);
+
+
+      
+        
+
+        
+
+      }
+
+      
   
       return () => {
         if (map.current) {
@@ -229,35 +283,35 @@ const ProjectDetails = () =>{
             </button>
             
             {locationForThisProject && (
-              <div className="flex space-x-8">   
-                
-                <div>  
-                  <h1 className="text-4xl font-semibold mb-6">
-                    Localización del Proyecto
-                  </h1>
-                    <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                    <p>{locationForThisProject.address}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{locationForThisProject.latitude}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{locationForThisProject.longitude}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Area</h2>
-                    <p>{locationForThisProject.area}</p>
-                  </div>
+               <div className="flex space-x-4">
+                <div>
+                <h1 className="text-4xl font-semibold mb-6">
+                 Localización del Proyecto
+               </h1>
+               <div className="flex-1 bg-white rounded-lg shadow p-4">
+                 <h2 className="font-bold text-lg mb-2">Dirección</h2>
+                 <p>{locationForThisProject.address}</p>
+               </div>
+               <div className="flex-1 bg-white rounded-lg shadow p-4">
+                 <h2 className="font-bold text-lg mb-2">Latitud</h2>
+                 <p>{locationForThisProject.latitude}</p>
+               </div>
+               <div className="flex-1 bg-white rounded-lg shadow p-4">
+                 <h2 className="font-bold text-lg mb-2">Longitud</h2>
+                 <p>{locationForThisProject.longitude}</p>
+               </div>
+               <div className="flex-1 bg-white rounded-lg shadow p-4">
+                 <h2 className="font-bold text-lg mb-2">Area</h2>
+                 <p>{locationForThisProject.area}</p>
+               </div>
                 </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <div ref={mapContainer} className="w-full h-full" />
-                </div>
+               <div className="flex-1 bg-white rounded-lg shadow p-4">
+                 <h2 className="font-bold text-lg mb-2">Mapa</h2>
+                 <div ref={mapContainer} className="w-full h-full" />
+               </div>
+               
+             </div>
               
-              </div>
             )}
 
             <button
