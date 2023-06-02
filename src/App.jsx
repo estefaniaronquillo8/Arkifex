@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { GlobalProvider } from "./contexts/GlobalContext";
 import "react-toastify/dist/ReactToastify.css";
+import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+
+
 // User
 import { Login, Register, UserEdit, UserIndex } from './pages/users/Users';
 // Resource
@@ -19,13 +23,20 @@ import { LocationCreate, LocationIndex, LocationEdit,MapPage } from './pages/loc
 //import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from './pages/resourceAssignment/ResourceAssignment';
 import { ResourceAssignmentCreate, ResourceAssignmentIndex } from './pages/resourceAssignment/ResourceAssignment';
 
+
+
+
 function App() {
+ 
   return (
     <Router>
       <GlobalProvider>
       <div className="App">
-        <Navbar />
-        <Routes>
+    <Navbar />
+      <div className="flex">
+      <Sidebar/>
+      <div className="flex-1">
+      <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -59,7 +70,12 @@ function App() {
           <Route path="/resourceAssignments/create" element={<ResourceAssignmentCreate />} />
 
         </Routes>
+      </div>
+      
+        </div>
+       
         <ToastContainer />
+      
       </div>
       </GlobalProvider>
     </Router>
