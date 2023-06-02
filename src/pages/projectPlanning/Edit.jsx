@@ -12,16 +12,16 @@ function ProjectPlanningEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { projectPlanning, setProjectPlanning, showNotification } =
-  useGlobalContext();
+    useGlobalContext();
   const { projects, setProjects } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
+
   const loadProjects = async () => {
     try {
       const { response } = await getAllProjects();

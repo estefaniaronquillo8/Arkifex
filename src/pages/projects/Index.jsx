@@ -90,53 +90,13 @@ const ProjectIndex = () => {
                     >
                       Detalles
                     </Link>
-                    <Link
-                      to={`/projects/edit/${project.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      onClick={async () => await deleteHandler(project.id)}
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button>
                   </div>
                 </div>
               );
             }
             return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
           })}
-        <div>
-          <h1>SEPARACIÓN</h1>
-        </div>
-        {projects &&
-          projects.map((project) => (
-            <div
-              key={project.id}
-              className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200"
-            >
-              <div className="col-span-1 pl-3">{project.parentId}</div>
-              <div className="col-span-1">{project.name}</div>
-              <div className="col-span-1">{project.description}</div>
-
-              <div className="col-span-2">
-                <Link
-                  to={`/projects/edit/${project.id}`}
-                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                >
-                  Editar
-                </Link>
-                <button
-                  onClick={async () => await deleteHandler(project.id)}
-                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Eliminar
-                </button>
-              </div>
-            </div>
-          ))}
+        
       </div>
     </div>
   );

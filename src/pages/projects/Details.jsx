@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { routesProtection } from "../../assets/routesProtection";
-import { handleDelete, handleEdit } from "../../services/project.api.routes";
+import {
+  getAllProjects,
+  handleDelete,
+  handleEdit,
+} from "../../services/project.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
@@ -15,6 +19,8 @@ function ProjectDetails() {
   const [projectPlannings, setProjectPlannings] = useState([]);
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const currentProjectId = "";
   const {
     project,
     setProject,
@@ -28,6 +34,8 @@ function ProjectDetails() {
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
+    setSelectedProjectId(project.id);
+    console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
   }, []);
 
@@ -47,6 +55,20 @@ function ProjectDetails() {
   }, [id]);
 
   useEffect(() => {
+    const fetchProjects = async () => {
+      const { response, success, error, notificationType } =
+        await getAllProjects();
+      if (response?.projects) {
+        // Filtrar planificaciones de proyectos por projectId
+        const relatedProjects = response.projects.filter(
+          (pry) => pry.parentId === project.id
+        );
+        setProjects(relatedProjects);
+      }
+      setError(error);
+      setNotificationType(notificationType);
+    };
+
     const fetchProjectPlannings = async () => {
       const { response, success, error, notificationType } =
         await getAllProjectPlannings();
@@ -76,24 +98,25 @@ function ProjectDetails() {
     };
 
     const fetchLocations = async () => {
-        const { response, success, error, notificationType } =
-          await getAllLocations();
-        if (response?.locations) {
-            // Filtrar localizaciones por projectId
-            const relatedLocations = response.locations.filter(
-              (location) => location.projectId === project.id
-            );
-          setLocations(relatedLocations);
-        }
-        setError(error);
-        setNotificationType(notificationType);
-      };
+      const { response, success, error, notificationType } =
+        await getAllLocations();
+      if (response?.locations) {
+        // Filtrar localizaciones por projectId
+        const relatedLocations = response.locations.filter(
+          (location) => location.projectId === project.id
+        );
+        setLocations(relatedLocations);
+      }
+      setError(error);
+      setNotificationType(notificationType);
+    };
 
     if (project) {
       // Llamar a estas funciones solo si el proyecto ya ha sido establecido
       fetchProjectPlannings();
       fetchResourceAssignments();
       fetchLocations();
+      fetchProjects();
     }
   }, [project]);
 
@@ -115,7 +138,11 @@ function ProjectDetails() {
   }, []);
 
   const handleBack = () => {
-    navigate("/projects");
+    if (project.parentId) {
+      navigate(`/projects/details/${project.parentId}`);
+    } else {
+      navigate("/projects");
+    }
   };
 
   const deleteHandler = async (id) => {
@@ -227,12 +254,14 @@ function ProjectDetails() {
               </div>
             )}
 
-            <button
-              onClick={handleLocationClick}
-              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-            >
-              {locationButtonText}
-            </button>
+            <div>
+              <button
+                onClick={handleLocationClick}
+                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+              >
+                {locationButtonText}
+              </button>
+            </div>
 
             <h1 className="text-4xl font-semibold mb-6">
               Planificación de Proyectos
@@ -298,7 +327,7 @@ function ProjectDetails() {
             >
               Asignar Nuevo Recurso
             </button>
-            
+
             <div className="bg-white shadow-md rounded-lg">
               <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
                 <div className="col-span-1 pl-3">Recurso</div>
@@ -346,61 +375,47 @@ function ProjectDetails() {
                 })}
             </div>
 
-            {/* <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Nombre
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Fecha estimada de Inicio
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Fecha estimada de Fin
-                  </th>
-                  <th
-                    scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Presupuesto Estimado
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {projectPlannings.map((planning) => (
-                  <tr key={planning.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {planning.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {planning.startDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {planning.endDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {planning.estimatedBudget}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            {!project.parentId && (
+              <>
+                <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
+                <Link
+                  to="/projects/create"
+                  className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+                >
+                  Crear Sub-Proyecto
+                </Link>
+                <div className="bg-white shadow-md rounded-lg">
+                  <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+                    <div className="col-span-1 ml-5">Nombre</div>
+                    <div className="col-span-1">Descripción</div>
+                    <div className="col-span-2">Acciones</div>
+                  </div>
+                  {projects &&
+                    projects.map((project) => {
+                      return (
+                        <div
+                          key={project.id}
+                          className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+                        >
+                          <div className="col-span-1 ml-5">{project.name}</div>
+                          <div className="col-span-1">
+                            {project.description}
+                          </div>
 
-            <button
-              onClick={handlePlanningClick}
-              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-            >
-              {planningButtonText}
-            </button> */}
+                          <div className="col-span-2">
+                            <Link
+                              to={`/projects/details/${project.id}`}
+                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                              Detalles
+                            </Link>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </>
+            )}
 
             <button
               onClick={handleBack}
