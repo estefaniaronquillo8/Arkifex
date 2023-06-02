@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-custom{
+    @apply inline-block px-6 py-4 rounded-full shadow-sm font-medium transition duration-700 ease-in-out transform hover:scale-105 animate-bounce
+}
+
+.btn-primary{
+    @apply bg-blue-500 text-white font-bold hover:bg-blue-700
+
+
+}   
+
+.img-resize {
+    width: 70%; /* Cambia el valor según tus necesidades */
+    height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
+  }
