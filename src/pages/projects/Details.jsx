@@ -12,14 +12,14 @@ import { getAllProjectPlannings } from "../../services/projectPlanning.api.route
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import 'tailwindcss/tailwind.css';
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "tailwindcss/tailwind.css";
 
-mapboxgl.accessToken = 'pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ'; // Replace with your Mapbox access token
+mapboxgl.accessToken =
+  "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
 
-
-const ProjectDetails = () =>{
+const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [projectPlannings, setProjectPlannings] = useState([]);
@@ -207,76 +207,73 @@ const ProjectDetails = () =>{
     ? "Editar locación"
     : "Crear locación";
 
-    var createGeoJSONCircle = function(center, radiusInKm, points) {
-      if(!points) points = 64;
-  
-      var coords = {
-          latitude: center[1],
-          longitude: center[0]
-      };
-  
-      var km = radiusInKm;
-  
-      var ret = [];
-      var distanceX = km/(111.320*Math.cos(coords.latitude*Math.PI/180));
-      var distanceY = km/110.574;
-  
-      var theta, x, y;
-      for(var i=0; i<points; i++) {
-          theta = (i/points)*(2*Math.PI);
-          x = distanceX*Math.cos(theta);
-          y = distanceY*Math.sin(theta);
-  
-          ret.push([coords.longitude+x, coords.latitude+y]);
-      }
-      ret.push(ret[0]);
-  
-      return {
-          "type": "geojson",
-          "data": {
-              "type": "FeatureCollection",
-              "features": [{
-                  "type": "Feature",
-                  "geometry": {
-                      "type": "Polygon",
-                      "coordinates": [ret]
-                  }
-              }]
-          }
-      };
+  var createGeoJSONCircle = function (center, radiusInKm, points) {
+    if (!points) points = 64;
+
+    var coords = {
+      latitude: center[1],
+      longitude: center[0],
+    };
+
+    var km = radiusInKm;
+
+    var ret = [];
+    var distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
+    var distanceY = km / 110.574;
+
+    var theta, x, y;
+    for (var i = 0; i < points; i++) {
+      theta = (i / points) * (2 * Math.PI);
+      x = distanceX * Math.cos(theta);
+      y = distanceY * Math.sin(theta);
+
+      ret.push([coords.longitude + x, coords.latitude + y]);
+    }
+    ret.push(ret[0]);
+
+    return {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Polygon",
+              coordinates: [ret],
+            },
+          },
+        ],
+      },
+    };
   };
-    
-    useEffect(() => {
-      if (mapContainer.current) {
-        map.current = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/satellite-streets-v12',
-          center: [locationForThisProject.longitude, locationForThisProject.latitude], // Specify the initial map center
-          zoom: 17 // Specify the initial zoom level
-        });
 
-        const marker = new mapboxgl.Marker()
-        .setLngLat([locationForThisProject.longitude, locationForThisProject.latitude]) // Set the marker's coordinates to the center
+  useEffect(() => {
+    if (mapContainer.current) {
+      map.current = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/satellite-streets-v12",
+        center: [
+          locationForThisProject.longitude,
+          locationForThisProject.latitude,
+        ], // Specify the initial map center
+        zoom: 17, // Specify the initial zoom level
+      });
+
+      const marker = new mapboxgl.Marker()
+        .setLngLat([
+          locationForThisProject.longitude,
+          locationForThisProject.latitude,
+        ]) // Set the marker's coordinates to the center
         .addTo(map.current);
+    }
 
-
-      
-        
-
-        
-
+    return () => {
+      if (map.current) {
+        map.current.remove();
       }
-
-      
-  
-      return () => {
-        if (map.current) {
-          map.current.remove();
-        }
-      };
-    }, []);
-    
-  
+    };
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -308,37 +305,35 @@ const ProjectDetails = () =>{
             >
               Eliminar
             </button>
-            
+
             {locationForThisProject && (
-               <div className="flex space-x-4">
+              <div className="flex space-x-4">
                 <div>
-                <h1 className="text-4xl font-semibold mb-6">
-                 Localización del Proyecto
-               </h1>
-               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                 <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                 <p>{locationForThisProject.address}</p>
-               </div>
-               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                 <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                 <p>{locationForThisProject.latitude}</p>
-               </div>
-               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                 <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                 <p>{locationForThisProject.longitude}</p>
-               </div>
-               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                 <h2 className="font-bold text-lg mb-2">Area</h2>
-                 <p>{locationForThisProject.area}</p>
-               </div>
+                  <h1 className="text-4xl font-semibold mb-6">
+                    Localización del Proyecto
+                  </h1>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
+                    <p>{locationForThisProject.address}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
+                    <p>{locationForThisProject.latitude}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
+                    <p>{locationForThisProject.longitude}</p>
+                  </div>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Area</h2>
+                    <p>{locationForThisProject.area}</p>
+                  </div>
                 </div>
-               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                 <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                 <div ref={mapContainer} className="w-full h-full" />
-               </div>
-               
-             </div>
-              
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
+                  <div ref={mapContainer} className="w-full h-full" />
+                </div>
+              </div>
             )}
 
             <div>
@@ -515,6 +510,6 @@ const ProjectDetails = () =>{
       )}
     </div>
   );
-}
+};
 
 export default ProjectDetails;
