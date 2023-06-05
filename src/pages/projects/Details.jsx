@@ -42,7 +42,6 @@ const ProjectDetails = () => {
   const map = useRef(null);
 
   useEffect(() => {
-    setSelectedProjectId(project.id);
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
   }, []);
