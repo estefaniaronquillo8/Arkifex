@@ -1,23 +1,19 @@
 const { ResourceAssignment, sequelize } = require("../models");
 
-const createResourceAssignment = async (resourceAssignmentData) => {
+const createResourceAssignment = async (data) => {
   const transaction = await sequelize.transaction();
+  console.log('data', data);
   try {
-    const responseProject = await findResourceAssignmentByProject(resourceAssignmentData.projectId);
-    const responseResource = await findResourceAssignmentByResource(resourceAssignmentData.resourceId);
-    if (responseProject?.resourceAssignmentProject) {
-      if (responseResource?.resourceAssignmentResource) {
+    const response = await findResourceAssignmentByProjectIdAndResourceId(data.projectId, data.resourceId);
+    if (response?.resourceAssignment) {
         return {
           status: 409,
           message: "ResourceAssignment already exists in this project",
           notificationType: "info",
         };
-      }
     }
-    const resourceAssignment = await ResourceAssignment.create(
-      resourceAssignmentData,
-      { transaction }
-    );
+    console.log('aaaaaaaaaaaa')
+    const resourceAssignment = await ResourceAssignment.create(data, { transaction });
     await transaction.commit();
     return {
       status: 200,
@@ -57,11 +53,11 @@ const getAllResourceAssignments = async () => {
   }
 };
 
-const updateResourceAssignment = async (id, resourceAssignmentData) => {
+const updateResourceAssignment = async (id, data) => {
   const transaction = await sequelize.transaction();
   try {
-    if (resourceAssignmentData.projectId) {
-      const response = await findResourceAssignmentByProject(resourceAssignmentData.projectId);
+    if (data.projectId && data.resourceId) {
+      const response = await findResourceAssignmentByProjectIdAndResourceId(data.projectId, data.resourceId);
       if (
         response.status === 200 &&
         response.resourceAssignment.id !== parseInt(id)
@@ -73,7 +69,7 @@ const updateResourceAssignment = async (id, resourceAssignmentData) => {
         };
       }
     }
-    await ResourceAssignment.update(resourceAssignmentData, {
+    await ResourceAssignment.update(data, {
       where: { id },
       transaction,
     });
@@ -82,7 +78,7 @@ const updateResourceAssignment = async (id, resourceAssignmentData) => {
     return {
       status: 200,
       message: "ResourceAssignment updated successfully",
-      user: updatedResourceAssignment.resourceAssignment,
+      resourceAssignment: updatedResourceAssignment.resourceAssignment,
       notificationType: "success",
     };
   } catch (error) {
@@ -115,25 +111,14 @@ const deleteResourceAssignment = async (id) => {
   }
 };
 
-const findResourceAssignmentByProject = async (projectId) => {
-  const resourceAssignmentProject = await ResourceAssignment.findOne({
-    where: { projectId },
-  });
-  if (!resourceAssignmentProject) {
+const findResourceAssignmentByProjectIdAndResourceId = async (projectId, resourceId) => {
+  const resourceAssignment = await ResourceAssignment.findOne({ where: { projectId, resourceId }});
+  console.log('RA', resourceAssignment);
+  if (!resourceAssignment){
     return { status: 404 };
   }
-  return { status: 200, resourceAssignmentProject };
-};
-
-const findResourceAssignmentByResource = async (resourceId) => {
-  const resourceAssignmentResource = await ResourceAssignment.findOne({
-    where: { resourceId },
-  });
-  if (!resourceAssignmentResource) {
-    return { status: 404 };
-  }
-  return { status: 200, resourceAssignmentResource };
-};
+  return { status: 200, resourceAssignment };
+}
 
 const findById = async (id) => {
   const resourceAssignment = await ResourceAssignment.findByPk(id);
@@ -158,6 +143,6 @@ module.exports = {
   getAllResourceAssignments,
   updateResourceAssignment,
   deleteResourceAssignment,
-  findResourceAssignmentByProject,
+  findResourceAssignmentByProjectIdAndResourceId,
   findById,
 };

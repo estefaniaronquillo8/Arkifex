@@ -20,9 +20,7 @@ import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit } from
 // Locations
 import { LocationCreate, LocationIndex, LocationEdit,MapPage } from './pages/location/Location';
 // ResourceAssignment
-//import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from './pages/resourceAssignment/ResourceAssignment';
-import { ResourceAssignmentCreate, ResourceAssignmentIndex } from './pages/resourceAssignment/ResourceAssignment';
-
+import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from './pages/resourceAssignment/ResourceAssignments';
 
 
 
@@ -68,6 +66,7 @@ function App() {
 
           <Route path="/resourceAssignments" element={<ResourceAssignmentIndex />} />
           <Route path="/resourceAssignments/create" element={<ResourceAssignmentCreate />} />
+          <Route path="/resourceAssignments/edit/:id" element={<ResourceAssignmentEdit />} />
 
         </Routes>
       </div>

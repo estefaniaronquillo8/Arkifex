@@ -28,6 +28,9 @@ const ResourceAssignmentCreate = () => {
     resourceId: 0,
     projectId: 0,
     quantity: 0,
+    estimatedCost: 0,
+    actualCost: 0,
+    associatedDate: 0
   });
 
   useEffect(() => {
@@ -37,28 +40,33 @@ const ResourceAssignmentCreate = () => {
   const loadResources = async () => {
     try {
       const { response: resourceResponse } = await getAllResources();
-      const { response: assignmentResponse } = await getAllResourceAssignments();
-  
+      const { response: assignmentResponse } =
+        await getAllResourceAssignments();
+
+      // Verifico si existen recursos
       if (resourceResponse?.resources) {
+        // Asigno los recursos a la variable assignableResources
         let assignableResources = resourceResponse.resources;
-  
+
+        // Verifico si ya existe asignaciones de recursos
         if (assignmentResponse?.resourceAssignments) {
-          // Filtrar las asignaciones de recursos por projectId
-          const relatedResourceAssignments = assignmentResponse.resourceAssignments.filter(
-            (assignment) => assignment.projectId === selectedProjectId
-          );
-  
-          // Crear una lista de id de recursos asignados
+          // Filtro las asignaciones de recursos por projectId
+          const relatedResourceAssignments =
+            assignmentResponse.resourceAssignments.filter(
+              (assignment) => assignment.projectId === selectedProjectId
+            );
+
+          // Creo una lista de ids de recursos asignados
           const assignedResourceIds = relatedResourceAssignments.map(
             (assignment) => assignment.resourceId
           );
-  
+
           // Filtrar los recursos que aún no han sido asignados a este proyecto
           assignableResources = resourceResponse.resources.filter(
             (resource) => !assignedResourceIds.includes(resource.id)
           );
         }
-  
+
         setResources(assignableResources);
       }
     } catch (error) {
@@ -84,8 +92,9 @@ const ResourceAssignmentCreate = () => {
       showNotification(error, notificationType);
     }
 
-    setSelectedProjectId(0);
+    
     if (response?.status === 200) {
+      setSelectedProjectId(0);
       navigate(`/projects/details/${data.projectId}`);
     }
   };
@@ -184,12 +193,86 @@ const ResourceAssignmentCreate = () => {
                 <p className="text-red-800">{errors.quantity.message}</p>
               )}
             </div>
+            <div className="mb-4">
+              <label
+                htmlFor="estimatedCost"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Costo Estimado
+              </label>
+              <input
+                type="number"
+                id="estimatedCost"
+                min={0}
+                step="0.01"
+                placeholder="Costo Estimado"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("estimatedCost", {
+                  required: "El campo es requerido.",
+                  minLength: {
+                    value: 1,
+                    message: "El costo estimado debe ser mayor o igual 1",
+                  },
+                })}
+              />
+              {errors.estimatedCost && (
+                <p className="text-red-800">{errors.estimatedCost.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="actualCost"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Costo Actual
+              </label>
+              <input
+                type="number"
+                id="actualCost"
+                min={0}
+                step="0.01"
+                placeholder="actualCost"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("actualCost", {
+                  required: "El campo es requerido.",
+                  minLength: {
+                    value: 1,
+                    message: "El costo actual debe ser mayor o igual a 1.",
+                  },
+                })}
+              />
+              {errors.actualCost && (
+                <p className="text-red-800">{errors.actualCost.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="associatedDate"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Fecha Asociada
+              </label>
+              <input
+                type="date"
+                id="associatedDate"
+                min={0}
+                step="0.01"
+                placeholder="associatedDate"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("associatedDate", {
+                  required: "El campo es requerido."
+                })}
+              />
+              {errors.associatedDate && (
+                <p className="text-red-800">{errors.associatedDate.message}</p>
+              )}
+            </div>
             <div className="flex flex-col items-center justify-center">
               <button
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear resource assignment
+                Asignar Recurso
               </button>
             </div>
           </form>
