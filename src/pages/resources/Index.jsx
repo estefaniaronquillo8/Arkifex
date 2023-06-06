@@ -68,20 +68,26 @@ const ResourceIndex = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-4xl font-semibold mb-6">Recursos</h1>
-      <Link
+
+      <nav className="bg-blue-500">
+        <br />
+        <Link
         to="/resources/create"
         onClick={() => localStorage.setItem("type", "Material")}
-        className="bg-green-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
+        className="bg-blue-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
       >
         Crear Material
       </Link>
       <Link
         to="/resources/create"
         onClick={() => localStorage.setItem("type", "Personal")}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block"
       >
         Crear Personal
       </Link>
+      </nav>
+     
+      
 
       <div className="bg-white shadow-md rounded-lg">
         <h1 className="text-2xl font-semibold mb-3">TABLA DE MATERIALES</h1>

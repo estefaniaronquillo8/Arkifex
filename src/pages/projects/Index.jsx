@@ -1,4 +1,3 @@
-// src/pages/projects.js
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import {
@@ -66,37 +65,36 @@ const ProjectIndex = () => {
       >
         Crear Proyecto
       </Link>
-      <div className="bg-white shadow-md rounded-lg">
-        <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-          <div className="col-span-1 ml-5">Nombre</div>
-          <div className="col-span-1">Descripción</div>
-          <div className="col-span-2">Acciones</div>
-        </div>
+      <div className="grid grid-cols-2 gap-4">
         {projects &&
           projects.map((project) => {
             if (!project.parentId) {
               return (
                 <div
                   key={project.id}
-                  className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+                  className="bg-white shadow-md rounded-lg p-4"
                 >
-                  <div className="col-span-1 ml-5">{project.name}</div>
-                  <div className="col-span-1">{project.description}</div>
-
-                  <div className="col-span-2">
+                  <h2 className="text-lg font-semibold mb-2">{project.name}</h2>
+                  <p className="mb-4">{project.description}</p>
+                  <div>
                     <Link
                       to={`/projects/details/${project.id}`}
                       className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                     >
                       Detalles
                     </Link>
+                    <button
+                      onClick={() => deleteHandler(project.id)}
+                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               );
             }
             return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
           })}
-        
       </div>
     </div>
   );

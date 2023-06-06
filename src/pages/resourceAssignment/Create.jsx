@@ -91,7 +91,7 @@ const ResourceAssignmentCreate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+   
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
           <form
@@ -184,18 +184,16 @@ const ResourceAssignmentCreate = () => {
                 <p className="text-red-800">{errors.quantity.message}</p>
               )}
             </div>
+            <br />
             <div className="flex flex-col items-center justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
-              >
-                Crear resource assignment
-              </button>
+            <button type="submit" className="btn-custom btn-primary">
+            Crear resource assignment
+            </button>
             </div>
           </form>
         </div>
       </div>
-    </div>
+   
   );
 };
 

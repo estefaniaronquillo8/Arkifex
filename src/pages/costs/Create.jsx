@@ -75,44 +75,17 @@ const CostCreate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
-          <form
-            onSubmit={handleSubmit(async (data) => await createHandler(data))}
-          >
-            <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Costos
-            </h1>
-            {/* <div className="mb-4">
-              <label
-                htmlFor="resourceId"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Recurso
-              </label>
-              <select
-                id="resourceId"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("resourceId", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona un recurso</option>
-                {resources && resources.length > 0 ? (
-                  resources.map((resource) => (
-                    <option key={resource.id} value={resource.id}>
-                      {resource.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>Cargando recursos...</option>
-                )}
-              </select>
-              {errors.resourceId && (
-                <p className="text-red-800">{errors.resourceId.message}</p>
-              )}
-            </div> */}
+    <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+      <br />
+      <form
+        onSubmit={handleSubmit(async (data) => await createHandler(data))}
+      >
+        <h1 className="mb-6 text-2xl font-bold text-center">
+          Creación de Costos
+        </h1>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
             <div className="mb-4">
               <label
                 htmlFor="description"
@@ -163,6 +136,8 @@ const CostCreate = () => {
                 <p className="text-red-800">{errors.amount.message}</p>
               )}
             </div>
+          </div>
+          <div>
             <div className="mb-4">
               <label
                 htmlFor="frequency"
@@ -209,23 +184,15 @@ const CostCreate = () => {
                 <p className="text-red-800">{errors.status.message}</p>
               )}
             </div>
-            <div className="flex flex-col items-center justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
-              >
-                Crear Costo
-              </button>
-              <button
-                onClick={handleBack}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-auto mb-4"
-              >
-                Volver
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
-      </div>
+        <div className="flex flex-col items-center justify-center">
+          <br />
+          <button type="submit" className="btn-custom btn-primary">
+            Crear Costo
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
