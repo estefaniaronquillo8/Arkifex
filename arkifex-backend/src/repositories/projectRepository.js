@@ -15,7 +15,7 @@ const createProject = async (projectData) => {
     await transaction.commit();
     return {
       status: 200,
-      Project: project,
+      project: project,
       message: "Project created successfully!",
       notificationType: "success",
     };
@@ -37,7 +37,7 @@ const getAllProjects = async () => {
     if (projects?.length === 0) {
       return {
         status: 200,
-        Projects: projects,
+        projects: projects,
         message: "Actualmente no existen proyectos",
         notificationType: "info",
       };
@@ -46,7 +46,7 @@ const getAllProjects = async () => {
   } catch (error) {
     return {
       status: 500,
-      Projects: [],
+      projects: [],
       message: "Internal server error",
       notificationType: "error",
     };
@@ -72,7 +72,7 @@ const updateProject = async (id, projectData) => {
     return {
       status: 200,
       message: "Project updated successfully",
-      user: updatedProject.project,
+      project: updatedProject.project,
       notificationType: "success",
     };
   } catch (error) {

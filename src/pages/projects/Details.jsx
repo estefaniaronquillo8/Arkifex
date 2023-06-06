@@ -8,6 +8,11 @@ import {
   handleDelete,
   handleEdit,
 } from "../../services/project.api.routes";
+
+import {
+  handleDelete as handleDeleteRA
+} from '../../services/resourceAssignment.api.routes'
+import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
@@ -35,6 +40,7 @@ const ProjectDetails = () => {
     showNotification,
   } = useGlobalContext();
   const [error, setError] = useState();
+  const [success, setSuccess] = useState();
   const [notificationType, setNotificationType] = useState();
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -149,10 +155,24 @@ const ProjectDetails = () => {
     setNotificationType(notificationType);
   };
 
-  /* const handleCreateProjectPlanning = () => {
+  const deleteHandlerRA = async (id) => {
+    const { response, success, error, notificationType } = await handleDeleteRA(
+      id
+    );
+    // Por ahora solo redirigiré cuando se elimine el proyecto
+    
+    if (success) {
+      navigate("/projects");
+    }
+    setSuccess(success);
+    setError(error);
+    setNotificationType(notificationType);
+  };
+
+  const handleCreateProjectPlanning = () => {
     setSelectedProjectId(project.id);
     navigate("/projectPlannings/create");
-  }; */
+  };
 
   const handleCreateResourceAssignment = () => {
     setSelectedProjectId(project.id);
@@ -451,7 +471,7 @@ const ProjectDetails = () => {
                         </Link>
                         <button
                           onClick={async () =>
-                            await deleteHandler(resourceAssignment.id)
+                            await deleteHandlerRA(resourceAssignment.id)
                           }
                           className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                         >

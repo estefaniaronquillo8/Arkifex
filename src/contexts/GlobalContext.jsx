@@ -59,6 +59,9 @@ export const GlobalProvider = ({ children }) => {
     resourceId: 0,
     projectId: 0,
     quantity: 0,
+    estimatedCost: 0,
+    actualCost: 0,
+    associatedDate: "",
   });
 
   const [lastNotification, setLastNotification] = useState(null);

@@ -4,54 +4,43 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import {
   handleEdit,
   handleUpdate,
-} from "../../services/location.api.routes";
-import { getAllProjects } from "../../services/project.api.routes";
+} from "../../services/resourceAssignment.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
 
-function LocationEdit() {
+function ResourceAssignmentEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { location, setLocation, showNotification } =
-  useGlobalContext();
-  const { projects, setProjects } = useGlobalContext();
+  const {
+    resourceAssignment,
+    setResourceAssignment,
+    resources,
+    showNotification,
+  } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
-  const loadProjects = async () => {
-    try {
-      const { response } = await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
-      }
-    } catch (error) {
-      console.error("Error al cargar los recursos:", error);
-    }
-  };
 
   // Función para cargar los recursos
-  useEffect(() => {
-    loadProjects();
-  }, []);
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    const fetchLocation = async () => {
+    const fetchResourceAssignment = async () => {
       const { response, success, error, notificationType } = await handleEdit(
         id
       );
-      if (response?.location) {
-        setLocation(response.location);
+      if (response?.resourceAssignment) {
+        setResourceAssignment(response.resourceAssignment);
       }
       setError(error);
       setSuccess(success);
       setNotificationType(notificationType);
     };
 
-    fetchLocation();
+    fetchResourceAssignment();
   }, []);
 
   useEffect(() => {
@@ -66,51 +55,56 @@ function LocationEdit() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { success, error, notificationType } = await handleUpdate(
-      id,
-      location
-    );
+    const { success, error, notificationType } = await handleUpdate(id, resourceAssignment);
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/locations");
+    navigate("/projects");
   };
 
   const handleChange = (event) => {
-    setLocation({
-      ...location,
+    setResourceAssignment({
+      ...resourceAssignment,
       [event.target.name]: event.target.value,
     });
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Editar location</h2>
-      {location && (
+      <h2 className="text-4xl font-semibold mb-6">
+        Editar Asignación de Recurso
+      </h2>
+      {resourceAssignment && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
               <div>
                 <label
-                  htmlFor="projectId"
+                  htmlFor="resourceId"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Proyecto:
+                  Recurso:
                 </label>
                 <select
-                  id="projectId"
-                  name="projectId"
-                  value={location.projectId}
+                  id="resourceId"
+                  name="resourceId"
+                  value={resourceAssignment.resourceId}
                   onChange={handleChange}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
-                  {projects && projects.length > 0 ? (
-                    projects.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))
+                  {resources && resources.length > 0 ? (
+                    resources.map((resource) =>
+                    resource.id == resourceAssignment.resourceId ? (
+                        <option key={resource.id} value={resource.id} selected>
+                          {resource.name}
+                        </option>
+                      ) : (
+                        <option key={resource.id} value={resource.id}>
+                          {resource.name}
+                        </option>
+                      )
+                    )
                   ) : (
                     <option disabled>Cargando recursos...</option>
                   )}
@@ -118,65 +112,65 @@ function LocationEdit() {
               </div>
               <div>
                 <label
-                  htmlFor="address"
+                  htmlFor="quantity"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Dirección:
+                  Cantidad:
                 </label>
                 <input
-                  id="address"
-                  type="text"
-                  name="address"
-                  value={location.address}
-                  onChange={handleChange}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>              
-              <div>
-                <label
-                  htmlFor="latitude"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Latitud:
-                </label>
-                <input
-                  id="latitude"
+                  id="quantity"
                   type="number"
-                  name="latitude"
-                  value={location.latitude}
+                  name="quantity"
+                  value={resourceAssignment.quantity}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="longitude"
+                  htmlFor="estimatedCost"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Longitud:
+                  Costo Estimado:
                 </label>
                 <input
-                  id="longitude"
+                  id="estimatedCost"
                   type="number"
-                  name="longitude"
-                  value={location.longitude}
+                  name="estimatedCost"
+                  value={resourceAssignment.estimatedCost}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="area"
+                  htmlFor="actualCost"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Area:
+                  Costo Actual:
                 </label>
                 <input
-                  id="area"
+                  id="actualCost"
                   type="number"
-                  name="area"
-                  value={location.area}
+                  name="actualCost"
+                  value={resourceAssignment.actualCost}
                   onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="associatedDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Fecha Asociada:
+                </label>
+                <input
+                  id="associatedDate"
+                  type="date"
+                  name="associatedDate"
+                  value={resourceAssignment.associatedDate}
+                  onInput={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
@@ -194,4 +188,4 @@ function LocationEdit() {
   );
 }
 
-export default LocationEdit;
+export default ResourceAssignmentEdit;
