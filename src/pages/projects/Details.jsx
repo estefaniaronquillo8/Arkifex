@@ -9,10 +9,7 @@ import {
   handleEdit,
 } from "../../services/project.api.routes";
 
-import {
-  handleDelete as handleDeleteRA
-} from '../../services/resourceAssignment.api.routes'
-import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
+import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
@@ -160,18 +157,13 @@ const ProjectDetails = () => {
       id
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
-    
+
     if (success) {
       navigate("/projects");
     }
     setSuccess(success);
     setError(error);
     setNotificationType(notificationType);
-  };
-
-  const handleCreateProjectPlanning = () => {
-    setSelectedProjectId(project.id);
-    navigate("/projectPlannings/create");
   };
 
   const handleCreateResourceAssignment = () => {
@@ -371,61 +363,6 @@ const ProjectDetails = () => {
               </button>
             </div>
 
-            {/* <h1 className="text-4xl font-semibold mb-6">
-              Planificación de Proyectos
-            </h1>
-            <button
-              onClick={handleCreateProjectPlanning}
-              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-            >
-              Crear Nueva Planificación
-            </button>
-
-            <div className="bg-white shadow-md rounded-lg">
-              <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                <div className="col-span-1 pl-3">Nombre</div>
-                <div className="col-span-1">Fecha Estimada Inicio</div>
-                <div className="col-span-1">Fecha Estimada Final</div>
-                <div className="col-span-1">Presupuesto Estimado</div>
-                <div className="col-span-2">Acciones</div>
-              </div>
-              {projectPlannings &&
-                projectPlannings.map((projectPlanning) => (
-                  <div
-                    key={projectPlanning.id}
-                    className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
-                  >
-                    <div className="col-span-1 pl-3">
-                      {projectPlanning.name}
-                    </div>
-                    <div className="col-span-1">
-                      {projectPlanning.startDate}
-                    </div>
-                    <div className="col-span-1">{projectPlanning.endDate}</div>
-                    <div className="col-span-1">
-                      {projectPlanning.estimatedBudget}
-                    </div>
-
-                    <div className="col-span-2">
-                      <Link
-                        to={`/projectPlannings/edit/${projectPlanning.id}`}
-                        className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                      >
-                        Editar
-                      </Link>
-                      <button
-                        onClick={async () =>
-                          await deleteHandler(projectPlanning.id)
-                        }
-                        className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-            </div> */}
-
             <h1 className="text-4xl font-semibold mb-6">
               Asignación de Recursos
             </h1>
@@ -437,9 +374,12 @@ const ProjectDetails = () => {
             </button>
 
             <div className="bg-white shadow-md rounded-lg">
-              <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+              <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
                 <div className="col-span-1 pl-3">Recurso</div>
                 <div className="col-span-1">Cantidad</div>
+                <div className="col-span-1">Costo Estimado</div>
+                <div className="col-span-1">Costo Actual</div>
+                <div className="col-span-1">Fecha de Asignación</div>
                 <div className="col-span-2">Acciones</div>
               </div>
               {resourceAssignments &&
@@ -452,14 +392,27 @@ const ProjectDetails = () => {
                   return (
                     <div
                       key={resourceAssignment.id}
-                      className="grid grid-cols-4 gap-4 py-2 pl-3 border-b border-gray-200"
+                      className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
                     >
                       {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
                       <div className="col-span-1">
                         {resource ? resource.name : "Desconocido"}
                       </div>
                       <div className="col-span-1">
-                        {resourceAssignment.quantity}
+                        {" "}
+                        {resourceAssignment.quantity}{" "}
+                      </div>
+                      <div className="col-span-1">
+                        {" "}
+                        ${resourceAssignment.estimatedCost}{" "}
+                      </div>
+                      <div className="col-span-1">
+                        {" "}
+                        ${resourceAssignment.actualCost}{" "}
+                      </div>
+                      <div className="col-span-1">
+                        {" "}
+                        {resourceAssignment.associatedDate}{" "}
                       </div>
 
                       <div className="col-span-2">
@@ -499,9 +452,12 @@ const ProjectDetails = () => {
                   Crear Sub-Proyecto
                 </Link> */}
                 <div className="bg-white shadow-md rounded-lg">
-                  <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+                  <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
                     <div className="col-span-1 ml-5">Nombre</div>
                     <div className="col-span-1">Descripción</div>
+                    <div className="col-span-1">Status</div>
+                    <div className="col-span-1">Fecha de Inicio</div>
+                    <div className="col-span-1">Fecha de Fin</div>
                     <div className="col-span-2">Acciones</div>
                   </div>
                   {projects &&
@@ -509,12 +465,13 @@ const ProjectDetails = () => {
                       return (
                         <div
                           key={project.id}
-                          className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+                          className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
                         >
                           <div className="col-span-1 ml-5">{project.name}</div>
-                          <div className="col-span-1">
-                            {project.description}
-                          </div>
+                          <div className="col-span-1"> {project.description}</div>
+                          <div className="col-span-1">{project.status}</div>
+                          <div className="col-span-1">{project.startDate}</div>
+                          <div className="col-span-1">{project.endDate}</div>
 
                           <div className="col-span-2">
                             <Link

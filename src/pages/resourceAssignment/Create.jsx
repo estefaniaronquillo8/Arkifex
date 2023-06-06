@@ -177,8 +177,6 @@ const ResourceAssignmentCreate = () => {
               <input
                 type="number"
                 id="quantity"
-                min={0}
-                step="0.01"
                 placeholder="quantity"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("quantity", {
