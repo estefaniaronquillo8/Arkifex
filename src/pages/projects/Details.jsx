@@ -13,8 +13,12 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
 import mapboxgl from "mapbox-gl";
+import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "mapbox-gl/dist/mapbox-gl.css";
+
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 import "tailwindcss/tailwind.css";
+
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
@@ -40,6 +44,9 @@ const ProjectDetails = () => {
   const [notificationType, setNotificationType] = useState();
   const mapContainer = useRef(null);
   const map = useRef(null);
+  const [markerCoordinates, setMarkerCoordinates] = useState(null);
+  
+   
 
   useEffect(() => {
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
@@ -206,52 +213,13 @@ const ProjectDetails = () => {
     ? "Editar locación"
     : "Crear locación";
 
-  var createGeoJSONCircle = function (center, radiusInKm, points) {
-    if (!points) points = 64;
-
-    var coords = {
-      latitude: center[1],
-      longitude: center[0],
-    };
-
-    var km = radiusInKm;
-
-    var ret = [];
-    var distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
-    var distanceY = km / 110.574;
-
-    var theta, x, y;
-    for (var i = 0; i < points; i++) {
-      theta = (i / points) * (2 * Math.PI);
-      x = distanceX * Math.cos(theta);
-      y = distanceY * Math.sin(theta);
-
-      ret.push([coords.longitude + x, coords.latitude + y]);
-    }
-    ret.push(ret[0]);
-
-    return {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            geometry: {
-              type: "Polygon",
-              coordinates: [ret],
-            },
-          },
-        ],
-      },
-    };
-  };
+    
 
   useEffect(() => {
     if (mapContainer.current) {
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: "mapbox://styles/mapbox/satellite-streets-v12",
+        style: "mapbox://styles/mapbox/satellite-v9",
         center: [
           locationForThisProject.longitude,
           locationForThisProject.latitude,
@@ -259,13 +227,43 @@ const ProjectDetails = () => {
         zoom: 17, // Specify the initial zoom level
       });
 
-      const marker = new mapboxgl.Marker()
+      const marker = new mapboxgl.Marker({draggable:true})
         .setLngLat([
           locationForThisProject.longitude,
           locationForThisProject.latitude,
         ]) // Set the marker's coordinates to the center
         .addTo(map.current);
+
+        
+        const draw = new MapboxDraw({
+          displayControlsDefault: false,
+          // Select which mapbox-gl-draw control buttons to add to the map.
+          controls: {
+          polygon: true,
+          trash: true
+          },
+          // Set mapbox-gl-draw to draw by default.
+          // The user does not have to click the polygon control button first.
+          defaultMode: 'draw_polygon'
+          });
+
+          map.current.addControl(draw);
+
+          const handleMarkerDragEnd = () => {
+            const lngLat = marker.getLngLat();
+            setMarkerCoordinates([lngLat.lng, lngLat.lat]);
+          };
+
+          marker.on('dragend', handleMarkerDragEnd);
+
+      // Add marker to the map
+         
+
+
     }
+
+    
+
 
     return () => {
       if (map.current) {
@@ -273,6 +271,10 @@ const ProjectDetails = () => {
       }
     };
   }, []);
+
+  
+  
+  
 
   return (
     <div className="container mx-auto px-4 py-6">
