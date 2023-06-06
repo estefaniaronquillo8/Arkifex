@@ -44,7 +44,7 @@ const UserIndex = () => {
   const deleteHandler = async(id) => {
     const { response, success, error, notificationType } = await handleDelete(id);
     if (response?.status === 200) {
-      setResources(response.resources);
+      setUsers(response.resources);
     }
     setError(error);
     setSuccess(success);
