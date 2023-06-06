@@ -50,7 +50,7 @@ const LocationCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-    data.projectId = 1;
+    data.projectId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -66,7 +66,7 @@ const LocationCreate = () => {
       showNotification(error, notificationType);
     }
 
-    setSelectedProjectId(0);
+    setSelectedProjectId(null);
     if (response?.status === 200) {
       navigate(`/projects/details/${data.projectId}`);
     }

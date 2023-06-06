@@ -8,7 +8,6 @@ import {
   handleDelete,
   handleEdit,
 } from "../../services/project.api.routes";
-import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
@@ -22,7 +21,6 @@ mapboxgl.accessToken =
 const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [projectPlannings, setProjectPlannings] = useState([]);
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [locations, setLocations] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -76,20 +74,6 @@ const ProjectDetails = () => {
       setNotificationType(notificationType);
     };
 
-    const fetchProjectPlannings = async () => {
-      const { response, success, error, notificationType } =
-        await getAllProjectPlannings();
-      if (response?.projectPlannings) {
-        // Filtrar planificaciones de proyectos por projectId
-        const relatedProjectPlannings = response.projectPlannings.filter(
-          (planning) => planning.projectId === project.id
-        );
-        setProjectPlannings(relatedProjectPlannings);
-      }
-      setError(error);
-      setNotificationType(notificationType);
-    };
-
     const fetchResourceAssignments = async () => {
       const { response, success, error, notificationType } =
         await getAllResourceAssignments();
@@ -120,7 +104,6 @@ const ProjectDetails = () => {
 
     if (project) {
       // Llamar a estas funciones solo si el proyecto ya ha sido establecido
-      fetchProjectPlannings();
       fetchResourceAssignments();
       fetchLocations();
       fetchProjects();
@@ -166,10 +149,10 @@ const ProjectDetails = () => {
     setNotificationType(notificationType);
   };
 
-  const handleCreateProjectPlanning = () => {
+  /* const handleCreateProjectPlanning = () => {
     setSelectedProjectId(project.id);
     navigate("/projectPlannings/create");
-  };
+  }; */
 
   const handleCreateResourceAssignment = () => {
     setSelectedProjectId(project.id);
@@ -179,6 +162,11 @@ const ProjectDetails = () => {
   const handleCreateLocation = () => {
     setSelectedProjectId(project.id);
     navigate("/locations/create");
+  };
+
+  const handleCreateSubproject = () => {
+    setSelectedProjectId(project.id);
+    navigate("/projects/create");
   };
 
   const handleEditLocation = () => {
@@ -281,14 +269,33 @@ const ProjectDetails = () => {
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-6">
             <div className="flex flex-wrap space-x-4">
+              {project.parentId === null && (
+                <>
+                  <div className="flex-1 bg-white rounded-lg shadow p-4">
+                    <h2 className="font-bold text-lg mb-2">Encargado</h2>
+                    <p>{project.userId}</p>
+                  </div>
+                </>
+              )}
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Nombre</h2>
                 <p>{project.name}</p>
               </div>
-
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Descripción</h2>
                 <p>{project.description}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Status</h2>
+                <p>{project.status}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
+                <p>{project.startDate}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
+                <p>{project.endDate}</p>
               </div>
             </div>
             <Link
@@ -344,7 +351,7 @@ const ProjectDetails = () => {
               </button>
             </div>
 
-            <h1 className="text-4xl font-semibold mb-6">
+            {/* <h1 className="text-4xl font-semibold mb-6">
               Planificación de Proyectos
             </h1>
             <button
@@ -397,7 +404,7 @@ const ProjectDetails = () => {
                     </div>
                   </div>
                 ))}
-            </div>
+            </div> */}
 
             <h1 className="text-4xl font-semibold mb-6">
               Asignación de Recursos
@@ -459,12 +466,18 @@ const ProjectDetails = () => {
             {!project.parentId && (
               <>
                 <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
-                <Link
+                <button
+                  onClick={handleCreateSubproject}
+                  className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+                >
+                  Crear Nuevo Subproyecto
+                </button>
+                {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
                 >
                   Crear Sub-Proyecto
-                </Link>
+                </Link> */}
                 <div className="bg-white shadow-md rounded-lg">
                   <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
                     <div className="col-span-1 ml-5">Nombre</div>

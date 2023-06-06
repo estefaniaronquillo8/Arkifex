@@ -8,7 +8,13 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const ProjectCreate = () => {
   const navigate = useNavigate();
-  const { users, setUsers, showNotification } = useGlobalContext();
+  const {
+    users,
+    setUsers,
+    showNotification,
+    selectedProjectId,
+    setSelectedProjectId,
+  } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -45,10 +51,8 @@ const ProjectCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-    if (!data.parentId) {
-      data.parentId = null;
-    }
-    if (data.parentId) {
+    if (selectedProjectId) {
+      data.parentId = selectedProjectId;
       data.userId = null;
     }
 
@@ -66,6 +70,7 @@ const ProjectCreate = () => {
       showNotification(error, notificationType);
     }
 
+    setSelectedProjectId(null);
     if (response?.status === 200) {
       navigate("/projects");
     }
@@ -81,36 +86,40 @@ const ProjectCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Proyectos
             </h1>
-            <div className="mb-4">
-              <label
-                htmlFor="userId"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Usuario Encargado del Proyecto
-              </label>
-              <select
-                id="userId"
-                name="userId"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("userId", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona un usuario</option>
-                {users && users.length > 0 ? (
-                  users.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>Cargando usuarios...</option>
-                )}
-              </select>
-              {errors.userId && (
-                <p className="text-red-800">{errors.userId.message}</p>
-              )}
-            </div>
+            {selectedProjectId === null && (
+              <>
+                <div className="mb-4">
+                  <label
+                    htmlFor="userId"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    Usuario Encargado del Proyecto
+                  </label>
+                  <select
+                    id="userId"
+                    name="userId"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    {...register("userId", {
+                      required: "El campo es requerido.",
+                    })}
+                  >
+                    <option value="">Selecciona un usuario</option>
+                    {users && users.length > 0 ? (
+                      users.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.name} {user.lastname}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Cargando usuarios...</option>
+                    )}
+                  </select>
+                  {errors.userId && (
+                    <p className="text-red-800">{errors.userId.message}</p>
+                  )}
+                </div>
+              </>
+            )}
             <div className="mb-4">
               <label
                 htmlFor="name"

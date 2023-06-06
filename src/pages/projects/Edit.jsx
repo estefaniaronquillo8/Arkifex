@@ -1,41 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import {
-  handleEdit,
-  handleUpdate,
-} from "../../services/project.api.routes";
-import { getAllProjects } from "../../services/project.api.routes";
+import { handleEdit, handleUpdate } from "../../services/project.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
 
 function ProjectEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { project, setProject, showNotification } =
-  useGlobalContext();
-  const { projects, setProjects } = useGlobalContext();
+  const { project, setProject, showNotification } = useGlobalContext();
+  const { users, setUsers } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
-  
-  const loadProjects = async () => {
+
+  const loadUsers = async () => {
     try {
-      const { response } = await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
+      const { response } = await getAllUsers();
+      if (response?.users) {
+        setUsers(response.users);
       }
     } catch (error) {
-      console.error("Error al cargar los recursos:", error);
+      console.error("Error al cargar los usuarios:", error);
     }
   };
 
   // Función para cargar los recursos
   useEffect(() => {
-    loadProjects();
+    loadUsers();
   }, []);
 
   useEffect(() => {
@@ -91,31 +87,36 @@ function ProjectEdit() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
-              {/* <div>
-                <label
-                  htmlFor="projectId"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Proyecto:
-                </label>
-                <select
-                  id="projectId"
-                  name="projectId"
-                  value={project.projectId}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  {projects && projects.length > 0 ? (
-                    projects.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option disabled>Cargando recursos...</option>
-                  )}
-                </select>
-              </div> */}
+              {project.parentId === null && (
+                <>
+                  <div>
+                    <label
+                      htmlFor="userId"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Encargado:
+                    </label>
+                    <select
+                      id="userId"
+                      name="userId"
+                      value={project.userId}
+                      onChange={handleChange}
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                      {users && users.length > 0 ? (
+                        users.map((user) => (
+                          <option key={user.id} value={user.id}>
+                            {user.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option disabled>Cargando recursos...</option>
+                      )}
+                    </select>
+                  </div>
+                </>
+              )}
+
               <div>
                 <label
                   htmlFor="name"
@@ -148,7 +149,54 @@ function ProjectEdit() {
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
-              
+              <div>
+                <label
+                  htmlFor="status"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Status:
+                </label>
+                <input
+                  id="status"
+                  type="text"
+                  name="status"
+                  value={project.status}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="startDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Fecha de inicio:
+                </label>
+                <input
+                  id="startDate"
+                  type="date"
+                  name="startDate"
+                  value={project.startDate}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="endDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Fecha de finalización:
+                </label>
+                <input
+                  id="endDate"
+                  type="date"
+                  name="endDate"
+                  value={project.endDate}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
             </div>
             <button
               type="submit"

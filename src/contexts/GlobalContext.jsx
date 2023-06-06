@@ -17,7 +17,7 @@ export const GlobalProvider = ({ children }) => {
     email: "",
   });
 
-  const [selectedResourceId, setSelectedResourceId] = useState(null);
+  //const [selectedResourceId, setSelectedResourceId] = useState(null);
   
   const [resources, setResources] = useState([]);
   const [resource, setResource] = useState({
@@ -27,16 +27,6 @@ export const GlobalProvider = ({ children }) => {
     role: "",
     description: "",
     marketPrice: 0,
-  });
-
-  const [costs, setCosts] = useState([]);
-  const [cost, setCost] = useState({
-    id: 0,
-    resourceId: 0,
-    description: "",
-    amount: 0,
-    frequency: "",
-    status: "",
   });
   
   const [selectedProjectId, setSelectedProjectId] = useState(null);
@@ -51,16 +41,6 @@ export const GlobalProvider = ({ children }) => {
     status: "",
     startDate: null,
     endDate: null,
-  });
-
-  const [projectPlannings, setProjectPlannings] = useState([]);
-  const [projectPlanning, setProjectPlanning] = useState({
-    id: 0,
-    projectId: 0,
-    name: "",
-    startDate: null,
-    endDate: null,
-    estimatedBudget: 0,
   });
 
   const [locations, setLocations] = useState([]);
@@ -121,19 +101,6 @@ export const GlobalProvider = ({ children }) => {
     resources,
     setResources,
 
-    selectedResourceId,
-    setSelectedResourceId,
-
-    // Costs
-    cost,
-    setCost,
-    costs,
-    setCosts,
-    // Project Plannings
-    projectPlannings,
-    setProjectPlannings,
-    projectPlanning,
-    setProjectPlanning,
     // Projects
     projects,
     setProjects,
@@ -148,6 +115,7 @@ export const GlobalProvider = ({ children }) => {
     setLocations,
     location,
     setLocation,
+    
     // Resource Assignments
     resourceAssignments,
     setResourceAssignments,

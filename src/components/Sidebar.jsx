@@ -13,19 +13,19 @@ const navigate = useNavigate();
   const menus = [
     { name: "Users", link: "/users", icon: AiOutlineUsergroupAdd },
     { name: "Resources", link: "/resources", icon: FaWindowRestore },
-    {
+    /* {
       name: "Resource Assignments",
       link: "/resourceAssignments",
       icon: MdAssignmentAdd,
-    },
+    }, */
     { name: "Projects", link: "/projects", icon: AiFillProject },
-    {
+    /* {
       name: "Projects Plannings",
       link: "/projectPlannings",
       icon: BsFillCalendarCheckFill,
-    },
+    }, */
     { name: "Locations", link: "/locations", icon: ImLocation },
-    { name: "Costs", link: "/costs", icon: FaMoneyCheckAlt },
+    /* { name: "Costs", link: "/costs", icon: FaMoneyCheckAlt }, */
   ];
 
   const [open, setOpen] = useState(true);

@@ -5,12 +5,14 @@ import {
   getAllProjects,
   handleDelete,
 } from "../../services/project.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
 const ProjectIndex = () => {
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  const { projects, setProjects, users, setUsers, setSelectedProjectId, showNotification } =
+    useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
@@ -21,11 +23,21 @@ const ProjectIndex = () => {
   }, []);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const { response, success, error, notificationType } =
-        await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
+    const fetchProjectsAndUsers = async () => {
+      const { response: userResponse } = await getAllUsers();
+      const {
+        response: projectResponse,
+        success,
+        error,
+        notificationType,
+      } = await getAllProjects();
+
+      if (userResponse?.users) {
+        setUsers(userResponse.users);
+      }
+
+      if (projectResponse?.projects) {
+        setProjects(projectResponse.projects);
       }
 
       setError(error);
@@ -33,7 +45,7 @@ const ProjectIndex = () => {
       setNotificationType(notificationType);
     };
 
-    fetchProjects();
+    fetchProjectsAndUsers();
   }, []);
 
   useEffect(() => {
@@ -57,15 +69,26 @@ const ProjectIndex = () => {
     setNotificationType(notificationType);
   };
 
+  const handleCreateProject = () => {
+    setSelectedProjectId(null);
+    navigate("/projects/create");
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-4xl font-semibold mb-6">Proyectos</h1>
-      <Link
+      <button
+        onClick={handleCreateProject}
+        className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+      >
+        Crear Nuevo Proyecto
+      </button>
+      {/* <Link
         to="/projects/create"
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
       >
         Crear Proyecto
-      </Link>
+      </Link> */}
       <div className="bg-white shadow-md rounded-lg">
         <div className="grid grid-cols-8 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 ml-5">Nombre</div>
@@ -79,6 +102,7 @@ const ProjectIndex = () => {
         {projects &&
           projects.map((project) => {
             if (!project.parentId) {
+              const user = users.find((user) => user.id === project.userId);
               return (
                 <div
                   key={project.id}
@@ -86,7 +110,9 @@ const ProjectIndex = () => {
                 >
                   <div className="col-span-1 ml-5">{project.name}</div>
                   <div className="col-span-1">{project.description}</div>
-                  <div className="col-span-1">{project.userId}</div>
+                  <div className="col-span-1 pl-3">
+                    {user ? user.name + " "  + user.lastname : "Unknown"}
+                  </div>
                   <div className="col-span-1">{project.status}</div>
                   <div className="col-span-1">{project.startDate}</div>
                   <div className="col-span-1">{project.endDate}</div>
@@ -104,7 +130,6 @@ const ProjectIndex = () => {
             }
             return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
           })}
-        
       </div>
     </div>
   );

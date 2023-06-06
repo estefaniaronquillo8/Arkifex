@@ -84,7 +84,7 @@ const ResourceAssignmentCreate = () => {
       showNotification(error, notificationType);
     }
 
-    setSelectedProjectId(0);
+    setSelectedProjectId(null);
     if (response?.status === 200) {
       navigate(`/projects/details/${data.projectId}`);
     }
