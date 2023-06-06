@@ -67,9 +67,13 @@ const ProjectIndex = () => {
         Crear Proyecto
       </Link>
       <div className="bg-white shadow-md rounded-lg">
-        <div className="grid grid-cols-4 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+        <div className="grid grid-cols-8 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 ml-5">Nombre</div>
           <div className="col-span-1">Descripción</div>
+          <div className="col-span-1">Encargado</div>
+          <div className="col-span-1">Status</div>
+          <div className="col-span-1">Fecha de Inicio</div>
+          <div className="col-span-1">Fecha de Fin</div>
           <div className="col-span-2">Acciones</div>
         </div>
         {projects &&
@@ -78,10 +82,14 @@ const ProjectIndex = () => {
               return (
                 <div
                   key={project.id}
-                  className="grid grid-cols-4 gap-4 py-2 border-b border-gray-200"
+                  className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
                 >
                   <div className="col-span-1 ml-5">{project.name}</div>
                   <div className="col-span-1">{project.description}</div>
+                  <div className="col-span-1">{project.userId}</div>
+                  <div className="col-span-1">{project.status}</div>
+                  <div className="col-span-1">{project.startDate}</div>
+                  <div className="col-span-1">{project.endDate}</div>
 
                   <div className="col-span-2">
                     <Link

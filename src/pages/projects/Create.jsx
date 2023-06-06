@@ -1,55 +1,62 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleCreate } from "../../services/project.api.routes";
-import { getAllProjects } from "../../services/project.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
 
 const ProjectCreate = () => {
   const navigate = useNavigate();
-  const { projects, setProjects, showNotification } = useGlobalContext();
+  const { users, setUsers, showNotification } = useGlobalContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
+    userId: 0,
     parentId: 0,
     name: "",
     description: "",
+    status: "",
+    startDate: null,
+    endDate: null,
   });
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
 
-  const loadProjects = async () => {
+  const loadUsers = async () => {
     try {
-      const { response } = await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
+      const { response } = await getAllUsers();
+      if (response?.users) {
+        setUsers(response.users);
       }
     } catch (error) {
-      console.error("Error al cargar los proyectos:", error);
+      console.error("Error al cargar los usuarios: ", error);
     }
   };
 
   // Función para cargar los proyectos
   useEffect(() => {
-    loadProjects();
+    loadUsers();
   }, []);
 
   const createHandler = async (data) => {
-    if (!data.parentId){
+    if (!data.parentId) {
       data.parentId = null;
     }
-       
+    if (data.parentId) {
+      data.userId = null;
+    }
+
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
 
-    console.log("DATA DEL PROJECT",data);
+    console.log("DATA DEL PROJECT", data);
 
     if (success) {
       showNotification(success, notificationType);
@@ -74,34 +81,36 @@ const ProjectCreate = () => {
             <h1 className="mb-6 text-2xl font-bold text-center">
               Creación de Proyectos
             </h1>
-            {/* <div className="mb-4">
+            <div className="mb-4">
               <label
-                htmlFor="parentId"
+                htmlFor="userId"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
-                Parent ID
+                Usuario Encargado del Proyecto
               </label>
               <select
-                id="parentId"
-                name="parentId"
+                id="userId"
+                name="userId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("parentId")}
+                {...register("userId", {
+                  required: "El campo es requerido.",
+                })}
               >
-                <option value="">Selecciona un proyecto</option>
-                {projects && projects.length > 0 ? (
-                  projects.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
+                <option value="">Selecciona un usuario</option>
+                {users && users.length > 0 ? (
+                  users.map((user) => (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
                     </option>
                   ))
                 ) : (
-                  <option disabled>Cargando proyectos...</option>
+                  <option disabled>Cargando usuarios...</option>
                 )}
               </select>
-              {errors.parentId && (
-                <p className="text-red-800">{errors.parentId.message}</p>
+              {errors.userId && (
+                <p className="text-red-800">{errors.userId.message}</p>
               )}
-            </div> */}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -148,6 +157,68 @@ const ProjectCreate = () => {
               />
               {errors.description && (
                 <p className="text-red-800">{errors.description.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="status"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Status
+              </label>
+              <input
+                type="text"
+                id="status"
+                placeholder="Status del Proyecto"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("status", {
+                  required: "El campo es requerido.",
+                  minLength: {
+                    value: 3,
+                    message: "El status debe tener al menos 3 caracteres.",
+                  },
+                })}
+              />
+              {errors.status && (
+                <p className="text-red-800">{errors.status.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="startDate"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Fecha de inicio
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("startDate", {
+                  required: "El campo es requerido.",
+                })}
+              />
+              {errors.startDate && (
+                <p className="text-red-800">{errors.startDate.message}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <label
+                htmlFor="endDate"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Fecha de finalización
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("endDate", {
+                  required: "El campo es requerido.",
+                })}
+              />
+              {errors.endDate && (
+                <p className="text-red-800">{errors.endDate.message}</p>
               )}
             </div>
             <div className="flex flex-col items-center justify-center">

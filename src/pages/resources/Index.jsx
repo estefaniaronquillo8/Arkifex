@@ -85,11 +85,10 @@ const ResourceIndex = () => {
 
       <div className="bg-white shadow-md rounded-lg">
         <h1 className="text-2xl font-semibold mb-3">TABLA DE MATERIALES</h1>
-        <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+        <div className="grid grid-cols-5 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 pl-2">Nombre</div>
-          <div className="col-span-1">Cantidad</div>
-          <div className="col-span-1">Unidad</div>
-          <div className="col-span-1">Costo por Unidad</div>
+          <div className="col-span-1">Descripción</div>
+          <div className="col-span-1">Precio en el Mercado</div>
           <div className="col-span-2">Acciones</div>
         </div>
         {resources &&
@@ -98,20 +97,26 @@ const ResourceIndex = () => {
             .map((resource) => (
               <div
                 key={resource.id}
-                className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
+                className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200"
               >
                 <div className="col-span-1 pl-3">{resource.name}</div>
-                <div className="col-span-1">{resource.quantity}</div>
-                <div className="col-span-1">{resource.unit}</div>
-                <div className="col-span-1">{resource.costPerUnit}</div>
+                <div className="col-span-1">{resource.description}</div>
+                <div className="col-span-1">${resource.marketPrice}</div>
                 <div className="col-span-2">
                   <Link
-                    to={`/resources/details/${resource.id}`}
+                    to={`/resources/edit/${resource.id}`}
                     onClick={() => localStorage.setItem("type", "Material")}
                     className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                   >
-                    Detalles
+                    Editar
                   </Link>
+
+                  <button
+                    onClick={async () => await deleteHandler(resource.id)}
+                    className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Eliminar
+                  </button>
                 </div>
               </div>
             ))}
@@ -119,9 +124,10 @@ const ResourceIndex = () => {
 
       <div className="bg-white shadow-md rounded-lg">
         <h1 className="text-2xl font-semibold mt-3 mb-3">TABLA DE PERSONAL</h1>
-        <div className="grid grid-cols-5 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+        <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 pl-2">Nombre</div>
           <div className="col-span-1">Rol</div>
+          <div className="col-span-1">Descripción</div>
           <div className="col-span-1">Pago por hora</div>
           <div className="col-span-2">Acciones</div>
         </div>
@@ -131,20 +137,21 @@ const ResourceIndex = () => {
             .map((resource) => (
               <div
                 key={resource.id}
-                className="grid grid-cols-5 gap-4 py-2 border-b border-gray-200"
+                className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
               >
                 <div className="col-span-1 pl-3">{resource.name}</div>
                 <div className="col-span-1">{resource.role}</div>
-                <div className="col-span-1">{resource.costPerUnit}</div>
+                <div className="col-span-1">{resource.description}</div>
+                <div className="col-span-1">${resource.marketPrice}</div>
                 <div className="col-span-2">
-                  <Link
+                  {/* <Link
                     to={`/resources/details/${resource.id}`}
                     onClick={() => localStorage.setItem("type", "Personal")}
                     className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                   >
                     Detalles
-                  </Link>
-                  {/* <Link
+                  </Link> */}
+                  <Link
                     to={`/resources/edit/${resource.id}`}
                     onClick={() => localStorage.setItem("type", "Personal")}
                     className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
@@ -157,7 +164,7 @@ const ResourceIndex = () => {
                     className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                   >
                     Eliminar
-                  </button> */}
+                  </button>
                 </div>
               </div>
             ))}

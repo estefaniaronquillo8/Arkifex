@@ -14,8 +14,15 @@ const ResourceCreate = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    name: "",
+    type: "",
+    role: "",
+    description: "",
+    marketPrice: 0,
+  });
   const [resourceType, setResourceType] = useState("");
 
   useEffect(() => {
@@ -80,7 +87,7 @@ const ResourceCreate = () => {
               <input
                 type="text"
                 id="name"
-                placeholder="Nombre del Recurso"
+                placeholder="Nombre"
                 className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
                   errors.name ? "border-red-500" : ""
                 }`}
@@ -124,64 +131,31 @@ const ResourceCreate = () => {
                 </div>
               </>
             )}
-            {resourceType === "Material" && (
-              <>
-                <div className="mb-4">
-                  <label
-                    htmlFor="quantity"
-                    className="block text-gray-700 text-sm font-bold mb-2"
-                  >
-                    <RiShoppingCartFill className="inline-block mr-2 mb-1" />{" "}
-                    Cantidad
-                  </label>
-                  <input
-                    type="number"
-                    id="quantity"
-                    min={1}
-                    placeholder="Cantidad"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                      errors.quantity ? "border-red-500" : ""
-                    }`}
-                    {...register("quantity", {
-                      required: "El campo es requerido.",
-                      minLength: {
-                        value: 1,
-                        message: "La cantidad debe tener al menos 1 valor.",
-                      },
-                    })}
-                  />
-                  {errors.quantity && (
-                    <p className="text-red-800">{errors.quantity.message}</p>
-                  )}
-                </div>
-                <div className="mb-4">
-                  <label
-                    htmlFor="unit"
-                    className="block text-gray-700 text-sm font-bold mb-3"
-                  >
-                    <GiWeight className="inline-block mr-2 mb-1 react-icons-gi text-xl" />{" "}
-                    Unidad
-                  </label>
-                  <select
-                    id="unit"
-                    className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                      errors.unit ? "border-red-500" : ""
-                    }`}
-                    {...register("unit", {
-                      required: "El campo es requerido.",
-                    })}
-                  >
-                    <option value="">Selecciona una unidad</option>
-                    <option value="kg">kg</option>
-                    <option value="m²">m²</option>
-                  </select>
-                  {errors.unit && (
-                    <p className="text-red-800">{errors.unit.message}</p>
-                  )}
-                </div>
-              </>
-            )}
-
+            <div className="mb-4">
+              <label
+                htmlFor="description"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                <RiShoppingCartFill className="inline-block mr-2 mb-1" />{" "}
+                Descripción
+              </label>
+              <input
+                type="text"
+                id="description"
+                placeholder="Descripción"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("description", {
+                  required: "El campo es requerido.",
+                  minLength: {
+                    value: 5,
+                    message: "La descripción debe tener al menos 5 caracteres.",
+                  },
+                })}
+              />
+              {errors.description && (
+                <p className="text-red-800">{errors.description.message}</p>
+              )}
+            </div>
             <div className="mb-4">
               {resourceType === "Personal" && (
                 <>
@@ -199,18 +173,18 @@ const ResourceCreate = () => {
                     htmlFor="costPerUnit"
                     className="block text-gray-700 text-sm font-bold mb-4"
                   >
-                    <FaDollarSign className="inline-block mr-2 mb-1" /> Costo
-                    por Unidad
+                    <FaDollarSign className="inline-block mr-2 mb-1" /> Precio
+                    en el Mercado
                   </label>
                 </>
               )}
               <input
                 type="number"
-                id="costPerUnit"
+                id="marketPrice"
                 min={0}
                 placeholder="Valor"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("costPerUnit", {
+                {...register("marketPrice", {
                   required: "El campo es requerido.",
                   minLength: {
                     value: 0.05,
@@ -218,8 +192,8 @@ const ResourceCreate = () => {
                   },
                 })}
               />
-              {errors.costPerUnit && (
-                <p className="text-red-800">{errors.costPerUnit.message}</p>
+              {errors.marketPrice && (
+                <p className="text-red-800">{errors.marketPrice.message}</p>
               )}
             </div>
           </div>
@@ -230,9 +204,16 @@ const ResourceCreate = () => {
             <br />
             <br />
             <br />
-            <button type="submit" className="btn-custom btn-primary">
-              Crear Nuevo Recurso
-            </button>
+            {resourceType === "Material" && (
+              <button type="submit" className="btn-custom btn-primary">
+                Crear Material
+              </button>
+            )}
+            {resourceType === "Personal" && (
+              <button type="submit" className="btn-custom btn-primary">
+                Crear Personal
+              </button>
+            )}
           </div>
         </form>
       </div>

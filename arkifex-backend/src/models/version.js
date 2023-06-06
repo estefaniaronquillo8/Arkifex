@@ -3,7 +3,7 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { Project, User } = require("./index");
 
-const Report = sequelize.define("Report", {
+const Version = sequelize.define("Version", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -25,14 +25,22 @@ const Report = sequelize.define("Report", {
       key: "id",
     },
   },
-  date: {
+  budget: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  time: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  versionDate: {
     type: DataTypes.DATEONLY,
     allowNull: false,
   },
-  /* archivo: {
-      type: ,
-      allowNull: false,
-    }, */
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
 });
 
-module.exports = Report;
+module.exports = Version;

@@ -1,3 +1,4 @@
+// project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 const { Project, Resource } = require("./index");
@@ -5,16 +6,8 @@ const { Project, Resource } = require("./index");
 const ResourceAssignment = sequelize.define("ResourceAssignment", {
   id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
     autoIncrement: true,
-  },
-  resourceId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Resource,
-      key: "id",
-    },
+    primaryKey: true,
   },
   projectId: {
     type: DataTypes.INTEGER,
@@ -24,7 +17,30 @@ const ResourceAssignment = sequelize.define("ResourceAssignment", {
       key: "id",
     },
   },
-  quantity: { type: DataTypes.INTEGER, allowNull: false},
+  resourceId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Resource,
+      key: "id",
+    },
+  },
+  quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  estimatedCost: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  actualCost: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  associatedDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
 });
 
 module.exports = ResourceAssignment;

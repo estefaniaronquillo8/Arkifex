@@ -1,43 +1,33 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+// project.js
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
-const Resource = sequelize.define(
-  'Resource',
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    type: {
-      type: DataTypes.ENUM('Material', 'Personal'),
-      allowNull: false,
-    },
-    role: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    quantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    unit: {
-      type: DataTypes.ENUM('kg', 'm²', 'horas'),
-      allowNull: false,
-    },
-    costPerUnit: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
+const Resource = sequelize.define("Resource", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
   },
-  {
-    tableName: 'Resources',
-  }
-);
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  marketPrice: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+});
 
 module.exports = Resource;

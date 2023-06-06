@@ -25,9 +25,8 @@ export const GlobalProvider = ({ children }) => {
     name: "",
     type: "",
     role: "",
-    quantity: 0,
-    unit: "",
-    costPerUnit: 0,
+    description: "",
+    marketPrice: 0,
   });
 
   const [costs, setCosts] = useState([]);
@@ -45,9 +44,13 @@ export const GlobalProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState({
     id: 0,
+    userId: 0,
     parentId: 0,
     name: "",
     description: "",
+    status: "",
+    startDate: null,
+    endDate: null,
   });
 
   const [projectPlannings, setProjectPlannings] = useState([]);

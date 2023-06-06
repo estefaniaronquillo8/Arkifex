@@ -50,7 +50,7 @@ const LocationCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-    data.projectId = selectedProjectId;
+    data.projectId = 1;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );

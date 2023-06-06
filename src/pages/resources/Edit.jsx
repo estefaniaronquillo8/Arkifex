@@ -121,42 +121,22 @@ function ResourceEdit() {
                   </div>
                 </>
               )}
-              {resourceType === "Material" && (
-                <>
-                  <div>
-                    <label
-                      htmlFor="quantity"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Cantidad:
-                    </label>
-                    <input
-                      id="quantity"
-                      type="number"
-                      name="quantity"
-                      value={resource.quantity}
-                      onChange={handleChange}
-                      className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="unit"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Unidad:
-                    </label>
-                    <input
-                      id="unit"
-                      type="text"
-                      name="unit"
-                      value={resource.unit}
-                      onChange={handleChange}
-                      className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                    />
-                  </div>
-                </>
-              )}
+              <div>
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Descripción:
+                </label>
+                <input
+                  id="description"
+                  type="text"
+                  name="description"
+                  value={resource.description}
+                  onChange={handleChange}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
               <div>
                 {resourceType === "Personal" && (
                   <>
@@ -171,18 +151,18 @@ function ResourceEdit() {
                 {resourceType === "Material" && (
                   <>
                     <label
-                      htmlFor="costPerUnit"
+                      htmlFor="marketPrice"
                       className="block text-gray-700 text-sm font-bold mb-2"
                     >
-                      Costo por Unidad
+                      Precio en el Mercado
                     </label>
                   </>
                 )}
                 <input
-                  id="costPerUnit"
+                  id="marketPrice"
                   type="number"
-                  name="costPerUnit"
-                  value={resource.costPerUnit}
+                  name="marketPrice"
+                  value={resource.marketPrice}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
