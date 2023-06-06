@@ -319,11 +319,11 @@ const ProjectDetails = () => {
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{locationForThisProject.latitude}</p>
+                    <p>{markerCoordinates}</p>
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{locationForThisProject.longitude}</p>
+                    <p>{markerCoordinates}</p>
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Area</h2>
