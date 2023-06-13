@@ -1,4 +1,3 @@
-// src/pages/ProjectDetails.js
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -7,29 +6,17 @@ import {
   getAllProjects,
   handleDelete,
   handleEdit,
-} from "../../services/project.api.routes";
-//import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
-import { handleDelete as handleDeletePP } from "../../services/projectPlanning.api.routes";
+} from "../../services/projectPlanning.api.routes";
+import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
-import { getAllLocations } from "../../services/location.api.routes";
-import mapboxgl from "mapbox-gl";
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import "mapbox-gl/dist/mapbox-gl.css";
-
-import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import "tailwindcss/tailwind.css";
-
-mapboxgl.accessToken =
-  "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
 
 const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [projectPlannings, setProjectPlannings] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [projects, setProjects] = useState([]);
   const currentProjectId = "";
   const {
@@ -44,9 +31,6 @@ const ProjectDetails = () => {
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
   const [notificationType, setNotificationType] = useState();
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [markerCoordinates, setMarkerCoordinates] = useState(null);
 
   useEffect(() => {
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
@@ -69,20 +53,6 @@ const ProjectDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const { response, success, error, notificationType } =
-        await getAllProjects();
-      if (response?.projects) {
-        // Filtrar planificaciones de proyectos por projectId
-        const relatedProjects = response.projects.filter(
-          (pry) => pry.parentId === project.id
-        );
-        setProjects(relatedProjects);
-      }
-      setError(error);
-      setNotificationType(notificationType);
-    };
-
     const fetchProjectPlannings = async () => {
       const { response, success, error, notificationType } =
         await getAllProjectPlannings();
@@ -111,26 +81,10 @@ const ProjectDetails = () => {
       setNotificationType(notificationType);
     };
 
-    const fetchLocations = async () => {
-      const { response, success, error, notificationType } =
-        await getAllLocations();
-      if (response?.locations) {
-        // Filtrar localizaciones por projectId
-        const relatedLocations = response.locations.filter(
-          (location) => location.projectId === project.id
-        );
-        setLocations(relatedLocations);
-      }
-      setError(error);
-      setNotificationType(notificationType);
-    };
-
     if (project) {
       // Llamar a estas funciones solo si el proyecto ya ha sido establecido
       fetchResourceAssignments();
       fetchProjectPlannings();
-      fetchLocations();
-      fetchProjects();
     }
   }, [project]);
 
@@ -192,90 +146,10 @@ const ProjectDetails = () => {
     navigate("/projectPlannings/create");
   };
 
-  const handleCreateLocation = () => {
-    setSelectedProjectId(project.id);
-    navigate("/locations/create");
-  };
-
   const handleCreateSubproject = () => {
     setSelectedProjectId(project.id);
     navigate("/projects/create");
   };
-
-  const handleEditLocation = () => {
-    const locationForThisProject = locations.find(
-      (locations) => locations.projectId === project.id
-    );
-    if (!locationForThisProject) {
-      console.error("No location found for this project");
-      return;
-    }
-    setSelectedProjectId(project.id);
-    navigate(`/locations/edit/${locationForThisProject.id}`);
-  };
-
-  const locationForThisProject = locations.find(
-    (locations) => locations.projectId === project.id
-  );
-  const locationForThisProjectExists = locations.some(
-    (location) => location.projectId === project.id
-  );
-  const handleLocationClick = locationForThisProjectExists
-    ? handleEditLocation
-    : handleCreateLocation;
-  const locationButtonText = locationForThisProjectExists
-    ? "Editar locación"
-    : "Crear locación";
-
-  useEffect(() => {
-    if (mapContainer.current) {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/satellite-v9",
-        center: [
-          locationForThisProject.longitude,
-          locationForThisProject.latitude,
-        ], // Specify the initial map center
-        zoom: 17, // Specify the initial zoom level
-      });
-
-      const marker = new mapboxgl.Marker({ draggable: true })
-        .setLngLat([
-          locationForThisProject.longitude,
-          locationForThisProject.latitude,
-        ]) // Set the marker's coordinates to the center
-        .addTo(map.current);
-
-      const draw = new MapboxDraw({
-        displayControlsDefault: false,
-        // Select which mapbox-gl-draw control buttons to add to the map.
-        controls: {
-          polygon: true,
-          trash: true,
-        },
-        // Set mapbox-gl-draw to draw by default.
-        // The user does not have to click the polygon control button first.
-        defaultMode: "draw_polygon",
-      });
-
-      map.current.addControl(draw);
-
-      const handleMarkerDragEnd = () => {
-        const lngLat = marker.getLngLat();
-        setMarkerCoordinates([lngLat.lng, lngLat.lat]);
-      };
-
-      marker.on("dragend", handleMarkerDragEnd);
-
-      // Add marker to the map
-    }
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, []);
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -327,47 +201,8 @@ const ProjectDetails = () => {
               Eliminar
             </button>
 
-            {locationForThisProject && (
-              <div className="flex space-x-4">
-                <div>
-                  <h1 className="text-4xl font-semibold mb-6">
-                    Localización del Proyecto
-                  </h1>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                    <p>{locationForThisProject.address}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{markerCoordinates}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{markerCoordinates}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Area</h2>
-                    <p>{locationForThisProject.area}</p>
-                  </div>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <div ref={mapContainer} className="w-full h-full" />
-                </div>
-              </div>
-            )}
-
-            <div>
-              <button
-                onClick={handleLocationClick}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                {locationButtonText}
-              </button>
-            </div>
-
             <h1 className="text-4xl font-semibold mb-6">
-              Creación de Tareas
+              Asignación de Planificaciones
             </h1>
             <button
               onClick={handleCreateProjectPlanning}

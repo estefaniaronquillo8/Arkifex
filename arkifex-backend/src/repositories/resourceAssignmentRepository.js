@@ -4,11 +4,11 @@ const createResourceAssignment = async (data) => {
   const transaction = await sequelize.transaction();
   console.log('data', data);
   try {
-    const response = await findResourceAssignmentByProjectIdAndResourceId(data.projectId, data.resourceId);
+    const response = await findResourceAssignmentByProjectPlanningIdAndResourceId(data.projectPlanningId, data.resourceId);
     if (response?.resourceAssignment) {
         return {
           status: 409,
-          message: "ResourceAssignment already exists in this project",
+          message: "ResourceAssignment already exists in this project Planning",
           notificationType: "info",
         };
     }
@@ -56,8 +56,8 @@ const getAllResourceAssignments = async () => {
 const updateResourceAssignment = async (id, data) => {
   const transaction = await sequelize.transaction();
   try {
-    if (data.projectId && data.resourceId) {
-      const response = await findResourceAssignmentByProjectIdAndResourceId(data.projectId, data.resourceId);
+    if (data.projectPlanningId && data.resourceId) {
+      const response = await findResourceAssignmentByProjectPlanningIdAndResourceId(data.projectPlanningId, data.resourceId);
       if (
         response.status === 200 &&
         response.resourceAssignment.id !== parseInt(id)
@@ -111,8 +111,8 @@ const deleteResourceAssignment = async (id) => {
   }
 };
 
-const findResourceAssignmentByProjectIdAndResourceId = async (projectId, resourceId) => {
-  const resourceAssignment = await ResourceAssignment.findOne({ where: { projectId, resourceId }});
+const findResourceAssignmentByProjectPlanningIdAndResourceId = async (projectPlanningId, resourceId) => {
+  const resourceAssignment = await ResourceAssignment.findOne({ where: { projectPlanningId, resourceId }});
   console.log('RA', resourceAssignment);
   if (!resourceAssignment){
     return { status: 404 };
@@ -143,6 +143,6 @@ module.exports = {
   getAllResourceAssignments,
   updateResourceAssignment,
   deleteResourceAssignment,
-  findResourceAssignmentByProjectIdAndResourceId,
+  findResourceAssignmentByProjectPlanningIdAndResourceId,
   findById,
 };

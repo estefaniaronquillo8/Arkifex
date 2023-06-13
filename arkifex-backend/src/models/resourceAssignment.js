@@ -1,7 +1,7 @@
 // project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { Project, Resource } = require("./index");
+const { ProjectPlanning, Resource } = require("./index");
 
 const ResourceAssignment = sequelize.define("ResourceAssignment", {
   id: {
@@ -9,11 +9,11 @@ const ResourceAssignment = sequelize.define("ResourceAssignment", {
     autoIncrement: true,
     primaryKey: true,
   },
-  projectId: {
+  projectPlanningId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Project,
+      model: ProjectPlanning,
       key: "id",
     },
   },

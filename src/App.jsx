@@ -10,6 +10,9 @@ import Navbar from "./components/Navbar";
 import { Login, Register, UserEdit, UserIndex } from "./pages/users/Users";
 // Resource
 import { ResourceCreate, ResourceIndex, ResourceEdit, } from "./pages/resources/Resources";
+// Project Planning
+//import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit, ProjectPlanningDetails, } from "./pages/projectPlanning/ProjectPlanning";
+import { ProjectPlanningCreate, ProjectPlanningEdit } from "./pages/projectPlanning/ProjectPlanning";
 // Project
 import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails, } from "./pages/projects/Projects";
 // Locations
@@ -36,6 +39,10 @@ function App() {
                 <Route path="/resources" element={<ResourceIndex />} />
                 <Route path="/resources/create" element={<ResourceCreate />} />
                 <Route path="/resources/edit/:id" element={<ResourceEdit />} />
+
+                <Route path="/projectPlannings/create" element={<ProjectPlanningCreate />} />
+                <Route path="/projectPlannings/edit/:id" element={<ProjectPlanningEdit />} />
+
 
                 <Route path="/projects" element={<ProjectIndex />} />
                 <Route path="/projects/create" element={<ProjectCreate />} />

@@ -70,7 +70,7 @@ const updateResource = async (id, resourceData) => {
     const updatedResource = await findById(id);
     return {
       status: 200,
-      message: "Resorce updated successfully",
+      message: "Resource updated successfully",
       user: updatedResource.resource,
       notificationType: "success",
     };

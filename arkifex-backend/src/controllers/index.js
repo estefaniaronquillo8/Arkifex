@@ -6,6 +6,7 @@ const resourceAssignmentController = require('../controllers/resourceAssignmentC
 const roleController = require('../controllers/roleController');
 const userController = require('../controllers/userController');
 const versionController = require('../controllers/versionController');
+const projectPlanningController = require('../controllers/projectPlanningController');
 
 module.exports = {
     locationController,
@@ -15,5 +16,6 @@ module.exports = {
     resourceController,
     roleController,
     userController,
-    versionController
+    versionController,
+    projectPlanningController
 }

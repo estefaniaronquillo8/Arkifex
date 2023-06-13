@@ -1,9 +1,9 @@
 // project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { Project, User } = require("./index");
+const { Project, Resource } = require("./index");
 
-const Version = sequelize.define("Version", {
+const ProjectPlanning = sequelize.define("ProjectPlanning", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -17,30 +17,25 @@ const Version = sequelize.define("Version", {
       key: "id",
     },
   },
-  userId: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: User,
-      key: "id",
-    },
-  },
-  budget: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
-  time: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  versionDate: {
-    type: DataTypes.DATEONLY,
+  name: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
   description: {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  status: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  startDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  endDate: {
+    type: DataTypes.DATEONLY,
+  },
 });
 
-module.exports = Version;
+module.exports = ProjectPlanning;

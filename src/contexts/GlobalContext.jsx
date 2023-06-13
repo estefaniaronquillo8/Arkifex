@@ -42,27 +42,38 @@ export const GlobalProvider = ({ children }) => {
     startDate: null,
     endDate: null,
   });
-
-  const [locations, setLocations] = useState([]);
-  const [location, setLocation] = useState({
+  
+  const [projectPlannings, setProjectPlannings] = useState([]);
+  const [projectPlanning, setProjectPlanning] = useState({
     id: 0,
     projectId: 0,
-    address: "",
-    latitude: 0,
-    longitude: 0,
-    area: 0,
+    name: "",
+    description: "",
+    status: "",
+    startDate: null,
+    endDate: null,
   });
-
+  
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [resourceAssignment, setResourceAssignment] = useState({
     id: 0,
     resourceId: 0,
-    projectId: 0,
+    projectPlanningId: 0,
     quantity: 0,
     estimatedCost: 0,
     actualCost: 0,
     associatedDate: "",
   });
+  
+    const [locations, setLocations] = useState([]);
+    const [location, setLocation] = useState({
+      id: 0,
+      projectId: 0,
+      address: "",
+      latitude: 0,
+      longitude: 0,
+      area: 0,
+    });
 
   const [lastNotification, setLastNotification] = useState(null);
 
@@ -124,6 +135,12 @@ export const GlobalProvider = ({ children }) => {
     setResourceAssignments,
     resourceAssignment,
     setResourceAssignment,
+
+    // Project Plannings
+    projectPlannings, 
+    setProjectPlannings,
+    projectPlanning, 
+    setProjectPlanning,
     
     showNotification,
   };
