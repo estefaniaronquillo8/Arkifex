@@ -7,6 +7,7 @@ const projectPlanningRoutes = require("./projectPlanning.routes");
 const projectRoutes = require("./project.routes");
 const locationRoutes = require("./location.routes");
 const resourceAssignmentRoutes = require("./resourceAssignment.routes");
+const versionRoutes = require("./version.routes");
 
 baseRouter.use(
   userRoutes,
@@ -14,7 +15,8 @@ baseRouter.use(
   projectPlanningRoutes,
   projectRoutes,
   locationRoutes,
-  resourceAssignmentRoutes
+  resourceAssignmentRoutes,
+  versionRoutes
 );
 
 module.exports = baseRouter;
