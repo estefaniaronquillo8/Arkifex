@@ -47,6 +47,7 @@ Project.hasMany(Location, { foreignKey: 'projectId' });
 
 // Función para añadir roles por defecto
 const addRoles = async () => {
+    await Role.findOrCreate({ where: { name: 'superAdmin' } });
     await Role.findOrCreate({ where: { name: 'admin' } });
     await Role.findOrCreate({ where: { name: 'client' } });
 };

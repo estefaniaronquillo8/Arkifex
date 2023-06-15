@@ -5,7 +5,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { showNotification } = useGlobalContext();
+  const { showNotification, currentUser, setCurrentUser } = useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -19,7 +19,15 @@ const Login = () => {
     if (success){
       showNotification(success, notificationType);
       localStorage.setItem("token", response.token);
-      navigate("/users");
+
+
+      if (response?.user) {
+        console.log("Adentro if ",currentUser);
+        setCurrentUser(response.user);
+      }
+      console.log(currentUser);
+      
+      navigate("/resources");
     }
     
     if (error){

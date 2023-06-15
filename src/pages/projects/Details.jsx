@@ -366,9 +366,7 @@ const ProjectDetails = () => {
               </button>
             </div>
 
-            <h1 className="text-4xl font-semibold mb-6">
-              Creación de Tareas
-            </h1>
+            <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
             <button
               onClick={handleCreateProjectPlanning}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -402,12 +400,24 @@ const ProjectDetails = () => {
                         {resource ? resource.name : "Desconocido"}
                       </div> */}
                       <div className="col-span-1">{projectPlanning.name}</div>
-                      <div className="col-span-1">{projectPlanning.description}</div>
+                      <div className="col-span-1">
+                        {projectPlanning.description}
+                      </div>
                       <div className="col-span-1">{projectPlanning.status}</div>
-                      <div className="col-span-1">{projectPlanning.startDate}</div>
-                      <div className="col-span-1">{projectPlanning.endDate}</div>
+                      <div className="col-span-1">
+                        {projectPlanning.startDate}
+                      </div>
+                      <div className="col-span-1">
+                        {projectPlanning.endDate}
+                      </div>
 
                       <div className="col-span-2">
+                        <Link
+                          to={`/projectPlannings/details/${projectPlanning.id}`}
+                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        >
+                          Detalles
+                        </Link>
                         <Link
                           to={`/projectPlannings/edit/${projectPlanning.id}`}
                           className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"

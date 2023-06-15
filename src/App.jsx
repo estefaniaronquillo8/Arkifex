@@ -7,12 +7,12 @@ import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 
 // User
-import { Login, Register, UserEdit, UserIndex } from "./pages/users/Users";
+import { Login, Register, UserCreate, UserEdit, UserIndex } from "./pages/users/Users";
 // Resource
 import { ResourceCreate, ResourceIndex, ResourceEdit, } from "./pages/resources/Resources";
 // Project Planning
 //import { ProjectPlanningCreate, ProjectPlanningIndex, ProjectPlanningEdit, ProjectPlanningDetails, } from "./pages/projectPlanning/ProjectPlanning";
-import { ProjectPlanningCreate, ProjectPlanningEdit } from "./pages/projectPlanning/ProjectPlanning";
+import { ProjectPlanningCreate, ProjectPlanningDetails, ProjectPlanningEdit } from "./pages/projectPlanning/ProjectPlanning";
 // Project
 import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails, } from "./pages/projects/Projects";
 // Locations
@@ -34,6 +34,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/users" element={<UserIndex />} />
+                <Route path="/users/create" element={<UserCreate />} />
                 <Route path="/users/edit/:id" element={<UserEdit />} />
 
                 <Route path="/resources" element={<ResourceIndex />} />
@@ -42,6 +43,7 @@ function App() {
 
                 <Route path="/projectPlannings/create" element={<ProjectPlanningCreate />} />
                 <Route path="/projectPlannings/edit/:id" element={<ProjectPlanningEdit />} />
+                <Route path="/projectPlannings/details/:id" element={<ProjectPlanningDetails />} />
 
 
                 <Route path="/projects" element={<ProjectIndex />} />

@@ -11,9 +11,9 @@ function UserEdit() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
-    if(!routesProtection()) navigate("/login");
+    if (!routesProtection()) navigate("/login");
   }, []);
 
   useEffect(() => {
@@ -63,6 +63,24 @@ function UserEdit() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
+              <div className="mb-4">
+                <label
+                  htmlFor="roleId"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Rol
+                </label>
+                <select
+                  id="roleId"
+                  name="roleId"
+                  value={user.roleId}
+                  onChange={handleChange}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  <option value="2">Administrador</option>
+                  <option value="3">Cliente</option>
+                </select>
+              </div>
               <div>
                 <label
                   htmlFor="name"

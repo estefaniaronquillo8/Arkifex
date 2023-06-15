@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { handleCreate } from "../../services/resourceAssignment.api.routes";
 import { getAllProjects } from "../../services/project.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
@@ -23,14 +23,15 @@ const ResourceAssignmentCreate = () => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resourceId: 0,
-    projectId: 0,
+    projectPlanningId: 0,
     quantity: 0,
     estimatedCost: 0,
     actualCost: 0,
-    associatedDate: 0
+    associatedDate: 0,
   });
 
   useEffect(() => {
@@ -50,10 +51,10 @@ const ResourceAssignmentCreate = () => {
 
         // Verifico si ya existe asignaciones de recursos
         if (assignmentResponse?.resourceAssignments) {
-          // Filtro las asignaciones de recursos por projectId
+          // Filtro las asignaciones de recursos por projectPlanningId
           const relatedResourceAssignments =
             assignmentResponse.resourceAssignments.filter(
-              (assignment) => assignment.projectId === selectedProjectId
+              (assignment) => assignment.projectPlanningId === selectedProjectId
             );
 
           // Creo una lista de ids de recursos asignados
@@ -79,7 +80,7 @@ const ResourceAssignmentCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-    data.projectId = selectedProjectId;
+    data.projectPlanningId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -94,8 +95,7 @@ const ResourceAssignmentCreate = () => {
 
     setSelectedProjectId(null);
     if (response?.status === 200) {
-      setSelectedProjectId(0);
-      navigate(`/projects/details/${data.projectId}`);
+      navigate(`/projectPlannings/details/${data.projectPlanningId}`);
     }
   };
 
@@ -116,7 +116,42 @@ const ResourceAssignmentCreate = () => {
               >
                 Recurso
               </label>
-              <select
+              <Controller
+                name="resourceId"
+                control={control}
+                rules={{ required: "El campo es requerido." }}
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    id="resourceId"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    onChange={(e) => {
+                      field.onChange(e); // Para mantener el comportamiento original
+                      const selectedResource = resources.find(
+                        (resource) => resource.id === e.target.value
+                      );
+                      if (selectedResource) {
+                        setValue("estimatedCost", selectedResource.marketPrice);
+                      }
+                    }}
+                  >
+                    <option value="">Selecciona un recurso</option>
+                    {resources && resources.length > 0 ? (
+                      resources.map((resource) => (
+                        <option key={resource.id} value={resource.id}>
+                          {resource.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>Cargando recursos...</option>
+                    )}
+                  </select>
+                )}
+              />
+              {errors.resourceId && (
+                <p className="text-red-800">{errors.resourceId.message}</p>
+              )}
+              {/* <select
                 id="resourceId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("resourceId", {
@@ -136,19 +171,19 @@ const ResourceAssignmentCreate = () => {
               </select>
               {errors.resourceId && (
                 <p className="text-red-800">{errors.resourceId.message}</p>
-              )}
+              )} */}
             </div>
             {/* <div className="mb-4">
               <label
-                htmlFor="projectId"
+                htmlFor="projectPlanningId"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 Proyecto
               </label>
               <select
-                id="projectId"
+                id="projectPlanningId"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("projectId", {
+                {...register("projectPlanningId", {
                   required: "El campo es requerido.",
                 })}
               >
@@ -163,8 +198,8 @@ const ResourceAssignmentCreate = () => {
                   <option disabled>Cargando proyectos...</option>
                 )}
               </select>
-              {errors.projectId && (
-                <p className="text-red-800">{errors.projectId.message}</p>
+              {errors.projectPlanningId && (
+                <p className="text-red-800">{errors.projectPlanningId.message}</p>
               )}
             </div> */}
             <div className="mb-4">
@@ -258,7 +293,7 @@ const ResourceAssignmentCreate = () => {
                 placeholder="associatedDate"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("associatedDate", {
-                  required: "El campo es requerido."
+                  required: "El campo es requerido.",
                 })}
               />
               {errors.associatedDate && (

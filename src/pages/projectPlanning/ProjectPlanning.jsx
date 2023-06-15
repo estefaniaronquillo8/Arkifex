@@ -1,9 +1,9 @@
 import ProjectPlanningCreate from "./Create";
-/* import ProjectPlanningIndex from "./Index";*/
+import ProjectPlanningDetails from "./Details";
 import ProjectPlanningEdit from "./Edit"; 
 
 export {
     ProjectPlanningCreate,
-    /* ProjectPlanningIndex,*/
+    ProjectPlanningDetails,
     ProjectPlanningEdit 
 }
