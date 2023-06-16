@@ -5,6 +5,7 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
+import Sidebar from "../../components/Sidebar"; // Importar el componente Sidebar
 
 const CostCreate = () => {
   const navigate = useNavigate();
@@ -75,6 +76,8 @@ const CostCreate = () => {
   };
 
   return (
+    <div className="flex">
+       <Sidebar /> 
     <div className="relative py-3 sm:max-w-xl sm:mx-auto">
       <br />
       <form
@@ -193,6 +196,7 @@ const CostCreate = () => {
           </button>
         </div>
       </form>
+    </div>
     </div>
   );
 };

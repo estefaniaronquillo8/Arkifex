@@ -6,6 +6,8 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/Sidebar"; // Importar el componente Sidebar
+import Navbar from "../../components/Navbar";
 
 const CostIndex = () => {
   const { costs, setCosts, showNotification, resources, setResources } = useGlobalContext();
@@ -74,6 +76,11 @@ const CostIndex = () => {
   };
 
   return (
+    
+    <div className="App">
+        <Navbar /> 
+        <div className="flex">
+       <Sidebar /> 
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-4xl font-semibold mb-6">Costos</h1>
       <Link
@@ -130,6 +137,8 @@ const CostIndex = () => {
             );
           })}
       </div>
+    </div>
+    </div>
     </div>
   );
 };

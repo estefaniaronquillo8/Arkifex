@@ -16,3 +16,36 @@
     width: 70%; /* Cambia el valor según tus necesidades */
     height: auto; /* La altura se ajustará automáticamente para mantener la proporción */
   }
+
+ @keyframes typing {
+    from {
+      width: 0;
+    }
+  }
+  
+  #animated-text {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(30, end);
+    animation-fill-mode: forwards;
+  }
+
+  .grid-cols-sidebar {
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+    gap: 1rem;
+  }
+
+
+  .gif-with-relief {
+    box-shadow: 0 0 200px rgba(178, 21, 189, 0.796);
+  }
+  
+
+
+
+
+  
+
+  

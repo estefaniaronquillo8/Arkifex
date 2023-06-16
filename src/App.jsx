@@ -32,9 +32,9 @@ function App() {
     <Router>
       <GlobalProvider>
       <div className="App">
-    <Navbar />
+    {/* <Navbar /> */}
       <div className="flex">
-      <Sidebar/>
+{/* <Sidebar/>       */}
       <div className="flex-1">
       <Routes>
           <Route path="/" element={<Navigate to="/login" />} />
