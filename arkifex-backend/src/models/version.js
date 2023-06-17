@@ -29,10 +29,6 @@ const Version = sequelize.define("Version", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
-  resourcesbudget: {
-    type: DataTypes.FLOAT,
-    allowNull: false,
-  },
   workload: {
     type: DataTypes.FLOAT,
     allowNull: false,

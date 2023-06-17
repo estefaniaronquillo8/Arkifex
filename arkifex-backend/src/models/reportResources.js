@@ -1,10 +1,9 @@
 // project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { Project, User } = require("./index");
 
-const Report = sequelize.define("Report", {
-  ReportId: {
+const ReportResources = sequelize.define("Resource", {
+  id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
@@ -25,30 +24,26 @@ const Report = sequelize.define("Report", {
       key: "id",
     },
   },
-  actualbudget: {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  role: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  marketPrice: {
     type: DataTypes.FLOAT,
-    allowNull: true,
-  },
-  numberOfTasks: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  taskCompleted:{
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  costVariance: {
-    type: DataTypes.FLOAT,
-    allowNull: true,
-  },
-  timeVariance: {
-    type: DataTypes.DATEONLY,
-    allowNull: true,
-  },  
-  date: {
-    type: DataTypes.DATEONLY,
     allowNull: false,
   },
 });
 
-module.exports = Report;
+module.exports = ReportResources;
