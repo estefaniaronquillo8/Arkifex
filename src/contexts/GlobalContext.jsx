@@ -17,6 +17,9 @@ export const GlobalProvider = ({ children }) => {
     email: "",
   });
 
+  // Contiene la información del usuario logueado
+  const [currentUser, setCurrentUser] = useState([null]); 
+
   //const [selectedResourceId, setSelectedResourceId] = useState(null);
   
   const [resources, setResources] = useState([]);
@@ -109,6 +112,10 @@ export const GlobalProvider = ({ children }) => {
     setUsers,
     user,
     setUser,
+    
+    currentUser,
+    setCurrentUser,
+
     // Resources
     resource,
     setResource,

@@ -1,4 +1,5 @@
 const { findRole } = require("../repositories/roleRepository");
+const { User, sequelize } = require("../models");
 const {
   getAllUsers,
   findById,
@@ -26,9 +27,14 @@ exports.update = async (req, res) => {
 };
 
 exports.create = async (req, res) => {
-  const response = await createUser(req.body);
+  const { password, ...otherFields } = req.body;
+  const response = await createUser({
+    ...otherFields,
+    password: encryptPassword(password),
+  });
   return res.status(response.status).json(response);
 };
+
 
 exports.delete = async (req, res) => {
   const response = await deleteUser(req.params.id);
@@ -51,8 +57,20 @@ exports.login = async (req, res) => {
 };
 
 exports.register = async (req, res) => {
-  const { name, lastname, email, password, role } = req.body;
-  const roleName = role || "client";
+  const { name, lastname, email, password } = req.body;
+
+  // Check if there are any users in the database
+  const users = await User.findAll();
+  
+  let roleName;
+  if (users.length === 0) {
+    // If there are no users in the database, assign the 'superAdmin' role
+    roleName = "superAdmin";
+  } else {
+    // If there are users in the database, assign the 'client' role
+    roleName = "client";
+  }
+  
   const roleResponse = await findRole({ where: { name: roleName } });
 
   if (!roleResponse.role) {
@@ -69,3 +87,4 @@ exports.register = async (req, res) => {
 
   return res.status(response.status).json(response);
 };
+
