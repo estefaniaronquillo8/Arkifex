@@ -4,7 +4,6 @@ import { getAllUsers, handleDelete } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../components/Sidebar"; 
 
 const UserIndex = () => {
   const { users, setUsers, showNotification } = useGlobalContext();
@@ -53,7 +52,7 @@ const UserIndex = () => {
 
   return (
     <div className="flex">
-      <Sidebar />
+
       <div className="container mx-auto px-4 py-6 flex-grow">
         <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
         <div className="bg-white shadow-md rounded-lg">

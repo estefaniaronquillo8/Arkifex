@@ -9,6 +9,7 @@ import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiLogoutBoxFill } from "react-icons/ri";
 
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,19 +73,13 @@ const Sidebar = () => {
     <div className="flex">
       {!sessionId ? (
         <>
-          <Link to="/login" className="text-white mr-4">
-            Login
-          </Link>
-          <Link to="/register" className="text-white mr-4">
-            Register
-          </Link>
         </>
       ) : (
         <>
           <section className="flex h-screen gap-6">
             {showSidebar && (
               <div
-                className={`bg-[#122949] ${
+                className={`bg-gradient-to-tl from-black to-blue-700 sidebar-container ${
                   open ? "w-72" : "w-16"
                 } duration-500 text-gray-100 flex flex-col`}
               >
