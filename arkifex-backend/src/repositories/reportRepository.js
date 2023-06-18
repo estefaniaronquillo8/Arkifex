@@ -1,11 +1,11 @@
 const {Report, sequelize} = require ("../models");
-const {findById: findProject} = require("../repositories/projectRepository");
-const {findById: findProjectPlanning} = require("../repositories/projectPlanningRepository");
+const {findById: findProject, findProjectByName} = require("../repositories/projectRepository");
+const {findById: findProjectPlanning, getAllProjectPlanningsByProject} = require("../repositories/projectPlanningRepository");
 
 const createReport  = async (projectId) => {
     const transaction = await sequelize.transaction();
     try {
-      const response = await findProjectById(projectId);
+      const response = await findProject(projectId);
 
       if (response?.project) {
         return {
@@ -15,8 +15,7 @@ const createReport  = async (projectId) => {
         };
       }else{
         const project = response.project;
-
-
+        const projectplanning = await getAllProjectPlanningsByProject(project.id)
       }
         
 

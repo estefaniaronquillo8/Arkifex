@@ -8,14 +8,7 @@ const ReportResources = sequelize.define("Resource", {
     autoIncrement: true,
     primaryKey: true,
   },
-  projectId: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Project,
-      key: "id",
-    },
-  },
+  
   userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
