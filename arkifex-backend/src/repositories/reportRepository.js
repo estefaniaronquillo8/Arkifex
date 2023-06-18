@@ -21,13 +21,15 @@ const createReport  = async (projectId) => {
       }
         //const project = response.project;
         const projectplannings = await project.getProjectPlannings();
-        const numtaskfinshed = 0;
+        let taskfinshed = 0;
+        let tasks = 0;
         projectplannings.forEach(planning =>{
           if(planning.status === 'Finished'){
-            numtaskfinshed++;
+            taskfinshed++;
           }
+          tasks++;            
         });
-        return { status:200,projectplannings: numtaskfinshed};
+        return { status:200,projectplannings: tasks};
 
         
       
