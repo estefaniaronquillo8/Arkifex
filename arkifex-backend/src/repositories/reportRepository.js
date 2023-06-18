@@ -1,34 +1,43 @@
-const {Report, sequelize} = require ("../models");
+const {Report,Project,ProjectPlanning,resourceAssignments, sequelize} = require ("../models");
 const {findById: findProject, findProjectByName} = require("../repositories/projectRepository");
 const {findById: findProjectPlanning, getAllProjectPlanningsByProject} = require("../repositories/projectPlanningRepository");
+const {findResourceAssignmentByProjectPlanningId} = require("../repositories/resourceAssignmentRepository");
+
+
 
 const createReport  = async (projectId) => {
-    const transaction = await sequelize.transaction();
+    //const transaction = await sequelize.transaction();
     try {
-      const response = await findProject(projectId);
+      const project = await Project.findByPk(projectId);
+      //console.log(response.toJSON);
 
-      if (response?.project) {
+      if (!project) {
         return {
           status: 409,
           message: "Project doesn't exists",
           notificationType: "info",
+          //return: response.toJSON(),
         };
-      }else{
-        const project = response.project;
-        const projectplanning = await getAllProjectPlanningsByProject(project.id)
       }
+        //const project = response.project;
+        const projectplannings = await project.getProjectPlannings();
+        const numtaskfinshed = 0;
+        projectplannings.forEach(planning =>{
+          if(planning.status === 'Finished'){
+            numtaskfinshed++;
+          }
+        });
+        return { status:200,projectplannings: numtaskfinshed};
+
+        
+      
         
 
       
-      await transaction.commit();
-      return {
-        status: 200,
-        project: project,
-        message: "Project created successfully!",
-        notificationType: "success",
-      };
+      //await transaction.commit();
+      //return { projectplannings: projectplannings };
     } catch (error) {
-      await transaction.rollback();
+      //await transaction.rollback();
       console.log("ERROR DEL CREATE PROJECT",error)
       return {
         status: 500,
@@ -38,4 +47,6 @@ const createReport  = async (projectId) => {
     }
 }; 
 
-
+module.exports = {
+  createReport
+}

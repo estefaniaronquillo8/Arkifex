@@ -120,6 +120,15 @@ const findResourceAssignmentByProjectPlanningIdAndResourceId = async (projectPla
   return { status: 200, resourceAssignment };
 }
 
+const findResourceAssignmentByProjectPlanningId = async (projectPlanningId) => {
+  const resourceAssignment = await ResourceAssignment.findOne({ where: { projectPlanningId}});
+  //console.log('RA', resourceAssignment);
+  if (!resourceAssignment){
+    return { status: 404 };
+  }
+  return { status: 200, resourceAssignment };
+}
+
 const findById = async (id) => {
   const resourceAssignment = await ResourceAssignment.findByPk(id);
 
@@ -144,5 +153,6 @@ module.exports = {
   updateResourceAssignment,
   deleteResourceAssignment,
   findResourceAssignmentByProjectPlanningIdAndResourceId,
+  findResourceAssignmentByProjectPlanningId,
   findById,
 };
