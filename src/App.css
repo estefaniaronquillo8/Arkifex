@@ -30,28 +30,65 @@
     }
   }
   
-  #animated-text {
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typing 2s steps(30, end);
-    animation-fill-mode: forwards;
-  }
-/* 
-  .grid-cols-sidebar {
-
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-    gap: 1rem;
-  } */
-
 
   .gif-with-relief {
     box-shadow: 0 0 200px rgba(178, 21, 189, 0.796);
   }
   
 
+ /* Estilos generales de la aplicación */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 
+.container {
+  max-width: 500px;
+  width: 100%;
+  padding: 10px;
+}
 
-  
+@media (min-width: 768px) {
+  .container {
+    max-width: 700px;
+  }
+}
+
+@media (min-width: 992px) {
+  .container {
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1120px;
+  }
+}
+
+.slider-container {
+  position: relative;
+}
+
+.slick-prev,
+.slick-next {
+  position: absolute;
+  bottom: -30px;
+  font-size: 24px;
+  background: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.slick-prev {
+  left: 0;
+}
+
+.slick-next {
+  right: 0;
+}
+
 
   

@@ -1,8 +1,9 @@
-export default {
+module.exports = {
   content: ['./src/**/*.jsx'],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar'),
+  ],
 };
-

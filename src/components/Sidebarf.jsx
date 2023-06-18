@@ -9,6 +9,7 @@ import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiLogoutBoxFill } from "react-icons/ri";
 
+
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,16 +73,15 @@ const Sidebar = () => {
     <div className="flex">
       {!sessionId ? (
         <>
-          {/* Código cuando no hay sesión */}
         </>
       ) : (
         <>
-          <section className="flex gap-6">
+          <section className="flex h-full gap-6">
             {showSidebar && (
               <div
                 className={`bg-gradient-to-tl from-black to-blue-700 sidebar-container ${
                   open ? "w-72" : "w-16"
-                } duration-500 text-gray-100 flex flex-col min-h-screen`}
+                } duration-500 text-gray-100 flex flex-col`}
               >
                 <div className="py-3 flex justify-center">
                   <HiMenuAlt3
@@ -91,13 +91,13 @@ const Sidebar = () => {
                   />
                 </div>
 
-                <div className="mt-4 flex flex-col gap-5 relative">
+                <div className="mt-4 flex flex-col gap-5 relative flex-grow">
                   {menus?.map((menu, i) => (
                     <Link
                       to={menu?.link}
                       key={i}
                       className={`group flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md ${
-                        isActive(menu?.link) ? "bg-white bg-opacity-50" : ""
+                        isActive(menu?.link) ? "bg-blue-900" : ""
                       }`}
                     >
                       <div className="flex items-center justify-center w-8 h-8">
