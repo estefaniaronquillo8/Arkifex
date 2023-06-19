@@ -1,4 +1,4 @@
-const {Report,Project,ProjectPlanning,resourceAssignments, sequelize} = require ("../models");
+const {Report,Project,ProjectPlanning, sequelize, ResourceAssignment} = require ("../models");
 const {findById: findProject, findProjectByName} = require("../repositories/projectRepository");
 const {findById: findProjectPlanning, getAllProjectPlanningsByProject} = require("../repositories/projectPlanningRepository");
 const {findResourceAssignmentByProjectPlanningId} = require("../repositories/resourceAssignmentRepository");
@@ -23,13 +23,38 @@ const createReport  = async (projectId) => {
         const projectplannings = await project.getProjectPlannings();
         let taskfinshed = 0;
         let tasks = 0;
-        projectplannings.forEach(planning =>{
+        let tasksEstimatedCost = 0;
+        let tasksActualCost = 0;
+
+
+        //Number of tasks and number of tasks completed
+        projectplannings.forEach(async planning => {
           if(planning.status === 'Finished'){
             taskfinshed++;
           }
+          // const resourceAssignments = await ResourceAssignment.findAll({where:{projectPlanningId:planning.id}});
+          // //console.log(resoureAssignments)
+          // for(const resourceAssignment of resourceAssignments){
+          //   tasksEstimatedCost+=resourceAssignment.estimatedCost;
+          //   tasksActualCost+=resourceAssignment.actualCost;
+          // }
+          console.log(tasksActualCost);
           tasks++;            
         });
-        return { status:200,projectplannings: tasks};
+
+        const [budgetByTask, metadatabudgetByTask] = await sequelize.query(
+          "SELECT PPS.id as ProjectPlanningId, PPS.name,SUM(RAS.actualCost) as ActualCostOfTask, SUM(RAS.estimatedCost) as EstimatedCostOfTask FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE projectId = "+projectId+" GROUP BY PPS.id,PPS.name");
+
+          const [budgetData, metadataBudgetData] = await sequelize.query(
+            "SELECT PPS.projectId, SUM(RAS.actualCost) as ActualBudget, SUM(RAS.estimatedCost) as EstimatedBudget, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as CostVariance, DATEDIFF(MAX(PPS.endDate), CURDATE()) as dateVariance "+
+             "FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE PPS.projectId = "+projectId+" GROUP BY PPS.projectId");
+  
+        
+        
+          console.log (tasksActualCost);
+        return { status:200,projectplannings: budgetData, metadata:metadataBudgetData };
+
+
 
         
       

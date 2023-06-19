@@ -25,7 +25,11 @@ const Report = sequelize.define("Report", {
       key: "id",
     },
   },
-  actualbudget: {
+  actualBudget: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  estimatedBudget: {
     type: DataTypes.FLOAT,
     allowNull: true,
   },
@@ -37,7 +41,7 @@ const Report = sequelize.define("Report", {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  costVariance: {
+  budgetVariance: {
     type: DataTypes.FLOAT,
     allowNull: true,
   },
