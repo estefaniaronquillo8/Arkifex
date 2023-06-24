@@ -37,7 +37,7 @@ export const GlobalProvider = ({ children }) => {
   };
 
   const clearAuthData = () => {
-    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('token');
     setUserInSession(null);
     setRoleInSession(null);
   };
