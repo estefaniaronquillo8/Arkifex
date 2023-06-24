@@ -7,6 +7,7 @@ import { MdAssignmentAdd } from "react-icons/md";
 import { ImLocation } from "react-icons/im";
 import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
+import { useGlobalContext } from '../contexts/GlobalContext';
 
 const Sidebar = () => {
   const { clearAuthData } = useGlobalContext();
