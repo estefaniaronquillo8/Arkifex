@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { User, sequelize } = require("../models");
+const { User, Role, sequelize } = require("../models");
 
 const createUser = async (userData) => {
   const transaction = await sequelize.transaction();
@@ -138,14 +138,15 @@ const findById = async (id) => {
   };
 };
 
-const createToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.SECRET_JWT, {
-    expiresIn: "1h",
-  });
+const createToken = (user, role) => {
+  return jwt.sign({ 
+    user: user.get({ plain: true }), 
+    role: role.get({ plain: true }) 
+  }, process.env.SECRET_JWT, { expiresIn: '1h' });
 };
 
 const validatePassword = async (email, password) => {
-  const response = await findUser({ where: { email } });
+  const response = await findUser({ where: { email }, include: [Role] });
 
   if (!response.user) {
     return { status: 404, message: response.message };

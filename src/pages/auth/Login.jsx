@@ -5,7 +5,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUserInSession, showNotification } =
+  const { setUserInSession, showNotification, setAuthData } =
     useGlobalContext();
   const {
     register,
@@ -15,20 +15,20 @@ const Login = () => {
   } = useForm();
 
   const loginHandler = async (data) => {
-    const { response, success, error, notificationType } = await handleLogin(
-      data
-    );
+
+    const { response, success, error, notificationType } = await handleLogin(data);
 
     if (success) {
       showNotification(success, notificationType);
-      localStorage.setItem("token", response.token);
-      setUserInSession(response?.user)
+      setAuthData(response?.token);
+      setUserInSession(response?.user);
       navigate("/resources");
     }
 
     if (error) {
       showNotification(error, notificationType);
     }
+    
   };
 
   return (

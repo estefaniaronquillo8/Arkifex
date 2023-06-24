@@ -1,5 +1,5 @@
-// src/context/GlobalContext.js
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import jwtDecode from 'jwt-decode';
 import { toast } from "react-toastify";
 
 const GlobalContext = createContext();
@@ -18,6 +18,29 @@ export const GlobalProvider = ({ children }) => {
   });
 
   const [userInSession, setUserInSession] = useState(null);
+  const [roleInSession, setRoleInSession] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setUserInSession(decodedToken.user);
+      setRoleInSession(decodedToken.role);
+    }
+  }, []);
+
+  const setAuthData = (token) => {
+    localStorage.setItem('token', token);
+    const decodedToken = jwtDecode(token);
+    setUserInSession(decodedToken.user);
+    setRoleInSession(decodedToken.role);
+  };
+
+  const clearAuthData = () => {
+    localStorage.removeItem('jwtToken');
+    setUserInSession(null);
+    setRoleInSession(null);
+  };
   
   const [resources, setResources] = useState([]);
   const [resource, setResource] = useState({
@@ -126,6 +149,12 @@ export const GlobalProvider = ({ children }) => {
 
     userInSession, 
     setUserInSession,
+
+    roleInSession, 
+    setRoleInSession,
+
+    setAuthData,
+    clearAuthData,
 
     // Resources
     resource,

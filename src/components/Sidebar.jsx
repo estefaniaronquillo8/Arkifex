@@ -9,7 +9,8 @@ import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 
 const Sidebar = () => {
-const navigate = useNavigate();
+  const { clearAuthData } = useGlobalContext();
+  const navigate = useNavigate();
   const menus = [
     { name: "Users", link: "/users", icon: AiOutlineUsergroupAdd },
     { name: "Resources", link: "/resources", icon: FaWindowRestore },
@@ -33,6 +34,7 @@ const navigate = useNavigate();
   const sessionId = localStorage.getItem("token");
 
   const handleLogoutClick = () => {
+    clearAuthData();
     handleLogout(navigate);
   };
 
@@ -73,7 +75,7 @@ const navigate = useNavigate();
                     <div className=" flex items-center justify-center w-8 h-8">
                       {React.createElement(menu?.icon, { size: "30" })}
                     </div>
-                    <h2 
+                    <h2
                       style={{
                         transitionDelay: `${i + 3}00ms`,
                       }}
@@ -87,7 +89,7 @@ const navigate = useNavigate();
                       className={`${
                         open && "hidden"
                       } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
+                    >
                       {menu?.name}
                     </h2>
                   </Link>
