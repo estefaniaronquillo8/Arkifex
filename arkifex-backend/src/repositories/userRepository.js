@@ -141,7 +141,7 @@ const findById = async (id) => {
 const createToken = (user, role) => {
   return jwt.sign({ 
     user: user.get({ plain: true }), 
-    role: role.get({ plain: true }) 
+    role: role.get({ plain: true })
   }, process.env.SECRET_JWT, { expiresIn: '1h' });
 };
 
