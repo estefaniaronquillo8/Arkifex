@@ -43,6 +43,11 @@ const Project = sequelize.define("Project", {
   },
   endDate: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  isTemplate: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true, 
   },
 });
 

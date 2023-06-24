@@ -24,7 +24,7 @@ const navigate = useNavigate();
       link: "/projectPlannings",
       icon: BsFillCalendarCheckFill,
     }, */
-    { name: "Locations", link: "/locations", icon: ImLocation },
+    { name: "Templates", link: "/templates", icon: ImLocation },
     /* { name: "Costs", link: "/costs", icon: FaMoneyCheckAlt }, */
   ];
 

@@ -5,7 +5,8 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { showNotification, currentUser, setCurrentUser } = useGlobalContext();
+  const { setUserInSession, showNotification } =
+    useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -14,26 +15,21 @@ const Login = () => {
   } = useForm();
 
   const loginHandler = async (data) => {
-    const { response, success, error, notificationType } = await handleLogin(data);
+    const { response, success, error, notificationType } = await handleLogin(
+      data
+    );
 
-    if (success){
+    if (success) {
       showNotification(success, notificationType);
       localStorage.setItem("token", response.token);
-
-
-      if (response?.user) {
-        console.log("Adentro if ",currentUser);
-        setCurrentUser(response.user);
-      }
-      console.log(currentUser);
-      
+      setUserInSession(response?.user)
       navigate("/resources");
     }
-    
-    if (error){
+
+    if (error) {
       showNotification(error, notificationType);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12">
@@ -41,7 +37,9 @@ const Login = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <h1 className="mb-6 text-2xl font-bold text-center">Login</h1>
-          <form onSubmit={handleSubmit(async (data) => await loginHandler(data))}>
+          <form
+            onSubmit={handleSubmit(async (data) => await loginHandler(data))}
+          >
             <div className="mb-4">
               <label
                 htmlFor="email"

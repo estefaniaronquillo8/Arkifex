@@ -2,7 +2,6 @@ const { ResourceAssignment, sequelize } = require("../models");
 
 const createResourceAssignment = async (data) => {
   const transaction = await sequelize.transaction();
-  console.log('data', data);
   try {
     const response = await findResourceAssignmentByProjectPlanningIdAndResourceId(data.projectPlanningId, data.resourceId);
     if (response?.resourceAssignment) {
@@ -12,7 +11,6 @@ const createResourceAssignment = async (data) => {
           notificationType: "info",
         };
     }
-    console.log('aaaaaaaaaaaa')
     const resourceAssignment = await ResourceAssignment.create(data, { transaction });
     await transaction.commit();
     return {
@@ -138,6 +136,21 @@ const findById = async (id) => {
   };
 };
 
+const getAllResourceAssignmentsByProjectPlanningId = async (projectPlanningId) => {
+  try {
+    const resourceAssignments = await ResourceAssignment.findAll({ where: { projectPlanningId }});
+    
+    return { status: 200, resourceAssignments: resourceAssignments };
+  } catch (error) {
+    return {
+      status: 500,
+      resourceAssignments: [],
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+};
+
 module.exports = {
   createResourceAssignment,
   getAllResourceAssignments,
@@ -145,4 +158,5 @@ module.exports = {
   deleteResourceAssignment,
   findResourceAssignmentByProjectPlanningIdAndResourceId,
   findById,
+  getAllResourceAssignmentsByProjectPlanningId,
 };

@@ -7,7 +7,7 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const UserCreate = () => {
   const navigate = useNavigate();
-  const { showNotification, currentUser } = useGlobalContext();
+  const { showNotification } = useGlobalContext();
 
   const {
     register,

@@ -51,9 +51,13 @@ exports.login = async (req, res) => {
 
   const { user } = response;
   const token = createToken(user.id);
+  const roleResponse = await findRole({ where: { id: user.roleId } });
+  let userData = user.get({ plain: true });
+  userData.role = roleResponse?.role;
+  
   return res
     .status(response.status)
-    .json({ token, user, message: "Ingreso exitoso!" });
+    .json({ token, user: userData, message: "Ingreso exitoso!" });
 };
 
 exports.register = async (req, res) => {

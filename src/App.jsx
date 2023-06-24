@@ -19,6 +19,9 @@ import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails, } from "./pag
 import { LocationCreate, LocationIndex, LocationEdit, MapPage, } from "./pages/location/Location";
 // ResourceAssignment
 import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit, } from "./pages/resourceAssignment/ResourceAssignments";
+// Templates
+//import { TemplateCreate, TemplateIndex, TemplateEdit, } from "./pages/templates/Templates";
+import { TemplateCreate, TemplateIndex, TemplateDetails } from "./pages/templates/Templates";
 
 function App() {
   return (
@@ -45,11 +48,14 @@ function App() {
                 <Route path="/projectPlannings/edit/:id" element={<ProjectPlanningEdit />} />
                 <Route path="/projectPlannings/details/:id" element={<ProjectPlanningDetails />} />
 
-
                 <Route path="/projects" element={<ProjectIndex />} />
                 <Route path="/projects/create" element={<ProjectCreate />} />
                 <Route path="/projects/edit/:id" element={<ProjectEdit />} />
                 <Route path="/projects/details/:id" element={<ProjectDetails />} />
+
+                <Route path="/templates" element={<TemplateIndex />} />
+                <Route path="/templates/create" element={<TemplateCreate />} />
+                <Route path="/templates/details/:id" element={<TemplateDetails />} />
 
                 <Route path="/locations" element={<LocationIndex />} />
                 <Route path="/locations/create" element={<LocationCreate />} />

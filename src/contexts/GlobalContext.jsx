@@ -17,10 +17,7 @@ export const GlobalProvider = ({ children }) => {
     email: "",
   });
 
-  // Contiene la información del usuario logueado
-  const [currentUser, setCurrentUser] = useState([null]); 
-
-  //const [selectedResourceId, setSelectedResourceId] = useState(null);
+  const [userInSession, setUserInSession] = useState(null);
   
   const [resources, setResources] = useState([]);
   const [resource, setResource] = useState({
@@ -44,7 +41,21 @@ export const GlobalProvider = ({ children }) => {
     status: "",
     startDate: null,
     endDate: null,
+    isTemplate: null,
   });
+  /* 
+  const [templates, setTemplates] = useState([]);
+  const [template, setTemplate] = useState({
+    id: 0,
+    userId: 0,
+    parentId: 0,
+    name: "",
+    description: "",
+    status: "",
+    startDate: null,
+    endDate: null,
+    isTemplate: null,
+  }); */
   
   const [projectPlannings, setProjectPlannings] = useState([]);
   const [projectPlanning, setProjectPlanning] = useState({
@@ -112,9 +123,9 @@ export const GlobalProvider = ({ children }) => {
     setUsers,
     user,
     setUser,
-    
-    currentUser,
-    setCurrentUser,
+
+    userInSession, 
+    setUserInSession,
 
     // Resources
     resource,
@@ -130,6 +141,12 @@ export const GlobalProvider = ({ children }) => {
 
     selectedProjectId, 
     setSelectedProjectId,
+
+    /* // Templates
+    templates, 
+    setTemplates,
+    template, 
+    setTemplate, */
 
     // Locations
     locations,

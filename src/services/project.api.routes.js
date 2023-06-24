@@ -5,6 +5,10 @@ export const getAllProjects = () => {
   return requestHandler("get", "/projects");
 };
 
+export const getProjectById = (id) => {
+  return requestHandler("get", `/projects/edit/${id}`);
+};
+
 export const handleCreate = (project) => {
   console.log(project)
   return requestHandler("post", "/projects/create", project);

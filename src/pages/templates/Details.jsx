@@ -1,4 +1,4 @@
-// src/pages/ProjectDetails.js
+// src/pages/TemplateDetails.js
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -14,24 +14,13 @@ import { handleDelete as handleDeletePP } from "../../services/projectPlanning.a
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
-import { getAllLocations } from "../../services/location.api.routes";
-import { duplicateProject } from "../../services/template.api.routes";
-import mapboxgl from "mapbox-gl";
-import MapboxDraw from "@mapbox/mapbox-gl-draw";
-import "mapbox-gl/dist/mapbox-gl.css";
+import { duplicateProject } from '../../services/template.api.routes';
 
-import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import "tailwindcss/tailwind.css";
-
-mapboxgl.accessToken =
-  "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
-
-const ProjectDetails = () => {
+const TemplateDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [projectPlannings, setProjectPlannings] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [projects, setProjects] = useState([]);
   const currentProjectId = "";
   const {
@@ -46,12 +35,8 @@ const ProjectDetails = () => {
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
   const [notificationType, setNotificationType] = useState();
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [markerCoordinates, setMarkerCoordinates] = useState(null);
-
+  
   useEffect(() => {
-    console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
   }, []);
 
@@ -113,25 +98,10 @@ const ProjectDetails = () => {
       setNotificationType(notificationType);
     };
 
-    const fetchLocations = async () => {
-      const { response, success, error, notificationType } =
-        await getAllLocations();
-      if (response?.locations) {
-        // Filtrar localizaciones por projectId
-        const relatedLocations = response.locations.filter(
-          (location) => location.projectId === project.id
-        );
-        setLocations(relatedLocations);
-      }
-      setError(error);
-      setNotificationType(notificationType);
-    };
-
     if (project) {
       // Llamar a estas funciones solo si el proyecto ya ha sido establecido
       fetchResourceAssignments();
       fetchProjectPlannings();
-      fetchLocations();
       fetchProjects();
     }
   }, [project]);
@@ -155,9 +125,9 @@ const ProjectDetails = () => {
 
   const handleBack = () => {
     if (project.parentId) {
-      navigate(`/projects/details/${project.parentId}`);
+      navigate(`/templates/details/${project.parentId}`);
     } else {
-      navigate("/projects");
+      navigate("/templates");
     }
   };
 
@@ -166,7 +136,7 @@ const ProjectDetails = () => {
       id
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
-    navigate("/projects");
+    navigate("/templates");
 
     if (response?.status === 200) {
       setProject(response.project);
@@ -182,7 +152,7 @@ const ProjectDetails = () => {
     // Por ahora solo redirigiré cuando se elimine el proyecto
 
     if (success) {
-      navigate("/projects");
+      navigate("/templates");
     }
     setSuccess(success);
     setError(error);
@@ -194,143 +164,19 @@ const ProjectDetails = () => {
     navigate("/projectPlannings/create");
   };
 
-  const handleCreateLocation = () => {
-    setSelectedProjectId(project.id);
-    navigate("/locations/create");
-  };
-
   const handleCreateSubproject = () => {
     setSelectedProjectId(project.id);
-    navigate("/projects/create");
+    navigate("/templates/create");
   };
-
-  const handleIsTemplateUpdate = async () => {
-    // Asumiendo que tienes una función 'handleUpdate' en tus rutas de la API que maneja la actualización del proyecto
-    const updatedProject = { ...project, isTemplate: !project.isTemplate }; // Crear una copia del proyecto actual y establecer isTemplate a true
-    const { success, error, notificationType } = await handleUpdate(
-      project.id,
-      updatedProject
-    ); // Hacer la llamada al servidor para actualizar el proyecto
-
-    if (success) {
-      setProject(updatedProject); // Si la actualización fue exitosa, actualizar el estado del proyecto localmente
-      showNotification(success, notificationType); // Mostrar una notificación de éxito
-    } else if (error) {
-      showNotification(error, notificationType); // Si hubo un error, mostrar una notificación de error
-    }
-
-    //navigate(`/projects/details/${project.id}`);
-  };
-
-  let isTemplateText = "Hacer Plantilla";
-  if (project.isTemplate === true) {
-    isTemplateText = "Que ya no sea plantilla";
-  }
-
-  const handleDuplicateProject = async () => {
-    const { response, success, error, notificationType } =
-      await duplicateProject(project.id);
-
-    if (success) {
-      navigate(`/projects`);
-      showNotification(success, notificationType);
-    } else if (error) {
-      showNotification(error, notificationType);
-    }
-  };
-
-  const handleEditLocation = () => {
-    const locationForThisProject = locations.find(
-      (locations) => locations.projectId === project.id
-    );
-    if (!locationForThisProject) {
-      console.error("No location found for this project");
-      return;
-    }
-    setSelectedProjectId(project.id);
-    navigate(`/locations/edit/${locationForThisProject.id}`);
-  };
-
-  const locationForThisProject = locations.find(
-    (locations) => locations.projectId === project.id
-  );
-  const locationForThisProjectExists = locations.some(
-    (location) => location.projectId === project.id
-  );
-  const handleLocationClick = locationForThisProjectExists
-    ? handleEditLocation
-    : handleCreateLocation;
-  const locationButtonText = locationForThisProjectExists
-    ? "Editar locación"
-    : "Crear locación";
-
-  useEffect(() => {
-    if (mapContainer.current) {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/satellite-v9",
-        center: [
-          locationForThisProject.longitude,
-          locationForThisProject.latitude,
-        ], // Specify the initial map center
-        zoom: 17, // Specify the initial zoom level
-      });
-
-      const marker = new mapboxgl.Marker({ draggable: true })
-        .setLngLat([
-          locationForThisProject.longitude,
-          locationForThisProject.latitude,
-        ]) // Set the marker's coordinates to the center
-        .addTo(map.current);
-
-      const draw = new MapboxDraw({
-        displayControlsDefault: false,
-        // Select which mapbox-gl-draw control buttons to add to the map.
-        controls: {
-          polygon: true,
-          trash: true,
-        },
-        // Set mapbox-gl-draw to draw by default.
-        // The user does not have to click the polygon control button first.
-        defaultMode: "draw_polygon",
-      });
-
-      map.current.addControl(draw);
-
-      const handleMarkerDragEnd = () => {
-        const lngLat = marker.getLngLat();
-        setMarkerCoordinates([lngLat.lng, lngLat.lat]);
-      };
-
-      marker.on("dragend", handleMarkerDragEnd);
-
-      // Add marker to the map
-    }
-
-    return () => {
-      if (map.current) {
-        map.current.remove();
-      }
-    };
-  }, []);
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">
-        Detalles del {project.name}
-      </h2>
+      <h2 className="text-4xl font-semibold mb-6">Detalles de {project.name}</h2>
       {project && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-6">
             <div className="flex flex-wrap space-x-4">
-              {project.parentId === null && (
-                <>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Encargado</h2>
-                    <p>{project.userId}</p>
-                  </div>
-                </>
-              )}
+              
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Nombre</h2>
                 <p>{project.name}</p>
@@ -342,14 +188,6 @@ const ProjectDetails = () => {
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Status</h2>
                 <p>{project.status}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
-                <p>{project.startDate}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
-                <p>{project.endDate}</p>
               </div>
             </div>
             <Link
@@ -365,57 +203,6 @@ const ProjectDetails = () => {
             >
               Eliminar
             </button>
-            <button
-              onClick={handleIsTemplateUpdate}
-              className="bg-teal-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block mr-2"
-            >
-              {isTemplateText}
-            </button>
-            <button
-              onClick={handleDuplicateProject}
-              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Duplicar Proyecto
-            </button>
-
-            {locationForThisProject && (
-              <div className="flex space-x-4">
-                <div>
-                  <h1 className="text-4xl font-semibold mb-6">
-                    Localización del Proyecto
-                  </h1>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                    <p>{locationForThisProject.address}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{markerCoordinates}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{markerCoordinates}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Area</h2>
-                    <p>{locationForThisProject.area}</p>
-                  </div>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <div ref={mapContainer} className="w-full h-full" />
-                </div>
-              </div>
-            )}
-
-            <div>
-              <button
-                onClick={handleLocationClick}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                {locationButtonText}
-              </button>
-            </div>
 
             <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
             <button
@@ -521,10 +308,7 @@ const ProjectDetails = () => {
                           className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
                         >
                           <div className="col-span-1 ml-5">{project.name}</div>
-                          <div className="col-span-1">
-                            {" "}
-                            {project.description}
-                          </div>
+                          <div className="col-span-1">{project.description}</div>
                           <div className="col-span-1">{project.status}</div>
                           <div className="col-span-1">{project.startDate}</div>
                           <div className="col-span-1">{project.endDate}</div>
@@ -557,4 +341,4 @@ const ProjectDetails = () => {
   );
 };
 
-export default ProjectDetails;
+export default TemplateDetails;

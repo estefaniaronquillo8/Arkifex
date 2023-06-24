@@ -1,35 +1,62 @@
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { handleCreate } from "../../services/projectPlanning.api.routes";
+import { handleCreate } from "../../services/template.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
-import { getProjectById } from "../../services/project.api.routes";
 
-const ProjectPlanningCreate = () => {
+const TemplateCreate = () => {
   const navigate = useNavigate();
-  const { showNotification, selectedProjectId, setSelectedProjectId } =
-    useGlobalContext();
+  const {
+    users,
+    setUsers,
+    showNotification,
+    selectedProjectId,
+    setSelectedProjectId,
+  } = useGlobalContext();
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
   } = useForm({
-    projectId: 0,
+    userId: 0,
+    parentId: 0,
     name: "",
     description: "",
     status: "",
     startDate: null,
     endDate: null,
+    isTemplate: null,
   });
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
 
+  const loadUsers = async () => {
+    try {
+      const { response } = await getAllUsers();
+      if (response?.users) {
+        setUsers(response.users);
+      }
+    } catch (error) {
+      console.error("Error al cargar los usuarios: ", error);
+    }
+  };
+
+  // Función para cargar los proyectos
+  useEffect(() => {
+    loadUsers();
+  }, []);
+
   const createHandler = async (data) => {
-    data.projectId = selectedProjectId;
+    if (selectedProjectId) {
+      data.parentId = selectedProjectId;
+      data.userId = null;
+    }
+
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -44,14 +71,14 @@ const ProjectPlanningCreate = () => {
 
     setSelectedProjectId(null);
     if (response?.status === 200) {
-      const projectResponse = await getProjectById(data.projectId);
-      if (projectResponse?.response?.project?.isTemplate) {
-        navigate(`/templates/details/${data.projectId}`);
-      } else {
-        navigate(`/projects/details/${data.projectId}`);
-      }
+      navigate("/templates");
     }
   };
+
+  let isSubprojectText = "Proyecto";
+  if (selectedProjectId) {
+    isSubprojectText = "Subproyecto";
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -61,7 +88,7 @@ const ProjectPlanningCreate = () => {
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
             <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Planificación de Proyecto
+              Crear Nueva Plantilla de {isSubprojectText}
             </h1>
             <div className="mb-4">
               <label
@@ -73,14 +100,13 @@ const ProjectPlanningCreate = () => {
               <input
                 type="text"
                 id="name"
-                placeholder="Nombre de la Planificación"
+                placeholder="Nombre del Proyecto"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("name", {
                   required: "El campo es requerido.",
                   minLength: {
                     value: 3,
-                    message:
-                      "La planificación debe tener al menos 3 caracteres.",
+                    message: "El nombre debe tener al menos 3 caracteres.",
                   },
                 })}
               />
@@ -98,7 +124,7 @@ const ProjectPlanningCreate = () => {
               <input
                 type="text"
                 id="description"
-                placeholder="Descripción de la Planificación"
+                placeholder="Descripción del Proyecto"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("description", {
                   required: "El campo es requerido.",
@@ -112,74 +138,13 @@ const ProjectPlanningCreate = () => {
                 <p className="text-red-800">{errors.description.message}</p>
               )}
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="status"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Status
-              </label>
-              <input
-                type="text"
-                id="status"
-                placeholder="Status de la Planificación"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("status", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "El status debe tener al menos 3 caracteres.",
-                  },
-                })}
-              />
-              {errors.status && (
-                <p className="text-red-800">{errors.status.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="startDate"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Fecha de inicio
-              </label>
-              <input
-                type="date"
-                id="startDate"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("startDate", {
-                  required: "El campo es requerido.",
-                })}
-              />
-              {errors.startDate && (
-                <p className="text-red-800">{errors.startDate.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="endDate"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Fecha de finalización
-              </label>
-              <input
-                type="date"
-                id="endDate"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("endDate", {
-                  required: "El campo es requerido.",
-                })}
-              />
-              {errors.endDate && (
-                <p className="text-red-800">{errors.endDate.message}</p>
-              )}
-            </div>
+            
             <div className="flex flex-col items-center justify-center">
               <button
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear planificación
+                Crear Plantilla
               </button>
             </div>
           </form>
@@ -189,4 +154,4 @@ const ProjectPlanningCreate = () => {
   );
 };
 
-export default ProjectPlanningCreate;
+export default TemplateCreate;

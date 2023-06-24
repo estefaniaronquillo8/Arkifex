@@ -3,7 +3,10 @@ const { ProjectPlanning, sequelize } = require("../models");
 const createProjectPlanning = async (projectPlanningData) => {
   const transaction = await sequelize.transaction();
   try {
-    const response = await findProjectPlanningByName(projectPlanningData.name);
+    const response = await findProjectPlanningByNameAndProjectId(
+      projectPlanningData.name,
+      projectPlanningData.projectId
+    );
     if (response?.projectPlanning) {
       return {
         status: 409,
@@ -11,7 +14,9 @@ const createProjectPlanning = async (projectPlanningData) => {
         notificationType: "info",
       };
     }
-    const projectPlanning = await ProjectPlanning.create(projectPlanningData, { transaction });
+    const projectPlanning = await ProjectPlanning.create(projectPlanningData, {
+      transaction,
+    });
     await transaction.commit();
     return {
       status: 200,
@@ -32,7 +37,6 @@ const createProjectPlanning = async (projectPlanningData) => {
 const getAllProjectPlannings = async () => {
   try {
     const projectPlannings = await ProjectPlanning.findAll();
-
     if (projectPlannings?.length === 0) {
       return {
         status: 200,
@@ -56,8 +60,14 @@ const updateProjectPlanning = async (id, projectPlanningData) => {
   const transaction = await sequelize.transaction();
   try {
     if (projectPlanningData.name) {
-      const response = await findProjectPlanningByName(projectPlanningData.name);
-      if (response.status === 200 && response.projectPlanning.id !== parseInt(id)) {
+      const response = await findProjectPlanningByNameAndProjectId(
+        projectPlanningData.name,
+        projectPlanningData.projectId
+      );
+      if (
+        response.status === 200 &&
+        response.projectPlanning.id !== parseInt(id)
+      ) {
         return {
           status: 409,
           message: "Name already exists",
@@ -65,7 +75,10 @@ const updateProjectPlanning = async (id, projectPlanningData) => {
         };
       }
     }
-    await ProjectPlanning.update(projectPlanningData, { where: { id }, transaction });
+    await ProjectPlanning.update(projectPlanningData, {
+      where: { id },
+      transaction,
+    });
     await transaction.commit();
     const updatedProjectPlanning = await findById(id);
     return {
@@ -104,8 +117,10 @@ const deleteProjectPlanning = async (id) => {
   }
 };
 
-const findProjectPlanningByName = async (name) => {
-  const projectPlanning = await ProjectPlanning.findOne({ where: { name } });
+const findProjectPlanningByNameAndProjectId = async (name, projectId) => {
+  const projectPlanning = await ProjectPlanning.findOne({
+    where: { name, projectId },
+  });
   if (!projectPlanning) {
     return { status: 404 };
   }
@@ -130,11 +145,27 @@ const findById = async (id) => {
   };
 };
 
+const getAllProjectPlanningsByProjectId = async (projectId) => {
+  try {
+    const projectPlannings = await ProjectPlanning.findAll({ where: { projectId }});
+    
+    return { status: 200, projectPlannings: projectPlannings };
+  } catch (error) {
+    return {
+      status: 500,
+      projectPlannings: [],
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+};
+
 module.exports = {
   createProjectPlanning,
   getAllProjectPlannings,
   updateProjectPlanning,
   deleteProjectPlanning,
-  findProjectPlanningByName,
+  findProjectPlanningByNameAndProjectId,
   findById,
+  getAllProjectPlanningsByProjectId,
 };

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import {
   getAllProjects,
-  handleDelete,
 } from "../../services/project.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
@@ -11,14 +10,22 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
 const ProjectIndex = () => {
-  const { projects, setProjects, users, setUsers, setSelectedProjectId, showNotification } =
-    useGlobalContext();
+  const {
+    projects,
+    setProjects,
+    users,
+    setUsers,
+    userInSession, 
+    setSelectedProjectId,
+    showNotification,
+  } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("ROLE", userInSession.role.id)
     if (!routesProtection()) navigate("/login");
   }, []);
 
@@ -56,18 +63,6 @@ const ProjectIndex = () => {
       showNotification(error, notificationType);
     }
   }, [success, error, notificationType, showNotification]);
-
-  const deleteHandler = async (id) => {
-    const { response, success, error, notificationType } = await handleDelete(
-      id
-    );
-    if (response?.status === 200) {
-      setProjects(response.projects);
-    }
-    setError(error);
-    setSuccess(success);
-    setNotificationType(notificationType);
-  };
 
   const handleCreateProject = () => {
     setSelectedProjectId(null);
@@ -111,7 +106,7 @@ const ProjectIndex = () => {
                   <div className="col-span-1 ml-5">{project.name}</div>
                   <div className="col-span-1">{project.description}</div>
                   <div className="col-span-1 pl-3">
-                    {user ? user.name + " "  + user.lastname : "Unknown"}
+                    {user ? user.name + " " + user.lastname : "Unknown"}
                   </div>
                   <div className="col-span-1">{project.status}</div>
                   <div className="col-span-1">{project.startDate}</div>

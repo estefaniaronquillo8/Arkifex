@@ -5,6 +5,7 @@ const userRoutes = require("./user.routes");
 const resourceRoutes = require("./resource.routes");
 const projectPlanningRoutes = require("./projectPlanning.routes");
 const projectRoutes = require("./project.routes");
+const templateRoutes = require("./template.routes");
 const locationRoutes = require("./location.routes");
 const resourceAssignmentRoutes = require("./resourceAssignment.routes");
 
@@ -13,6 +14,7 @@ baseRouter.use(
   resourceRoutes,
   projectPlanningRoutes,
   projectRoutes,
+  templateRoutes,
   locationRoutes,
   resourceAssignmentRoutes
 );

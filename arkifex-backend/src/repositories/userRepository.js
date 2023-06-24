@@ -168,6 +168,10 @@ const encryptPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
+/* const getUserInSession = async (token) =>{
+  return bcrypt.
+} */
+
 module.exports = {
   createUser,
   updateUser,

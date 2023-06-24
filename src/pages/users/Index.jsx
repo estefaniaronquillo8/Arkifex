@@ -7,7 +7,7 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
 const UserIndex = () => {
-  const { users, setUsers, currentUser, showNotification } = useGlobalContext();
+  const { users, setUsers, userInSession, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
@@ -15,9 +15,8 @@ const UserIndex = () => {
   
   useEffect(() => {
     if(!routesProtection()) navigate("/login");
-    console.log(currentUser)
-    console.log("GLOBAL CONTEXT", useGlobalContext)
-    //if(currentUser.roleId !== 1) navigate("/resources");
+    console.log(userInSession)
+    if(userInSession.role.name !== "superAdmin") navigate("/resources");
   }, []);
   
   useEffect(() => {
