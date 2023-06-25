@@ -25,7 +25,6 @@ const ProjectIndex = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("ROLE", userInSession.role.id)
     if (!routesProtection()) navigate("/login");
   }, []);
 

@@ -1,11 +1,11 @@
 import LocationCreate from "./Create";
 import LocationIndex from "./Index";
 import LocationEdit from "./Edit";
-import MapPage from "./Map";
+import LocationDetails from "./Details";
 
 export {
     LocationCreate,
     LocationIndex,
     LocationEdit,
-    MapPage
+    LocationDetails
 }

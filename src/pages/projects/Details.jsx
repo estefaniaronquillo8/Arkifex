@@ -16,6 +16,7 @@ import { getAllResourceAssignments } from "../../services/resourceAssignment.api
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import LocationDetails from "../location/Details";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -390,11 +391,11 @@ const ProjectDetails = () => {
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{markerCoordinates}</p>
+                    <p>{locationForThisProject.lat}</p>
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{markerCoordinates}</p>
+                    <p>{locationForThisProject.lng}</p>
                   </div>
                   <div className="flex-1 bg-white rounded-lg shadow p-4">
                     <h2 className="font-bold text-lg mb-2">Area</h2>
@@ -403,7 +404,7 @@ const ProjectDetails = () => {
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <div ref={mapContainer} className="w-full h-full" />
+                  <LocationDetails locationId={locationForThisProject.id} />
                 </div>
               </div>
             )}
