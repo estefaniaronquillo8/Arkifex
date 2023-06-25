@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/user.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
-import Sidebar from "../../components/Sidebar"; // Importar el componente Sidebar
+
 
 function UserEdit() {
   const { id } = useParams();
@@ -60,7 +60,6 @@ function UserEdit() {
   return (
 
     <div className="flex">
-     <Sidebar /> 
     <div className="container mx-auto px-4 py-6">
        
       <h2 className="text-4xl font-semibold mb-6">Editar usuario</h2>
