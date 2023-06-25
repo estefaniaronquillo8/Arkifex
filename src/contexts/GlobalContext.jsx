@@ -1,5 +1,11 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import jwtDecode from 'jwt-decode';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 
 const GlobalContext = createContext();
@@ -28,20 +34,20 @@ export const GlobalProvider = ({ children }) => {
       setRoleInSession(decodedToken.role);
     }
   }, []);
-
+  
   const setAuthData = (token) => {
-    localStorage.setItem('token', token);
+    localStorage.setItem("token", token);
     const decodedToken = jwtDecode(token);
     setUserInSession(decodedToken.user);
     setRoleInSession(decodedToken.role);
   };
 
   const clearAuthData = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setUserInSession(null);
     setRoleInSession(null);
   };
-  
+
   const [resources, setResources] = useState([]);
   const [resource, setResource] = useState({
     id: 0,
@@ -51,9 +57,9 @@ export const GlobalProvider = ({ children }) => {
     description: "",
     marketPrice: 0,
   });
-  
+
   const [selectedProjectId, setSelectedProjectId] = useState(null);
-  
+
   const [projects, setProjects] = useState([]);
   const [project, setProject] = useState({
     id: 0,
@@ -79,7 +85,7 @@ export const GlobalProvider = ({ children }) => {
     endDate: null,
     isTemplate: null,
   }); */
-  
+
   const [projectPlannings, setProjectPlannings] = useState([]);
   const [projectPlanning, setProjectPlanning] = useState({
     id: 0,
@@ -90,7 +96,7 @@ export const GlobalProvider = ({ children }) => {
     startDate: null,
     endDate: null,
   });
-  
+
   const [resourceAssignments, setResourceAssignments] = useState([]);
   const [resourceAssignment, setResourceAssignment] = useState({
     id: 0,
@@ -101,16 +107,16 @@ export const GlobalProvider = ({ children }) => {
     actualCost: 0,
     associatedDate: "",
   });
-  
-    const [locations, setLocations] = useState([]);
-    const [location, setLocation] = useState({
-      id: 0,
-      projectId: 0,
-      address: "",
-      latitude: 0,
-      longitude: 0,
-      area: 0,
-    });
+
+  const [locations, setLocations] = useState([]);
+  const [location, setLocation] = useState({
+    id: 0,
+    projectId: 0,
+    address: "",
+    latitude: 0,
+    longitude: 0,
+    area: 0,
+  });
 
   const [lastNotification, setLastNotification] = useState(null);
 
@@ -149,10 +155,8 @@ export const GlobalProvider = ({ children }) => {
 
     userInSession, 
     setUserInSession,
-
     roleInSession, 
     setRoleInSession,
-
     setAuthData,
     clearAuthData,
 
@@ -168,7 +172,7 @@ export const GlobalProvider = ({ children }) => {
     project,
     setProject,
 
-    selectedProjectId, 
+    selectedProjectId,
     setSelectedProjectId,
 
     /* // Templates
@@ -182,7 +186,7 @@ export const GlobalProvider = ({ children }) => {
     setLocations,
     location,
     setLocation,
-    
+
     // Resource Assignments
     resourceAssignments,
     setResourceAssignments,
@@ -190,11 +194,11 @@ export const GlobalProvider = ({ children }) => {
     setResourceAssignment,
 
     // Project Plannings
-    projectPlannings, 
+    projectPlannings,
     setProjectPlannings,
-    projectPlanning, 
+    projectPlanning,
     setProjectPlanning,
-    
+
     showNotification,
   };
 
