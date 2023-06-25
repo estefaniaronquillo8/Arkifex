@@ -29,9 +29,24 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserInSession(decodedToken.user);
-      setRoleInSession(decodedToken.role);
+      try {
+        const decodedToken = jwtDecode(token);
+  
+        // Verificamos la expiración del token
+        const currentTime = Date.now().valueOf() / 1000;
+
+        if (decodedToken.exp < currentTime) {
+          console.error('Sesión Expirada');
+          localStorage.removeItem('token');
+          navigate('/login');
+        } else {
+          setUserInSession(decodedToken.user);
+          setRoleInSession(decodedToken.role);
+        }
+        
+      } catch (error) {
+        console.error('error', error);
+      }
     }
   }, []);
   
