@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { RiUserFill, RiShoppingCartFill } from "react-icons/ri";
 import { FaDollarSign } from "react-icons/fa";
 import { GiWeight } from "react-icons/gi";
+import { BsDropbox } from "react-icons/bs";
 
 const ResourceCreate = () => {
   const navigate = useNavigate();
@@ -99,6 +100,8 @@ const ResourceCreate = () => {
                   },
                 })}
               />
+
+              
               {errors.name && (
                 <p className="text-red-800">{errors.name.message}</p>
               )}
