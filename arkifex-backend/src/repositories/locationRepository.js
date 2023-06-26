@@ -1,4 +1,5 @@
 const { Location, sequelize } = require("../models");
+const axios = require('axios');
 
 const createLocation = async (locationData) => {
   const transaction = await sequelize.transaction();
@@ -11,6 +12,7 @@ const createLocation = async (locationData) => {
         notificationType: "info",
       };
     }
+
     const location = await Location.create(locationData, { transaction });
     await transaction.commit();
     return {
@@ -21,6 +23,7 @@ const createLocation = async (locationData) => {
     };
   } catch (error) {
     await transaction.rollback();
+    console.log(error)
     return {
       status: 500,
       message: "Internal server error",

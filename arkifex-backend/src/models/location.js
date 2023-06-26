@@ -22,19 +22,19 @@ const Location = sequelize.define("Location", {
   },
   area: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   lat: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   lng: {
     type: DataTypes.FLOAT,
-    allowNull: false,
+    allowNull: true,
   },
   polygon: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
 });
 

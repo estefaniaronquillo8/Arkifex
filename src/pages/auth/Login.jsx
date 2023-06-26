@@ -20,6 +20,7 @@ const Login = () => {
 
     if (success) {
       showNotification(success, notificationType);
+      console.log("SET AUTH DATA EN LOGIN")
       setAuthData(response?.token);
       setUserInSession(response?.user);
       navigate("/resources");

@@ -53,6 +53,7 @@ export const GlobalProvider = ({ children }) => {
   const setAuthData = (token) => {
     localStorage.setItem("token", token);
     const decodedToken = jwtDecode(token);
+    console.log(decodedToken)
     setUserInSession(decodedToken.user);
     setRoleInSession(decodedToken.role);
   };

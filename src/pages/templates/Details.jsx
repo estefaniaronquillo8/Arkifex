@@ -169,6 +169,18 @@ const TemplateDetails = () => {
     navigate("/templates/create");
   };
 
+  const handleDuplicateProject = async () => {
+    const { response, success, error, notificationType } =
+      await duplicateProject(project.id);
+
+    if (success) {
+      navigate(`/projects`);
+      showNotification(success, notificationType);
+    } else if (error) {
+      showNotification(error, notificationType);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-6">
       <h2 className="text-4xl font-semibold mb-6">Detalles de {project.name}</h2>
@@ -191,7 +203,7 @@ const TemplateDetails = () => {
               </div>
             </div>
             <Link
-              to={`/projects/edit/${project.id}`}
+              to={`/templates/edit/${project.id}`}
               className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
             >
               Editar
@@ -202,6 +214,12 @@ const TemplateDetails = () => {
               className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
             >
               Eliminar
+            </button>
+            <button
+              onClick={handleDuplicateProject}
+              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Duplicar Proyecto
             </button>
 
             <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>

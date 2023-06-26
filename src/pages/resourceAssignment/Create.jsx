@@ -19,6 +19,7 @@ const ResourceAssignmentCreate = () => {
     selectedProjectId,
     setSelectedProjectId,
   } = useGlobalContext();
+
   const {
     register,
     handleSubmit,
@@ -128,7 +129,7 @@ const ResourceAssignmentCreate = () => {
                     onChange={(e) => {
                       field.onChange(e); // Para mantener el comportamiento original
                       const selectedResource = resources.find(
-                        (resource) => resource.id === e.target.value
+                        (resource) => resource.id === Number(e.target.value)
                       );
                       if (selectedResource) {
                         setValue("estimatedCost", selectedResource.marketPrice);
@@ -151,57 +152,7 @@ const ResourceAssignmentCreate = () => {
               {errors.resourceId && (
                 <p className="text-red-800">{errors.resourceId.message}</p>
               )}
-              {/* <select
-                id="resourceId"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("resourceId", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona un recurso</option>
-                {resources && resources.length > 0 ? (
-                  resources.map((resource) => (
-                    <option key={resource.id} value={resource.id}>
-                      {resource.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>Cargando recursos...</option>
-                )}
-              </select>
-              {errors.resourceId && (
-                <p className="text-red-800">{errors.resourceId.message}</p>
-              )} */}
             </div>
-            {/* <div className="mb-4">
-              <label
-                htmlFor="projectPlanningId"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Proyecto
-              </label>
-              <select
-                id="projectPlanningId"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("projectPlanningId", {
-                  required: "El campo es requerido.",
-                })}
-              >
-                <option value="">Selecciona un proyecto</option>
-                {projects && projects.length > 0 ? (
-                  projects.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>Cargando proyectos...</option>
-                )}
-              </select>
-              {errors.projectPlanningId && (
-                <p className="text-red-800">{errors.projectPlanningId.message}</p>
-              )}
-            </div> */}
             <div className="mb-4">
               <label
                 htmlFor="quantity"
@@ -242,15 +193,9 @@ const ResourceAssignmentCreate = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("estimatedCost", {
                   required: "El campo es requerido.",
-                  minLength: {
-                    value: 1,
-                    message: "El costo estimado debe ser mayor o igual 1",
-                  },
                 })}
+                readOnly  
               />
-              {errors.estimatedCost && (
-                <p className="text-red-800">{errors.estimatedCost.message}</p>
-              )}
             </div>
             <div className="mb-4">
               <label

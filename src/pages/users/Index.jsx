@@ -21,6 +21,7 @@ const UserIndex = () => {
 
   useEffect(() => {
     if (roleInSession) {
+      console.log(roleInSession.name)
       setIsLoading(false);
     }
   }, [roleInSession]);
@@ -40,7 +41,7 @@ const UserIndex = () => {
     if (!isLoading) {
       fetchUsers();
     }
-  }, [isLoading, setUsers]);
+  }, [isLoading]);
 
   useEffect(() => {
     if (success) {
@@ -67,7 +68,7 @@ const UserIndex = () => {
       id
     );
     if (response?.status === 200) {
-      setUsers(response.resources);
+      setUsers(response.users);
     }
     setError(error);
     setSuccess(success);

@@ -1,93 +1,216 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
-import axios from 'axios';
-import { handleEdit } from '../../services/location.api.routes';
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import axios from "axios";
+import { handleEdit } from "../../services/location.api.routes";
 
 const mapContainerStyle = {
-  height: '70vh',
-  width: '100%',
+  height: "70vh",
+  width: "100%",
 };
 
-const LocationDetails = ({locationId}) => {
+const LocationDetails = ({ locationId, mode, setLocationData }) => {
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y',
+    id: "google-map-script",
+    googleMapsApiKey: "AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y",
+    libraries: ["drawing", "geometry"],
   });
 
   const [location, setLocation] = useState();
   const [center, setCenter] = useState();
   const mapRef = useRef();
+  const markerRef = useRef(); // Ref for the marker
+  const polygonRef = useRef(); // Ref for the polygon
 
   const getGeocode = async (address) => {
     try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`);
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
+      );
       const { results } = response.data;
       return results[0].geometry.location;
     } catch (error) {
-      console.error('Error occurred while fetching geocode:', error);
+      console.error("Error occurred while fetching geocode:", error);
+    }
+  };
+
+  const getAddress = async (lat, lng) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
+      );
+      console.log(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
+      );
+      const { results } = response.data;
+      return results[0].formatted_address;
+    } catch (error) {
+      console.error("Error occurred while fetching geocode:", error);
     }
   };
 
   useEffect(() => {
-    const fetchLocation = async () => {
-      const { response } = await handleEdit(locationId);
-      if (response?.location) {
-        let polygonData = JSON.parse(response.location.polygon).map(point => {
-          return {
-            lat: parseFloat(point.lat),
-            lng: parseFloat(point.lng)
-          };
-        });
-  
-        setLocation({
-          ...response.location,
-          polygon: polygonData,
-        });
-  
-        if (response.location.address) {
-          const geo = await getGeocode(response.location.address);
-          if (geo) {
-            setCenter(geo);
-          } 
-        } else if (response.location.lat && response.location.lng) {
-          setCenter({ lat: parseFloat(response.location.lat), lng: parseFloat(response.location.lng) });
+    if (mode === "create") {
+      setLocation({
+        address: "",
+        area: "",
+        lat: "",
+        lng: "",
+        polygon: [],
+      });
+      setCenter({
+        lat: 0, // Se pueden establecer estos valores a la ubicación que se prefiera.
+        lng: 0,
+      });
+    } else if (locationId) {
+      const fetchLocation = async () => {
+        const { response } = await handleEdit(locationId);
+        if (response?.location) {
+          let polygonData = JSON.parse(response.location.polygon).map(
+            (point) => {
+              return {
+                lat: parseFloat(point.lat),
+                lng: parseFloat(point.lng),
+              };
+            }
+          );
+
+          setLocation({
+            ...response.location,
+            polygon: polygonData,
+          });
+
+          if (response.location.address) {
+            const geo = await getGeocode(response.location.address);
+            if (geo) {
+              setCenter(geo);
+            }
+          } else if (response.location.lat && response.location.lng) {
+            setCenter({
+              lat: parseFloat(response.location.lat),
+              lng: parseFloat(response.location.lng),
+            });
+          }
         }
+        if (mode !== "show") setLocationData(response.location); // Update location data in parent
+      };
+
+      fetchLocation();
+    }
+  }, [mode, locationId]);
+
+  const onLoad = useCallback(
+    (map) => {
+      mapRef.current = map;
+
+      if (mode === "edit" || mode === "create") {
+        const drawingManager = new window.google.maps.drawing.DrawingManager({
+          drawingMode: window.google.maps.drawing.OverlayType.POLYGON,
+          drawingControl: true,
+          drawingControlOptions: {
+            position: window.google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: [
+              window.google.maps.drawing.OverlayType.MARKER,
+              window.google.maps.drawing.OverlayType.POLYGON,
+            ],
+          },
+        });
+
+        drawingManager.setMap(map);
+
+        window.google.maps.event.addListener(
+          drawingManager,
+          "overlaycomplete",
+          async (event) => {
+            if (event.type === window.google.maps.drawing.OverlayType.MARKER) {
+              // If a marker already exists, remove it.
+              if (markerRef.current) {
+                markerRef.current.setMap(null);
+              }
+
+              let marker = event.overlay;
+              markerRef.current = marker; // Store reference to the new marker
+
+              const address = await getAddress(
+                marker.position.lat(),
+                marker.position.lng()
+              );
+              console.log("address", address);
+
+              setLocationData({
+                address: address,
+                lat: marker.position.lat(),
+                lng: marker.position.lng(),
+              });
+            } else if (
+              event.type === window.google.maps.drawing.OverlayType.POLYGON
+            ) {
+              // If a polygon already exists, remove it.
+              if (polygonRef.current) {
+                polygonRef.current.setMap(null);
+              }
+
+              let polygon = new window.google.maps.Polygon({
+                paths: event.overlay.getPath().getArray(),
+                map: map,
+              });
+              polygonRef.current = polygon; // Store reference to the new polygon
+
+              // Calcular el área del polígono
+              const area = window.google.maps.geometry.spherical.computeArea(
+                polygon
+                  .getPath()
+                  .getArray()
+                  .map((latLng) => {
+                    return { lat: latLng.lat(), lng: latLng.lng() };
+                  })
+              );
+              console.log("Area of the polygon is: ", area);
+
+              setLocationData({
+                polygon: polygon
+                  .getPath()
+                  .getArray()
+                  .map((point) => ({ lat: point.lat(), lng: point.lng() })),
+                area: area,
+              });
+
+              // Remove the polygon that was just drawn with the DrawingManager
+              event.overlay.setMap(null);
+            }
+          }
+        );
       }
-    };
-  
-    fetchLocation();
-  }, [locationId]);
 
-  const onLoad = useCallback((map) => {
-    mapRef.current = map;
-  }, []);
+      if (location?.polygon) {
+        let polygon = new window.google.maps.Polygon({
+          paths: location?.polygon,
+          map: map,
+        });
+        polygonRef.current = polygon; // Store reference to the initial polygon
+      }
 
-  useEffect(() => {
-    if (!mapRef.current || !isLoaded || !center || !location?.polygon) return;
-
-    new window.google.maps.Marker({
-      position: center,
-      map: mapRef.current,
-    });
-
-    new window.google.maps.Polygon({
-      paths: location?.polygon,
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-      map: mapRef.current,
-    });
-  }, [isLoaded, center, location]);
+      if (center) {
+        let marker = new window.google.maps.Marker({
+          position: center,
+          map: map,
+        });
+        markerRef.current = marker; // Store reference to the initial marker
+      }
+    },
+    [location, center, mode, setLocationData]
+  );
 
   const mapOptions = {
     center,
     zoom: 15,
   };
 
-  return isLoaded && center && location?.polygon ? (
-    <GoogleMap mapContainerStyle={mapContainerStyle} options={mapOptions} onLoad={onLoad} />
+  return isLoaded && center && location ? (
+    <GoogleMap
+      mapContainerStyle={mapContainerStyle}
+      options={mapOptions}
+      onLoad={onLoad}
+    />
   ) : (
     <div>Loading...</div>
   );

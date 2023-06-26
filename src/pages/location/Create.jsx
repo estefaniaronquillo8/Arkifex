@@ -1,40 +1,51 @@
 import { useNavigate } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import { handleCreate } from "../../services/location.api.routes";
-import { getAllProjects } from "../../services/project.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { useState, useEffect } from "react";
+import { useEffect, useCallback } from "react";
+import LocationDetails from "./Details";
 import { routesProtection } from "../../assets/routesProtection";
 
 const LocationCreate = () => {
   const navigate = useNavigate();
-  const {
-    showNotification,
-    selectedProjectId,
-    setSelectedProjectId,
-  } = useGlobalContext();
+  const { showNotification, selectedProjectId, setSelectedProjectId } =
+    useGlobalContext();
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm();
+    const { register, handleSubmit, setValue } = useForm({
+      defaultValues: {
+        projectId: "",
+        address: "",
+        area: 0,
+        lat: 0,
+        lng: 0,
+        polygon: [],
+      },
+    });
 
-  // Usamos useFieldArray para manejar un array de campos
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "polygon"
-  });
+  const setLocationData = useCallback(
+    (data) => {
+      console.log("setLocationData", data);
+      if (data?.lat) setValue("lat", data.lat);
+      if (data?.lng) setValue("lng", data.lng);
+      if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
+      if (data?.address) setValue("address", data.address);
+      if (data?.area) setValue("area", data.area);
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
 
   const createHandler = async (data) => {
+    console.log("data", data)
     data.projectId = selectedProjectId;
-    data.polygon = JSON.stringify(data.polygon);
-    const { response, success, error, notificationType } = await handleCreate(data);
+    const { response, success, error, notificationType } = await handleCreate(
+      data
+    );
+
+    console.log(response)
 
     if (success) {
       showNotification(success, notificationType);
@@ -57,157 +68,101 @@ const LocationCreate = () => {
           <form
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
-            <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Localización
-            </h1>
-            
-            <div className="mb-4">
-              <label
-                htmlFor="address"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Dirección
-              </label>
-              <input
-                type="text"
-                id="address"
-                placeholder="Dirección"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("address", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "La dirección debe tener al menos 3 caracteres.",
-                  },
-                })}
-              />
-              {errors.address && (
-                <p className="text-red-800">{errors.address.message}</p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="area"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Area
-              </label>
-              <input
-                type="number"
-                id="area"
-                min={0}
-                step="0.01"
-                placeholder="Area"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("area", {
-                  required: "El campo es requerido.",
-                  min: {
-                    value: 1,
-                    message: "El área debe ser al menos 1.",
-                  },
-                })}
-              />
-              {errors.area && (
-                <p className="text-red-800">{errors.area.message}</p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="lat"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Latitud
-              </label>
-              <input
-                type="number"
-                id="lat"
-                step="0.00000000000000001"
-                placeholder="Latitud"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("lat", {
-                  required: "El campo es requerido.",
-                })}
-              />
-              {errors.lat && (
-                <p className="text-red-800">{errors.lat.message}</p>
-              )}
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="lng"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Longitud
-              </label>
-              <input
-                type="number"
-                id="lng"
-                step="0.00000000000000001"
-                placeholder="Longitud"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("lng", {
-                  required: "El campo es requerido.",
-                })}
-              />
-              {errors.lng && (
-                <p className="text-red-800">{errors.lng.message}</p>
-              )}
-            </div>
-
-            <h2 className="mb-6 text-xl font-bold text-center">
-              Creación de Polígono
-            </h2>
-
-            {fields.map((field, index) => (
-              <div key={field.id}>
-                <label htmlFor={`polygon.${index}.lat`} className="block text-gray-700 text-sm font-bold mb-2">
-                  Latitud
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
+              <div>
+                <label
+                  htmlFor="projectId"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Project ID:
                 </label>
                 <input
-                  type="number"
-                  id={`polygon.${index}.lat`}
-                  step="0.00000000000000001"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  defaultValue={field.lat} // make sure to set up defaultValue
-                  {...register(`polygon.${index}.lat`, { required: "El campo es requerido." })}
+                  id="projectId"
+                  type="hidden"
+                  {...register("projectId")}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
-                {errors.polygon && errors.polygon[index]?.lat && (
-                  <p className="text-red-800">{errors.polygon[index].lat.message}</p>
-                )}
-
-                <label htmlFor={`polygon.${index}.lng`} className="block text-gray-700 text-sm font-bold mb-2">
-                  Longitud
-                </label>
-                <input
-                  type="number"
-                  id={`polygon.${index}.lng`}
-                  step="0.00000000000000001"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  defaultValue={field.lng} // make sure to set up defaultValue
-                  {...register(`polygon.${index}.lng`, { required: "El campo es requerido." })}
-                />
-                {errors.polygon && errors.polygon[index]?.lng && (
-                  <p className="text-red-800">{errors.polygon[index].lng.message}</p>
-                )}
-
-                <button type="button" className="btn btn-danger" onClick={() => remove(index)}>Eliminar</button>
               </div>
-            ))}
-            
-            <button type="button" className="btn btn-primary" onClick={() => append({ lat: "", lng: "" })}>
-              Añadir punto
-            </button>
-
+              <div>
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Address:
+                </label>
+                <input
+                  id="address"
+                  type="text"
+                  {...register("address")}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="area"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Area:
+                </label>
+                <input
+                  id="area"
+                  type="hidden"
+                  step="any"
+                  {...register("area")}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                htmlFor="lat"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Latitude:
+              </label>
+                <input
+                  id="lat"
+                  type="hidden"
+                  {...register("lat")}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+              <div>
+                <label
+                htmlFor="lng"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Longitude:
+              </label>
+                <input
+                  id="lng"
+                  type="hidden"
+                  {...register("lng")}
+                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                />
+              </div>
+            </div>
+            <div>
+              <label
+              htmlFor="polygon"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Polygon:
+            </label>
+              <input
+                id="polygon"
+                type="hidden"
+                {...register("polygon", )}
+                className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+              />
+            </div>
             <button
               type="submit"
-              className="mt-6 bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline hover:bg-blue-400"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Crear
             </button>
           </form>
+          <LocationDetails mode="create" setLocationData={setLocationData} />
         </div>
       </div>
     </div>

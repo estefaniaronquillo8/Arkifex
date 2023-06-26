@@ -11,7 +11,15 @@ const createProject = async (projectData) => {
   const transaction = await sequelize.transaction();
   try {
     const response = await findProjectByName(projectData.name);
+    const responseSubpry = await findProjectByParentId(projectData.name);
     if (response?.project) {
+      if (responseSubpry?.project) {
+        return {
+          status: 409,
+          message: "Subproject already exists",
+          notificationType: "info",
+        };
+      }
       return {
         status: 409,
         message: "Project already exists",
@@ -179,11 +187,13 @@ async function duplicateProject(projectId) {
   try {
     // Encuentra el proyecto original
     const originalProject = await Project.findOne({ where: { id: projectId } });
-
+    console.log(originalProject)
     // Duplica el proyecto excluyendo el id
-    let { id, ...projectData } = originalProject.get({ plain: true }); // Excluye el id
+    let { id, ...projectData } = originalProject.get({ plain: true }); // Excluye el id 
     const newProject = await Project.create({
       ...projectData,
+      status: "Comenzando",
+      isTemplate: false,
       name: `${originalProject.name}_duplicate`,
     });
 
@@ -233,7 +243,15 @@ async function duplicateProject(projectId) {
 }
 
 const findProjectByName = async (name) => {
-  const project = await Project.findOne({ where: { name } });
+  const project = await Project.findOne({ where: { name, parentId: null } });
+  if (!project) {
+    return { status: 404 };
+  }
+  return { status: 200, project };
+};
+
+const findProjectByParentId = async (name) => {
+  const project = await Project.findOne({ where: { name, parentId: { [Op.ne]: null } } });
   if (!project) {
     return { status: 404 };
   }
@@ -244,7 +262,7 @@ const findProjectByName = async (name) => {
   const project = await Project.findOne({ where: { name } });
   if (!project) {
     return { status: 404 };
-  }
+  } 
   return { status: 200, project };
 }; */
 

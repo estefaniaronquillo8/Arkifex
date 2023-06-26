@@ -21,7 +21,7 @@ import { LocationCreate, LocationIndex, LocationEdit, LocationDetails } from "./
 import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit, } from "./pages/resourceAssignment/ResourceAssignments";
 // Templates
 //import { TemplateCreate, TemplateIndex, TemplateEdit, } from "./pages/templates/Templates";
-import { TemplateCreate, TemplateIndex, TemplateDetails } from "./pages/templates/Templates";
+import { TemplateCreate, TemplateIndex, TemplateEdit, TemplateDetails } from "./pages/templates/Templates";
 
 function App() {
   return (
@@ -55,6 +55,7 @@ function App() {
 
                 <Route path="/templates" element={<TemplateIndex />} />
                 <Route path="/templates/create" element={<TemplateCreate />} />
+                <Route path="/templates/edit/:id" element={<TemplateEdit />} />
                 <Route path="/templates/details/:id" element={<TemplateDetails />} />
 
                 <Route path="/locations" element={<LocationIndex />} />
