@@ -67,7 +67,7 @@ const LocationIndex = () => {
         {group.map((location) => (
           <div
             key={location.id}
-            className="border p-4  border-4"
+            className="border p-4"
           >
             <div className="font-semibold text-blue-800">
               Proyecto: {location.projectId}

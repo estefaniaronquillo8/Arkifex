@@ -24,10 +24,13 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "tailwindcss/tailwind.css";
 
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
 
 const ProjectDetails = () => {
+  const [currentSection, setCurrentSection] = useState("details");
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
@@ -51,6 +54,7 @@ const ProjectDetails = () => {
   const map = useRef(null);
   const [markerCoordinates, setMarkerCoordinates] = useState(null);
 
+  
   useEffect(() => {
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
@@ -315,110 +319,121 @@ const ProjectDetails = () => {
     };
   }, []);
 
-  return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">
-        Detalles del {project.name}
-      </h2>
-      {project && (
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <div className="space-y-6">
-            <div className="flex flex-wrap space-x-4">
-              {project.parentId === null && (
-                <>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Encargado</h2>
-                    <p>{project.userId}</p>
-                  </div>
-                </>
-              )}
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Nombre</h2>
-                <p>{project.name}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Descripción</h2>
-                <p>{project.description}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Status</h2>
-                <p>{project.status}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
-                <p>{project.startDate}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
-                <p>{project.endDate}</p>
-              </div>
-            </div>
-            <Link
-              to={`/projects/edit/${project.id}`}
-              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Editar
-            </Link>
 
-            <button
-              onClick={async () => await deleteHandler(project.id)}
-              className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Eliminar
-            </button>
-            <button
-              onClick={handleIsTemplateUpdate}
-              className="bg-teal-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block mr-2"
-            >
-              {isTemplateText}
-            </button>
-            <button
-              onClick={handleDuplicateProject}
-              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Duplicar Proyecto
-            </button>
-
-            {locationForThisProject && (
-              <div className="flex space-x-4">
-                <div>
-                  <h1 className="text-4xl font-semibold mb-6">
-                    Localización del Proyecto
-                  </h1>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                    <p>{locationForThisProject.address}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{locationForThisProject.lat}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{locationForThisProject.lng}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Area</h2>
-                    <p>{locationForThisProject.area}</p>
-                  </div>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <LocationDetails locationId={locationForThisProject.id} />
-                </div>
+  const ProjectDetailsSection = ({ project }) => {
+    return (
+      <div className="bg-white shadow-md rounded-lg p-6">
+      <div className="space-y-6">
+        <div className="flex flex-wrap space-x-4">
+          {project.parentId === null && (
+            <>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Encargado</h2>
+                <p>{project.userId}</p>
               </div>
-            )}
+            </>
+          )}
+          <div className="flex-1 bg-white rounded-lg shadow p-4">
+            <h2 className="font-bold text-lg mb-2">Nombre</h2>
+            <p>{project.name}</p>
+          </div>
+          <div className="flex-1 bg-white rounded-lg shadow p-4">
+            <h2 className="font-bold text-lg mb-2">Descripción</h2>
+            <p>{project.description}</p>
+          </div>
+          <div className="flex-1 bg-white rounded-lg shadow p-4">
+            <h2 className="font-bold text-lg mb-2">Status</h2>
+            <p>{project.status}</p>
+          </div>
+          <div className="flex-1 bg-white rounded-lg shadow p-4">
+            <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
+            <p>{project.startDate}</p>
+          </div>
+          <div className="flex-1 bg-white rounded-lg shadow p-4">
+            <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
+            <p>{project.endDate}</p>
+          </div>
+        </div>
+        <Link
+          to={`/projects/edit/${project.id}`}
+          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+        >
+          Editar
+        </Link>
 
+        <button
+          onClick={async () => await deleteHandler(project.id)}
+          className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
+        >
+          Eliminar
+        </button>
+        <button
+          onClick={handleIsTemplateUpdate}
+          className="bg-teal-500 text-white px-4 py-2 rounded mb-4 inline-block mr-2"
+        >
+          {isTemplateText}
+        </button>
+        <button
+          onClick={handleDuplicateProject}
+          className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Duplicar Proyecto
+        </button>
+
+        {locationForThisProject && (
+          <div className="flex space-x-4">
             <div>
-              <button
-                onClick={handleLocationClick}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                {locationButtonText}
-              </button>
+              <h1 className="text-4xl font-semibold mb-6">
+                Localización del Proyecto
+              </h1>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Dirección</h2>
+                <p>{locationForThisProject.address}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Latitud</h2>
+                <p>{locationForThisProject.lat}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Longitud</h2>
+                <p>{locationForThisProject.lng}</p>
+              </div>
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Area</h2>
+                <p>{locationForThisProject.area}</p>
+              </div>
             </div>
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Mapa</h2>
+              <LocationDetails locationId={locationForThisProject.id} />
+            </div>
+          </div>
+        )}
 
-            <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+        <div>
+          <button
+            onClick={handleLocationClick}
+            className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+          >
+            {locationButtonText}
+          </button>
+        </div>  
+
+        <button
+          onClick={handleBack}
+          className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          Volver
+        </button>
+      </div>
+    </div>
+    );
+  };
+  
+  const TaskCreationSection = ({ project }) => {
+    return (
+      <div>
+           <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
             <button
               onClick={handleCreateProjectPlanning}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -489,10 +504,17 @@ const ProjectDetails = () => {
                   );
                 })}
             </div>
-
-            {!project.parentId && (
-              <>
-                <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
+      </div>
+    );
+  };
+  
+  //SUBPROYECTOS AQUIII
+  const SubprojectsSection = ({ project }) => {
+    return (
+      <div>
+        {!project.parentId && (
+          <>
+           <h1 className="text-4xl font-semibold mb-6">Sub-Proyectossss</h1>
                 <button
                   onClick={handleCreateSubproject}
                   className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -542,18 +564,50 @@ const ProjectDetails = () => {
                       );
                     })}
                 </div>
-              </>
-            )}
+           
+          </>
+        )}
+      </div>
+    );
+  };
+  
 
-            <button
-              onClick={handleBack}
-              className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Volver
-            </button>
-          </div>
-        </div>
-      )}
+
+
+  return (
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-4xl font-semibold mb-6">
+        Detalles del {project.name}
+      </h2>
+
+      <div>
+        <nav className="navres">
+        <button
+        className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "details" ? "active" : ""}`}
+        onClick={() => setCurrentSection("details")}
+      >
+        Detalles Generales
+      </button>
+          <button
+            className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "creation" ? "active" : ""}`}
+            onClick={() => setCurrentSection("creation")}
+          >
+            Creacion de Tareas
+          </button>
+          <button
+            className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "subprojects" ? "active" : ""}`}
+            onClick={() => setCurrentSection("subprojects")}
+          >
+            Sub-Proyectos
+          </button>
+        </nav>
+        {currentSection === "details" && <ProjectDetailsSection project={project} />}
+        {currentSection === "creation" && <TaskCreationSection project={project} />}
+
+      {currentSection === "subprojects" && <SubprojectsSection project={project} />}
+      </div>
+   
+    
     </div>
   );
 };

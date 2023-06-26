@@ -26,7 +26,7 @@ const Sidebar = () => {
     //   link: "/projectPlannings",
     //   icon: BsFillCalendarCheckFill,
     // },
-    { name: "Locations", link: "/locations", icon: ImLocation },
+    { name: "Templates", link: "/templates", icon: ImLocation },
     // { name: "Costs", link: "/costs", icon: FaMoneyCheckAlt },
   ];
 
@@ -100,7 +100,7 @@ const Sidebar = () => {
                         isActive(menu?.link) ? "bg-white bg-opacity-50" : ""
                       }`}
                     >
-                      <div className="flex items-center justify-center w-8 h-8">
+                      <div className="flex items-center justify-center w-9 h-8">
                         {React.createElement(menu?.icon, {
                           size: "30",
                           color: isActive(menu?.link) ? "#ffffff" : "#6B7280",
@@ -147,7 +147,7 @@ const Sidebar = () => {
               </div>
             )}
 
-            <div className={`m-3 text-x1 text-gray-900 font-semibold ${!showSidebar && 'hidden'}`}></div>
+            <div className={`text-xl text-gray-900 font-semibold ${!showSidebar && 'hidden'}`}></div>
           </section>
         </>
       )}

@@ -13,7 +13,7 @@
 }   
 
 .sidebar-container {
-  border-right: 1px solid #000000;
+  border-right: 1px solid #3d3d3d;
   border-top-right-radius: 20px;
   border-bottom-right-radius: 0px;
  
@@ -116,4 +116,10 @@ th {
 }
 .btnpul{
     background-color: rgb(12, 104, 185);   
+}
+
+
+.btnnav.active {
+  background-color: rgb(12, 104, 185);    /* Cambia al color deseado */
+  /* Estilos adicionales... */
 }

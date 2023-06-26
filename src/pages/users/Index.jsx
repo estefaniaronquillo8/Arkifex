@@ -21,7 +21,9 @@ const UserIndex = () => {
 
   useEffect(() => {
     if (roleInSession) {
+      console.log(roleInSession.name);
       setIsLoading(false);
+
     }
   }, [roleInSession]);
 

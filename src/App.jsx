@@ -12,7 +12,7 @@ import { ResourceCreate, ResourceIndex, ResourceEdit } from "./pages/resources/R
 // Project Planning
 import { ProjectPlanningCreate, ProjectPlanningDetails, ProjectPlanningEdit } from "./pages/projectPlanning/ProjectPlanning";
 // Project
-import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails } from "./pages/projects/Projects";
+import { ProjectCreate, ProjectIndex, ProjectEdit, ProjectDetails, ProjectDashboards } from "./pages/projects/Projects";
 // Locations
 import { LocationCreate, LocationIndex, LocationEdit, LocationDetails } from "./pages/location/Location";
 // ResourceAssignment
@@ -57,6 +57,7 @@ function App() {
             <Route path="/projects/create" element={<ProjectCreate />} />
             <Route path="/projects/edit/:id" element={<ProjectEdit />} />
             <Route path="/projects/details/:id" element={<ProjectDetails />} />
+            <Route path="/projects/dashboards/:id" element={<ProjectDashboards />} />
 
             <Route path="/templates" element={<TemplateIndex />} />
             <Route path="/templates/create" element={<TemplateCreate />} />

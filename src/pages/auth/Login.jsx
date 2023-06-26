@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { showNotification } = useGlobalContext();
+  const { setUserInSession, showNotification, setAuthData } =
+    useGlobalContext();
   const {
     register,
     handleSubmit,
@@ -15,20 +16,22 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+
   const loginHandler = async (data) => {
-    const { response, success, error, notificationType } = await handleLogin(
-      data
-    );
+
+    const { response, success, error, notificationType } = await handleLogin(data);
 
     if (success) {
       showNotification(success, notificationType);
-      localStorage.setItem("token", response.token);
-      navigate("/users");
+      setAuthData(response?.token);
+      setUserInSession(response?.user);
+      navigate("/resources");
     }
 
     if (error) {
       showNotification(error, notificationType);
     }
+    
   };
 
   return (
@@ -112,7 +115,8 @@ const Login = () => {
                 )}
               </div>
               <div className="w-full flex flex-col my-2">
-                <button
+                <button 
+               
                   type="submit"
                   className="w-full text-white my-2 font-semibold bg-black rounded-md p-4 text-center flex items-center justify-center"
                 >

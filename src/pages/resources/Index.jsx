@@ -22,7 +22,7 @@ const ResourceIndex = () => {
   const itemsPerPage = 25; // Número de elementos por página de materiales
 // personal items
 const [currentPersonalPage, setCurrentPersonalPage] = useState(1);
-const itemsPersonalPage = 1;
+const itemsPersonalPage = 10;
 //
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
