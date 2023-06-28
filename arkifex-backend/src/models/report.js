@@ -4,7 +4,7 @@ const sequelize = require("../config/database");
 const { Project, User } = require("./index");
 
 const Report = sequelize.define("Report", {
-  ReportId: {
+  id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
@@ -46,11 +46,11 @@ const Report = sequelize.define("Report", {
     allowNull: true,
   },
   timeVariance: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.INTEGER,
     allowNull: true,
   },  
   date: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
   },
 });
