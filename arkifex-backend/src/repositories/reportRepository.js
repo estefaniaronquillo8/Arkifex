@@ -110,9 +110,9 @@ const createReport  = async (projectId) => {
     }
 }; 
 
-const getBudgetByProjectPlanningReport = async (projectId) => {
+const getLastReport = async (projectId) => {
   try {
-    const project = await Project.findByPk(projectId);
+    const project = await Project.findAll({where: {id:projectId}});
 
     const maxdate = await Report.max('date');
     //console.log(response.toJSON);
@@ -150,8 +150,48 @@ const getBudgetByProjectPlanningReport = async (projectId) => {
 
 }
 
+const getReports = async (projectId) => {
+  try {
+    //const project = await Project.findByPk(projectId);
+
+    //const maxdate = await Report.max('date');
+    //console.log(response.toJSON);
+    const report = await Report.findAll({where:{projectId: projectId}});
+
+    if (!report) {
+      return {
+        status: 409,
+        message: "Project doesn't exists",
+        notificationType: "info",
+        //return: response.toJSON(),
+      };
+    }
+      // const [budgetByTask, metadatabudgetByTask] = await sequelize.query(
+      //   "SELECT PPS.id as ProjectPlanningId, PPS.name,SUM(RAS.actualCost) as ActualTotalCostOfTask, SUM(RAS.estimatedCost) as EstimatedTotalCostOfTask,  SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as CostVariance, DATEDIFF(MAX(PPS.endDate), CURDATE()) as dateVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE projectId = "+projectId+" GROUP BY PPS.id,PPS.name");
+      //const [budgetByResources, metadaBudgetByResources] = await sequelize.query(
+      //   "SELECT RES.type, SUM(RAS.actualCost) as ActualCostOfResource, SUM(RAS.estimatedCost) as EstimatedCostOfResource, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as ResourceCostVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id LEFT JOIN Resources RES ON RAS.resourceId = RES.id WHERE projectId = "+projectId+" GROUP BY RES.type"
+      // );
+      //const [budgetByResources, metadaBudgetByResources] = await sequelize.query(
+      //   "SELECT PPS.id,PPS.name,RES.type, SUM(RAS.actualCost) as ActualCostOfResource, SUM(RAS.estimatedCost) as EstimatedCostOfResource, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as ResourceCostVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id LEFT JOIN Resources RES ON RAS.resourceId = RES.id WHERE projectId = "+projectId+" GROUP BY PPS.id,PPS.name,RES.type"
+      // );
+
+      return { status:200, reportData: report };
+      
+
+  } catch (error) {
+    //await transaction.rollback();
+    console.log("ERROR GET REPORT BY PROJECT PLANNING",error)
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+
+}
+
 module.exports = {
   createReport,
-  getBudgetByProjectPlanningReport,
-  
+  getLastReport,
+  getReports,
 }

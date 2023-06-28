@@ -1,6 +1,7 @@
 const {
     createReport,
-    getBudgetByProjectPlanningReport
+    getLastReport,
+    getReports
   } = require("../repositories/reportRepository");
   
   exports.createReport = async (req, res) => {
@@ -8,8 +9,13 @@ const {
     return res.status(response.status).json(response);
   };
 
-  exports.getReport = async (req, res) => {
-    const response = await getBudgetByProjectPlanningReport(req.params.id);
+  exports.getReportByDate = async (req, res) => {
+    const response = await getLastReport(req.params.id);
+    return res.status(response.status).json(response);
+  };
+
+  exports.getAllReports = async (req, res) => {
+    const response = await getReports(req.params.id);
     return res.status(response.status).json(response);
   };
   
