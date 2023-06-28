@@ -10,7 +10,6 @@ export const handleLogin = (data) => {
 }
 
 export const handleLogout = (navigate) => {
-  localStorage.removeItem("token");
   navigate("/login");
 };
 

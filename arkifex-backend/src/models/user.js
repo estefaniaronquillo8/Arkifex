@@ -1,7 +1,7 @@
 // user.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { Role } = require("./index");
+const { Role } = require("./role");
 
 const User = sequelize.define("User", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },

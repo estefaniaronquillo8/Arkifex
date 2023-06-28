@@ -1,7 +1,7 @@
 // project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { User } = require("./index");
+const { User } = require("./user");
 
 const Project = sequelize.define("Project", {
   id: {
@@ -43,6 +43,11 @@ const Project = sequelize.define("Project", {
   },
   endDate: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  isTemplate: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true, 
   },
 });
 

@@ -35,7 +35,6 @@ exports.create = async (req, res) => {
   return res.status(response.status).json(response);
 };
 
-
 exports.delete = async (req, res) => {
   const response = await deleteUser(req.params.id);
   return res.status(response.status).json(response);
@@ -50,10 +49,16 @@ exports.login = async (req, res) => {
   }
 
   const { user } = response;
-  const token = createToken(user.id);
+  const role = user.Role;
+  const token = createToken(user, role);
+
   return res
     .status(response.status)
-    .json({ token, user, message: "Ingreso exitoso!" });
+    .json({ 
+      token, 
+      user: user.get({ plain: true }), 
+      message: "Ingreso exitoso!" 
+    });
 };
 
 exports.register = async (req, res) => {
@@ -61,7 +66,7 @@ exports.register = async (req, res) => {
 
   // Check if there are any users in the database
   const users = await User.findAll();
-  
+
   let roleName;
   if (users.length === 0) {
     // If there are no users in the database, assign the 'superAdmin' role
@@ -70,7 +75,7 @@ exports.register = async (req, res) => {
     // If there are users in the database, assign the 'client' role
     roleName = "client";
   }
-  
+
   const roleResponse = await findRole({ where: { name: roleName } });
 
   if (!roleResponse.role) {
@@ -87,4 +92,3 @@ exports.register = async (req, res) => {
 
   return res.status(response.status).json(response);
 };
-

@@ -1,4 +1,4 @@
-// src/pages/locations.js
+// src/pages/locations/index.jsx
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllLocations, handleDelete } from "../../services/location.api.routes";
@@ -67,15 +67,14 @@ const LocationIndex = () => {
         {group.map((location) => (
           <div
             key={location.id}
-            className="border p-4  border-4"
+            className="border p-4"
           >
             <div className="font-semibold text-blue-800">
               Proyecto: {location.projectId}
             </div>
             <div className="mt-2">Dirección: {location.address}</div>
-            <div>Latitud: {location.latitude}</div>
-            <div>Longitud: {location.longitude}</div>
-            <div>Area: {location.area}</div>
+            <div className="mt-2">Area: {location.area}</div>
+            <div className="mt-2">Puntos de polígono: {location.polygon.length}</div>
             <div className="mt-7">
               <Link
                 to={`/locations/edit/${location.id}`}

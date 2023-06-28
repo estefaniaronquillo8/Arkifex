@@ -6,7 +6,6 @@ export const getAllLocations = () => {
 };
 
 export const handleCreate = (location) => {
-  console.log(location)
   return requestHandler("post", "/locations/create", location);
 };
 

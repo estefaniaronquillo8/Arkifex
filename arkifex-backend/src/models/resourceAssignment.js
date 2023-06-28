@@ -1,7 +1,8 @@
 // project.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { ProjectPlanning, Resource } = require("./index");
+const { ProjectPlanning } = require("./projectPlanning");
+const { Resource } = require("./resource");
 
 const ResourceAssignment = sequelize.define("ResourceAssignment", {
   id: {

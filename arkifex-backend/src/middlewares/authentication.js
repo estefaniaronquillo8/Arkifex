@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 const isAuthenticated = (req, res, next) => {
   const token = req.headers['authorization'].split(' ')[1];
   
-  // 403 -> no estás autorizado
   if (!token) {
     return res.status(403).json({ message: 'No se ha proveido un token' });
   }
@@ -13,7 +12,8 @@ const isAuthenticated = (req, res, next) => {
       return res.status(401).json({ message: 'Ruta protegida, primero inicie sesión.' });
     }
 
-    req.userId = decoded.id;
+    req.user = decoded.user;
+    req.role = decoded.role;  
     next();
   });
 };

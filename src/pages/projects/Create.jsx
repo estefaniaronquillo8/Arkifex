@@ -28,6 +28,7 @@ const ProjectCreate = () => {
     status: "",
     startDate: null,
     endDate: null,
+    isTemplate: null,
   });
 
   useEffect(() => {
@@ -76,6 +77,11 @@ const ProjectCreate = () => {
     }
   };
 
+  let isSubprojectText = "Proyecto";
+  if (selectedProjectId) {
+    isSubprojectText = "Subproyecto";
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -84,7 +90,7 @@ const ProjectCreate = () => {
             onSubmit={handleSubmit(async (data) => await createHandler(data))}
           >
             <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Proyectos
+              Crear Nuevo {isSubprojectText}
             </h1>
             {selectedProjectId === null && (
               <>

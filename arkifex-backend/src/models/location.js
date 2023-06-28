@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
-const { Project } = require("./index");
+const { Project } = require("./project");
 
 const Location = sequelize.define("Location", {
   id: {
@@ -16,10 +16,26 @@ const Location = sequelize.define("Location", {
       key: "id",
     },
   },
-  address: { type: DataTypes.STRING, allowNull: false },
-  latitude: { type: DataTypes.FLOAT, allowNull: false },
-  longitude: { type: DataTypes.FLOAT, allowNull: false },
-  area: { type: DataTypes.FLOAT, allowNull: false },
+  address: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  area: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  lat: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  lng: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  polygon: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
 module.exports = Location;
