@@ -68,7 +68,7 @@ const ProjectDashboards = () => {
 
 
   return (
-    <div className="min-h-screen bg-red-100 flex  justify-center">
+    <div className="min-h-screen bg-white flex  justify-center">
       <div className="container mx-auto px-4 py-6 mt-5">
 
       <Navbar />

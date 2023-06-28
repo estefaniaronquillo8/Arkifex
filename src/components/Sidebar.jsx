@@ -79,7 +79,7 @@ const Sidebar = () => {
           <section className="flex gap-6">
             {showSidebar && (
               <div
-                className={`bg-gradient-to-tl from-black to-gray-800 sidebar-container ${
+                className={`bg-gradient-to-tl from-[#032d50] to-[#031d31] sidebar-container ${
                   open ? "w-72" : "w-16"
                 } duration-500 text-gray-100 flex flex-col min-h-screen`}
               >

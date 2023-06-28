@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
+
+
 const TemplateIndex = () => {
+  const [currentSection, setCurrentSection] = useState("templates");
   const {
     projects,
     setProjects,
@@ -69,12 +72,15 @@ const TemplateIndex = () => {
     navigate("/templates/create");
   };
 
-  return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-4xl font-semibold mb-6">Plantillas</h1>
+
+  const TemplatesSection = ({ project }) => {
+    return (
+          <div>
+            {!project.parentId && (
+              <>
       <button
         onClick={handleCreateTemplate}
-        className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+        className="bg-green-500 text-white px-4 py-2 mr-2 mt-6 rounded mb-4 inline-block"
       >
         Crear Nueva Plantilla
       </button>
@@ -129,8 +135,17 @@ const TemplateIndex = () => {
               return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
             })}
       </div>
+              </>
+            )}
+          </div>
+        );
+      };
+    //PROYECTOS AQUIII
 
-      <h1 className="text-4xl font-semibold mb-6">Proyectos</h1>
+    const ProjectsSection = ({ project }) => {
+      return(
+<div>
+<h1 className="text-4xl font-semibold mb-6">Proyectos</h1>
       <div className="bg-white shadow-md rounded-lg">
         <div className="grid grid-cols-8 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 ml-5">Nombre</div>
@@ -174,7 +189,14 @@ const TemplateIndex = () => {
             })}
       </div>
 
-      <h1 className="text-4xl font-semibold mb-6">Subproyectos</h1>
+</div>
+      
+    );};
+  //SUBPROYECTOS AQUIII
+  const SubprojectsSection = ({ project }) => {
+    return (
+      <div>
+        <h1 className="text-4xl font-semibold mb-6">Subproyectos</h1>
       <div className="bg-white shadow-md rounded-lg">
         <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 ml-5">Nombre</div>
@@ -218,6 +240,49 @@ const TemplateIndex = () => {
           })}
       </div>
     </div>
+    
+    );
+  };
+
+
+
+
+  return (
+    <div className="container mx-auto px-4 py-6">
+    <h2 className="text-4xl font-semibold mb-6">
+      Plantillas
+    </h2>
+
+    <div>
+      <nav className="navres">
+      <button
+     className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "templates" ? "active" : ""} `}
+
+     onClick={() => setCurrentSection("templates")}
+    >
+      Nuevas Plantillas
+    </button>
+        <button
+         className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "projects" ? "active" : ""}`}
+           onClick={() => setCurrentSection("projects")}
+        >
+          Proyectos
+        </button>
+        <button
+         className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "psubprojects" ? "active" : ""} `}
+         onClick={() => setCurrentSection("psubprojects")}
+        >
+          SubProyectos
+        </button>
+      </nav>
+      {currentSection === "templates" && <TemplatesSection project={projects} />}
+     {currentSection === "projects" && <ProjectsSection project={projects} />}
+
+    {currentSection === "psubprojects" && <SubprojectsSection project={projects} />}
+    </div>
+ 
+  
+  </div>
   );
 };
 
