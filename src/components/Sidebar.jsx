@@ -15,7 +15,7 @@ import { getAllUsers, handleDelete } from "../services/user.api.routes";
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { roleInSession } = useGlobalContext();
+  const { roleInSession,userInSession } = useGlobalContext();
   const menus = [
     { name: "Usuarios", link: "/users", icon: AiOutlineUsergroupAdd },
     { name: "Recursos", link: "/resources", icon:  MdBuild},
@@ -88,7 +88,7 @@ const Sidebar = () => {
               </div>
               
           <h1 className="mt-10 text-center text-white font-bold my-4 ">
-            Bienvenid@ {roleInSession.name}
+            Bienvenid@ <br />{userInSession.name} {userInSession.lastname}
           </h1>
        
 

@@ -37,14 +37,18 @@ const UserIndex = () => {
       const { response, success, error, notificationType } =
         await getAllUsers();
       if (response?.users) {
-        setUsers(response.users);
+        const filteredUsers =
+          roleInSession && roleInSession.name === "superAdmin"
+            ? response.users.filter((user) => user.roleId !== 1)
+            : response.users;
+        setUsers(filteredUsers);
       }
       setError(error);
       setSuccess(success);
       setNotificationType(notificationType);
     };
 
-    if (!isLoading && roleInSession && roleInSession.name === "superAdmin") {
+    if (!isLoading && roleInSession) {
       fetchUsers();
     }
   }, [isLoading, setUsers, roleInSession]);
@@ -116,24 +120,28 @@ const UserIndex = () => {
               key={user.id}
               className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
             >
-              <div className="col-span-1 pl-3">{user.name}</div>
-              <div className="col-span-1">{user.lastname}</div>
-              <div className="col-span-1">{getRoleName(user.roleId)}</div>
-              <div className="col-span-1">{user.email}</div>
-              <div className="col-span-2">
-                <Link
-                  to={`/users/edit/${user.id}`}
-                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                >
-                  Editar
-                </Link>
-                <button
-                  onClick={async () => await deleteHandler(user.id)}
-                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Eliminar
-                </button>
-              </div>
+              {user.roleId !== 1 && (
+                <>
+                  <div className="col-span-1 pl-3">{user.name}</div>
+                  <div className="col-span-1">{user.lastname}</div>
+                  <div className="col-span-1">{getRoleName(user.roleId)}</div>
+                  <div className="col-span-1">{user.email}</div>
+                  <div className="col-span-2">
+                    <Link
+                      to={`/users/edit/${user.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Editar
+                    </Link>
+                    <button
+                      onClick={async () => await deleteHandler(user.id)}
+                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           ))}
       </div>
