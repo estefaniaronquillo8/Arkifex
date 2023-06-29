@@ -19,7 +19,7 @@ const ResourceIndex = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTable, setSelectedTable] = useState("materiales"); // Estado para almacenar la tabla seleccionada
-  const itemsPerPage = 25; // Número de elementos por página de materiales
+  const itemsPerPage = 20; // Número de elementos por página de materiales
 // personal items
 const [currentPersonalPage, setCurrentPersonalPage] = useState(1);
 const itemsPersonalPage = 10;

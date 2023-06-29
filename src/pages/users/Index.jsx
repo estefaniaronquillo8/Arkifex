@@ -16,14 +16,19 @@ const UserIndex = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!routesProtection()) navigate("/login");
-  }, []);
+    const checkRouteProtection = async () => {
+      if (!routesProtection()) {
+        navigate("/login");
+      }
+    };
+
+    checkRouteProtection();
+  }, [navigate]);
 
   useEffect(() => {
     if (roleInSession) {
       console.log(roleInSession.name);
       setIsLoading(false);
-
     }
   }, [roleInSession]);
 
@@ -39,10 +44,10 @@ const UserIndex = () => {
       setNotificationType(notificationType);
     };
 
-    if (!isLoading) {
+    if (!isLoading && roleInSession && roleInSession.name === "superAdmin") {
       fetchUsers();
     }
-  }, [isLoading, setUsers]);
+  }, [isLoading, setUsers, roleInSession]);
 
   useEffect(() => {
     if (success) {
@@ -76,56 +81,62 @@ const UserIndex = () => {
     setNotificationType(notificationType);
   };
 
+  if (!routesProtection()) {
+    return null; // Otra opción es redirigir al usuario a otra página en lugar de simplemente no mostrar nada
+  }
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (roleInSession && roleInSession.name !== "superAdmin") {
+    return <div>Acceso no autorizado</div>; // Página de acceso no autorizado
+  }
+
   return (
     <div className="container mx-auto px-4 py-6">
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <>
-          <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
-          <Link
-            to="/users/create"
-            className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
-          >
-            Crear Usuario
-          </Link>
-          <div className="bg-white shadow-md rounded-lg">
-            <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-              <div className="col-span-1 pl-2">Nombre</div>
-              <div className="col-span-1">Apellido</div>
-              <div className="col-span-1">Rol</div>
-              <div className="col-span-1">Correo electrónico</div>
-              <div className="col-span-2">Acciones</div>
-            </div>
-            {users &&
-              users.map((user) => (
-                <div
-                  key={user.id}
-                  className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
+      <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
+      <Link
+        to="/users/create"
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+      >
+        Crear Usuario
+      </Link>
+      <div className="bg-white shadow-md rounded-lg">
+        <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+          <div className="col-span-1 pl-2">Nombre</div>
+          <div className="col-span-1">Apellido</div>
+          <div className="col-span-1">Rol</div>
+          <div className="col-span-1">Correo electrónico</div>
+          <div className="col-span-2">Acciones</div>
+        </div>
+        {users &&
+          users.map((user) => (
+            <div
+              key={user.id}
+              className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
+            >
+              <div className="col-span-1 pl-3">{user.name}</div>
+              <div className="col-span-1">{user.lastname}</div>
+              <div className="col-span-1">{getRoleName(user.roleId)}</div>
+              <div className="col-span-1">{user.email}</div>
+              <div className="col-span-2">
+                <Link
+                  to={`/users/edit/${user.id}`}
+                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                 >
-                  <div className="col-span-1 pl-3">{user.name}</div>
-                  <div className="col-span-1">{user.lastname}</div>
-                  <div className="col-span-1">{getRoleName(user.roleId)}</div>
-                  <div className="col-span-1">{user.email}</div>
-                  <div className="col-span-2">
-                    <Link
-                      to={`/users/edit/${user.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      onClick={async () => await deleteHandler(user.id)}
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </>
-      )}
+                  Editar
+                </Link>
+                <button
+                  onClick={async () => await deleteHandler(user.id)}
+                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };

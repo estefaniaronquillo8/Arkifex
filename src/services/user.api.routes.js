@@ -17,6 +17,7 @@ export const getAllUsers = () => {
   return requestHandler("get", "/users");
 };
 
+
 export const handleCreate = (data) => {
   return requestHandler("post", "/users/create", data);
 };

@@ -8,26 +8,19 @@ import { ImLocation } from "react-icons/im";
 import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiLogoutBoxFill } from "react-icons/ri";
+import { useGlobalContext } from "../contexts/GlobalContext";
+import { MdBuild } from "react-icons/md";
+import { getAllUsers, handleDelete } from "../services/user.api.routes";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { roleInSession } = useGlobalContext();
   const menus = [
-    { name: "Users", link: "/users", icon: AiOutlineUsergroupAdd },
-    { name: "Resources", link: "/resources", icon: FaWindowRestore },
-    // {
-    //   name: "Resource Assignments",
-    //   link: "/resourceAssignments",
-    //   icon: MdAssignmentAdd,
-    // },
-    { name: "Projects", link: "/projects", icon: AiFillProject },
-    // {
-    //   name: "Projects Plannings",
-    //   link: "/projectPlannings",
-    //   icon: BsFillCalendarCheckFill,
-    // },
-    { name: "Templates", link: "/templates", icon: ImLocation },
-    // { name: "Costs", link: "/costs", icon: FaMoneyCheckAlt },
+    { name: "Usuarios", link: "/users", icon: AiOutlineUsergroupAdd },
+    { name: "Recursos", link: "/resources", icon:  MdBuild},
+    { name: "Proyectos", link: "/projects", icon: AiFillProject },
+    { name: "Plantillas", link: "/templates", icon: FaWindowRestore},
   ];
 
   const [open, setOpen] = useState(true);
@@ -68,31 +61,52 @@ const Sidebar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  if (!sessionId) {
+    return (
+      <>
+        {/* Código cuando no hay sesión */}
+      </>
+    );
+  }
+
   return (
     <div className="flex">
-      {!sessionId ? (
-        <>
-          {/* Código cuando no hay sesión */}
-        </>
-      ) : (
-        <>
-          <section className="flex gap-6">
-            {showSidebar && (
-              <div
-                className={`bg-gradient-to-tl from-[#032d50] to-[#031d31] sidebar-container ${
-                  open ? "w-72" : "w-16"
-                } duration-500 text-gray-100 flex flex-col min-h-screen`}
-              >
-                <div className="py-3 flex justify-center">
-                  <HiMenuAlt3
-                    size={28}
-                    className="cursor-pointer"
-                    onClick={() => setOpen(!open)}
-                  />
-                </div>
+      <>
+        <section className="flex gap-6">
+          {showSidebar && (
+            <div
+              className={`bg-gradient-to-tl from-[#032d50] to-[#031d31] sidebar-container ${
+                open ? "w-72" : "w-16"
+              } duration-500 text-gray-100 flex flex-col min-h-screen`}
+            >
+              <div className="py-3 flex justify-center">
+                <HiMenuAlt3
+                  size={28}
+                  className="cursor-pointer"
+                  onClick={() => setOpen(!open)}
+                />
+              </div>
+              
+          <h1 className="mt-10 text-center text-white font-bold my-4 ">
+            Bienvenid@ {roleInSession.name}
+          </h1>
+       
 
-                <div className="mt-4 flex flex-col gap-5 relative">
-                  {menus?.map((menu, i) => (
+              <div className="mt-10 flex flex-col gap-5 relative">
+                {menus
+                  ?.filter(
+                    (menu) =>
+                      (roleInSession &&
+                        roleInSession.name === "superAdmin") ||
+                      (roleInSession &&
+                        roleInSession.name === "admin" &&
+                        menu.name !== "Usuarios") ||
+                      (roleInSession &&
+                        roleInSession.name === "client" &&
+                        menu.name !== "Usuarios" )
+                        // dentro si se queire tapa&&menu.name !== "Resources"
+                  )
+                  .map((menu, i) => (
                     <Link
                       to={menu?.link}
                       key={i}
@@ -126,31 +140,30 @@ const Sidebar = () => {
                     </Link>
                   ))}
 
-                  <br />
-                  <button
-                    onClick={handleLogoutClick}
-                    className="text-white flex items-center justify-center"
-                  >
-                    <RiLogoutBoxFill size={30} className="mr-2" />
-                  </button>
-                </div>
+                <br />
+                <button
+                  onClick={handleLogoutClick}
+                  className="text-white flex items-center justify-center mt-30"
+                >
+                <RiLogoutBoxFill size={30} className="mr-2" /> Salir
+                </button>
               </div>
-            )}
+            </div>
+          )}
 
-            {!showSidebar && (
-              <div className="py-3 flex justify-center">
-                <HiMenuAlt3
-                  size={28}
-                  className="cursor-pointer"
-                  onClick={() => setShowSidebar(true)}
-                />
-              </div>
-            )}
+          {!showSidebar && (
+            <div className="py-3 flex justify-center">
+              <HiMenuAlt3
+                size={28}
+                className="cursor-pointer"
+                onClick={() => setShowSidebar(true)}
+              />
+            </div>
+          )}
 
-            <div className={`text-xl text-gray-900 font-semibold ${!showSidebar && 'hidden'}`}></div>
-          </section>
-        </>
-      )}
+          <div className={`text-xl text-gray-900 font-semibold ${!showSidebar && 'hidden'}`}></div>
+        </section>
+      </>
     </div>
   );
 };
