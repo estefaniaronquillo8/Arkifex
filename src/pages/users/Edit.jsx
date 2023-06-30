@@ -7,7 +7,7 @@ import { routesProtection } from "../../assets/routesProtection";
 function UserEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, setUser, showNotification } = useGlobalContext();
+  const { user, setUser, roleInSession, showNotification } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();

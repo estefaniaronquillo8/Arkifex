@@ -17,16 +17,23 @@ const TemplateIndex = () => {
     users,
     setUsers,
     setSelectedProjectId,
+    roleInSession,
     showNotification,
   } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
   const navigate = useNavigate();
-
+  const [showSubprojectsButton, setShowSubprojectsButton] = useState(true);
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
+
+  useEffect(() => {
+    if (roleInSession) {
+      console.log(roleInSession.name);
+    }
+  }, [roleInSession]);
 
   useEffect(() => {
     const fetchProjectsAndUsers = async () => {
@@ -71,19 +78,30 @@ const TemplateIndex = () => {
     setSelectedProjectId(null);
     navigate("/templates/create");
   };
-
+  
+  const handleBack = () => {
+    setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
+    if (projects.parentId) {
+      navigate(`/templates/details/${projects.parentId}`);
+    } else {
+      navigate("/templates");
+    }
+  };
 
   const TemplatesSection = ({ project }) => {
     return (
           <div>
             {!project.parentId && (
               <>
+               {roleInSession.name !== "client" && (
+            
       <button
         onClick={handleCreateTemplate}
         className="bg-green-500 text-white px-4 py-2 mr-2 mt-6 rounded mb-4 inline-block"
       >
         Crear Nueva Plantilla
       </button>
+               )}
       {/* <Link
         to="/projects/create"
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
@@ -225,14 +243,16 @@ const TemplateIndex = () => {
                   <div className="col-span-1">{project.startDate}</div>
                   <div className="col-span-1">{project.endDate}</div>
 
-                  <div className="col-span-2">
-                    <Link
-                      to={`/projects/details/${project.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Detallessss
-                    </Link>
-                  </div>
+                  <Link
+                          to={`/projects/details/${project.id}`}
+                          onClick={() => {
+                            setShowSubprojectsButton(false);
+                            setCurrentSection("details");
+                          }}
+                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        >
+                          Detalles 2
+                        </Link>
                 </div>
               );
             }
@@ -268,19 +288,23 @@ const TemplateIndex = () => {
         >
           Proyectos
         </button>
-        <button
-         className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "psubprojects" ? "active" : ""} `}
-         onClick={() => setCurrentSection("psubprojects")}
-        >
-          SubProyectos
-        </button>
+        {showSubprojectsButton && (
+            <button
+              className={`btnnav text-white px-7 py-6 rounded inline-block ${
+                currentSection === "psubprojects" ? "active" : ""
+              }`}
+              onClick={() => setCurrentSection("psubprojects")}
+            >
+              SubProyectos
+            </button>
+          )}
       </nav>
       {currentSection === "templates" && <TemplatesSection project={projects} />}
      {currentSection === "projects" && <ProjectsSection project={projects} />}
 
     {currentSection === "psubprojects" && <SubprojectsSection project={projects} />}
     </div>
- 
+  
   
   </div>
   );

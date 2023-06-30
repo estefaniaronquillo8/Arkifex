@@ -45,6 +45,7 @@ const ProjectDetails = () => {
     selectedProjectId,
     setSelectedProjectId,
     showNotification,
+    roleInSession,
   } = useGlobalContext();
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
@@ -58,6 +59,12 @@ const ProjectDetails = () => {
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
   }, []);
+
+  useEffect(() => {
+    if (roleInSession) {
+      console.log(roleInSession.name);
+    }
+  }, [roleInSession]);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -353,19 +360,22 @@ const ProjectDetails = () => {
               <p>{project.endDate}</p>
             </div>
           </div>
-          <Link
-            to={`/projects/edit/${project.id}`}
-            className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-          >
-            Editar
-          </Link>
+          {roleInSession.name !== "client" && (
+            <>
+              <Link
+                to={`/projects/edit/${project.id}`}
+                className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Editar 1
+              </Link>
 
-          <button
-            onClick={async () => await deleteHandler(project.id)}
-            className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
-          >
-            Eliminar
-          </button>
+              <button
+                onClick={async () => await deleteHandler(project.id)}
+                className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Eliminar
+              </button>
+          
           <button
             onClick={handleIsTemplateUpdate}
             className="bg-teal-500 text-white px-4 py-2 rounded mb-4 inline-block mr-2"
@@ -378,6 +388,8 @@ const ProjectDetails = () => {
           >
             Duplicar Proyecto
           </button>
+          </>
+          )}
 
           {locationForThisProject && (
             <div className="flex space-x-4">
@@ -433,6 +445,8 @@ const ProjectDetails = () => {
     return (
       <div>
         <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+        {roleInSession.name !== "client" && (
+            
         <button
           onClick={handleCreateProjectPlanning}
           className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -440,6 +454,7 @@ const ProjectDetails = () => {
           Crear Nueva Tarea
         </button>
 
+        )}
         <div className="bg-white shadow-md rounded-lg">
           <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
             <div className="col-span-1 pl-3">Nombre</div>
@@ -447,7 +462,7 @@ const ProjectDetails = () => {
             <div className="col-span-1">Status</div>
             <div className="col-span-1">Fecha de Inicio</div>
             <div className="col-span-1">Fecha de Fin</div>
-            <div className="col-span-2">Acciones</div>
+            {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
           </div>
           {projectPlannings &&
             projectPlannings.map((projectPlanning) => {
@@ -474,6 +489,8 @@ const ProjectDetails = () => {
                   <div className="col-span-1">{projectPlanning.endDate}</div>
 
                   <div className="col-span-2">
+                  {roleInSession.name !== "client" && (
+            <>
                     <Link
                       to={`/projectPlannings/details/${projectPlanning.id}`}
                       className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
@@ -494,6 +511,8 @@ const ProjectDetails = () => {
                     >
                       Eliminar
                     </button>
+                    </>
+                  )}
                   </div>
                 </div>
               );
@@ -510,12 +529,15 @@ const ProjectDetails = () => {
         {!project.parentId && (
           <>
             <h1 className="text-4xl font-semibold mb-6">Sub-Proyectossss</h1>
+            {roleInSession.name !== "client" && (
+            
             <button
               onClick={handleCreateSubproject}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
             >
               Crear Nuevo Subproyecto
             </button>
+            )}
             {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"

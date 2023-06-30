@@ -9,7 +9,8 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 
 const ResourceIndex = () => {
-  const { resources, setResources, showNotification } = useGlobalContext();
+  const { resources, setResources, roleInSession, showNotification } =
+    useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
@@ -20,10 +21,10 @@ const ResourceIndex = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTable, setSelectedTable] = useState("materiales"); // Estado para almacenar la tabla seleccionada
   const itemsPerPage = 20; // Número de elementos por página de materiales
-// personal items
-const [currentPersonalPage, setCurrentPersonalPage] = useState(1);
-const itemsPersonalPage = 10;
-//
+  // personal items
+  const [currentPersonalPage, setCurrentPersonalPage] = useState(1);
+  const itemsPersonalPage = 10;
+  //
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -34,6 +35,12 @@ const itemsPersonalPage = 10;
       localStorage.setItem("token", token);
     }
   }, []);
+
+  useEffect(() => {
+    if (roleInSession) {
+      console.log(roleInSession.name);
+    }
+  }, [roleInSession]);
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -72,7 +79,6 @@ const itemsPersonalPage = 10;
     setNotificationType(notificationType);
   };
 
-
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -98,9 +104,8 @@ const itemsPersonalPage = 10;
     }
   };
 
-
-   // Función para avanzar a la siguiente página personal
-   const handlePerNextPage = () => {
+  // Función para avanzar a la siguiente página personal
+  const handlePerNextPage = () => {
     const totalPagesp = Math.ceil(filteredResources.length / itemsPersonalPage);
     if (currentPersonalPage < totalPagesp) {
       setCurrentPersonalPage(currentPersonalPage + 1);
@@ -142,7 +147,9 @@ const itemsPersonalPage = 10;
       if (personalSearchTerm === "") {
         return true;
       } else {
-        return resource.name.toLowerCase().includes(personalSearchTerm.toLowerCase());
+        return resource.name
+          .toLowerCase()
+          .includes(personalSearchTerm.toLowerCase());
       }
     });
 
@@ -155,14 +162,12 @@ const itemsPersonalPage = 10;
   const endIndexp = startIndexp + itemsPersonalPage;
   const currentResourcesp = filteredResources.slice(startIndexp, endIndexp);
 
-
   return (
     <div className="flex-container">
       <div className="container mx-auto px-4 py-6">
         <h1 className="text-4xl font-semibold mb-6">Recursos</h1>
 
         <nav className="navres">
-  
           <button
             className={`btnnav text-white px-7 py-6  rounded inline-block ${
               selectedTable === "materiales" ? "btnpul" : ""
@@ -183,29 +188,31 @@ const itemsPersonalPage = 10;
 
         {selectedTable === "materiales" && ( // Mostrar la tabla de materiales si se seleccionó "Materiales"
           <>
-          <br />
+            <br />
             <h1 className="text-2xl font-semibold mb-3">TABLA DE MATERIALES</h1>
-            <div className="flex justify-between items-center">
-            <Link
-              to="/resources/create"
-              onClick={() => localStorage.setItem("type", "Material")}
-              className="bg-blue-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
-            >
-              Crear Material
-            </Link>
 
-          
+            <div className="flex justify-between items-center">
+              {roleInSession.name !== "client" && (
+                <Link
+                  to="/resources/create"
+                  onClick={() => localStorage.setItem("type", "Material")}
+                  className="mt-1 bg-blue-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
+                >
+                  Crear Material
+                </Link>
+              )}
+
               <input
                 type="text"
                 placeholder="Buscar materiales"
-                className="p-2 border border-gray-300 rounded"
+                className=" p-2 border border-gray-300 rounded"
                 value={searchTerm}
                 onChange={handleSearchTermChange}
               />
             </div>
 
             <div className="overflow-x-auto">
-              <table className="min-w-full">
+              <table className="mt-4 min-w-full">
                 <thead>
                   <tr>
                     <th className="px-4 py-2">Nombre</th>
@@ -226,7 +233,7 @@ const itemsPersonalPage = 10;
                   </select> */}
                     </th>
 
-                    <th className="px-4 py-2">Acciones</th>
+                    {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -235,7 +242,7 @@ const itemsPersonalPage = 10;
                       <td className="px-4 py-2">{resource.name}</td>
                       <td className="px-4 py-2">{resource.description}</td>
                       <td className="px-4 py-2">{resource.marketPrice}</td>
-
+                      {roleInSession.name !== "client" && (
                       <td className="px-4 py-2">
                         <Link
                           to={`/resources/edit/${resource.id}`}
@@ -244,23 +251,23 @@ const itemsPersonalPage = 10;
                           }
                           className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                         >
-                          Editar
+                          Editar M
                         </Link>
 
                         <button
                           onClick={async () => await deleteHandler(resource.id)}
                           className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                         >
-                          Eliminar
+                          Eliminar M
                         </button>
                       </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
             <div className="flex justify-between mt-4">
-          
               <button
                 className="bg-blue-500 text-white px-4 py-2 rounded"
                 onClick={handlePreviousPage}
@@ -303,27 +310,24 @@ const itemsPersonalPage = 10;
               />
             </div>
 
-            <table className="table-auto w-full">
-              <thead>
-                <tr>
-                  <th className="pl-2">Nombre</th>
-                  <th>Rol</th>
-                  <th>Descripción</th>
-                  <th>Pago por hora</th>
-                  <th colSpan="2">Acciones</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                  {currentResourcesp.map((resource) => (
-                    <tr key={resource.id}>
-                      <td className="px-4 py-2">{resource.name}</td>
-                      <td className="px-4 py-2">{resource.role}</td>
-                      <td className="px-4 py-2">{resource.description}</td>
-                      <td className="px-4 py-2">{resource.marketPrice}</td>
-
-                      <td className="px-4 py-2">
-                        <Link
+        <table className="mt-4 min-w-full">
+          <thead>
+            <tr>
+              <th className="px-4 py-2">Nombre</th>
+              <th className="px-4 py-2">Descripción</th>
+              <th className="px-4 py-2">Precio en el Mercado</th>
+              {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {currentResources.map((resource) => (
+              <tr key={resource.id}>
+                <td className="border px-4 py-2">{resource.name}</td>
+                <td className="border px-4 py-2">{resource.description}</td>
+                <td className="border px-4 py-2">{resource.marketPrice}</td>
+                {roleInSession.name !== "client" && (
+                  <td className="border px-4 py-2">
+                    <Link
                           to={`/resources/edit/${resource.id}`}
                           onClick={() =>
                             localStorage.setItem("type", "Personal")
@@ -332,39 +336,36 @@ const itemsPersonalPage = 10;
                         >
                           Editar
                         </Link>
+                    <button
+                      onClick={() => deleteHandler(resource.id)}
+                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-                        <button
-                          onClick={async () => await deleteHandler(resource.id)}
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-            
-            </table>
             <div className="flex justify-between mt-4">
-          
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-            onClick={handlePerPreviousPage}
-            disabled={currentPersonalPage === 1}
-          >
-            Anterior
-          </button>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-            onClick={handlePerNextPage}
-            disabled={currentResourcesp.length < itemsPersonalPage}
-          >
-            Siguiente
-          </button>
-        </div>
-
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handlePerPreviousPage}
+                disabled={currentPersonalPage === 1}
+              >
+                Anterior
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+                onClick={handlePerNextPage}
+                disabled={currentResourcesp.length < itemsPersonalPage}
+              >
+                Siguiente
+              </button>
+            </div>
           </div>
-          
 
           //  aqui muere todo
         )}

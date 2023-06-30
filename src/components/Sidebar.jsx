@@ -3,14 +3,11 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { handleLogout } from "../services/user.api.routes";
 import { BsFillCalendarCheckFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiFillProject } from "react-icons/ai";
-import { MdAssignmentAdd } from "react-icons/md";
-import { ImLocation } from "react-icons/im";
-import { FaMoneyCheckAlt, FaWindowRestore } from "react-icons/fa";
+import { FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { RiLogoutBoxFill } from "react-icons/ri";
 import { useGlobalContext } from "../contexts/GlobalContext";
 import { MdBuild } from "react-icons/md";
-import { getAllUsers, handleDelete } from "../services/user.api.routes";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -21,6 +18,7 @@ const Sidebar = () => {
     { name: "Recursos", link: "/resources", icon:  MdBuild},
     { name: "Proyectos", link: "/projects", icon: AiFillProject },
     { name: "Plantillas", link: "/templates", icon: FaWindowRestore},
+    
   ];
 
   const [open, setOpen] = useState(true);
@@ -90,7 +88,10 @@ const Sidebar = () => {
           <h1 className="mt-10 text-center text-white font-bold my-4 ">
             Bienvenid@ <br />{userInSession.name} {userInSession.lastname}
           </h1>
-       
+          
+          <Link className="inline-block text-center text-white px-4 py-2 rounded mr-2">
+  Editar
+</Link>
 
               <div className="mt-10 flex flex-col gap-5 relative">
                 {menus
@@ -137,6 +138,7 @@ const Sidebar = () => {
                       >
                         {menu?.name}
                       </h2>
+                      
                     </Link>
                   ))}
 

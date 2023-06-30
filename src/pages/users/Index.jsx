@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/Spinner";
+import jsPDF from "jspdf";
 
 const UserIndex = () => {
   const { users, setUsers, roleInSession, showNotification } =
@@ -85,6 +86,38 @@ const UserIndex = () => {
     setNotificationType(notificationType);
   };
 
+  const exportToPDF = () => {
+    // Crear un nuevo documento PDF
+    const doc = new jsPDF();
+
+    // Agregar contenido al documento PDF
+    doc.setFontSize(16);
+    doc.text("Lista de usuarios", 15, 15);
+
+    users.forEach((user, index) => {
+      const yPos = 35 + index * 30;
+
+      // Agregar el nombre del usuario
+      doc.setFontSize(14);
+      doc.text(`Nombre: ${user.name}`, 15, yPos);
+
+      // Agregar el apellido del usuario
+      doc.setFontSize(12);
+      doc.text(`Apellidos: ${user.lastname}`, 15, yPos + 10);
+
+      // Agregar el rol del usuario
+      doc.setFontSize(12);
+      doc.text(`Rol: ${getRoleName(user.roleId)}`, 15, yPos + 20);
+
+      // Agregar una línea separadora
+      doc.setLineWidth(0.5);
+      doc.line(15, yPos + 25, 195, yPos + 25);
+    });
+
+    // Guardar y descargar el archivo PDF
+    doc.save("usuarios.pdf");
+  };
+
   if (!routesProtection()) {
     return null; // Otra opción es redirigir al usuario a otra página en lugar de simplemente no mostrar nada
   }
@@ -100,6 +133,12 @@ const UserIndex = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
+      <button
+        onClick={exportToPDF}
+        className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block"
+      >
+        Exportar a PDF
+      </button>
       <Link
         to="/users/create"
         className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"

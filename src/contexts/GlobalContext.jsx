@@ -179,12 +179,14 @@ export const GlobalProvider = ({ children }) => {
     resource,
     setResource,
     resources,
+    roleInSession, 
     setResources,
 
     // Projects
     projects,
     setProjects,
     project,
+    roleInSession, 
     setProject,
 
     selectedProjectId,
@@ -193,6 +195,7 @@ export const GlobalProvider = ({ children }) => {
     /* // Templates
     templates, 
     setTemplates,
+     roleInSession, 
     template, 
     setTemplate, */
 
