@@ -5,10 +5,10 @@ export const getAllReports = (projectId) => {
 };
 
 export const getLastReport = (projectId) => {
-  return requestHandler("post", `/reports/${projectId}`);
+  return requestHandler("get", `/reports/${projectId}`);
 };
 
 export const createReport = (projectId) => {
-  return requestHandler("get", `/reports/create/${projectId}`);
+  return requestHandler("post", `/reports/create/${projectId}`);
 };
 

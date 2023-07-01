@@ -9,6 +9,8 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import CostCreate from "../projects/Create";
+import { createReport, getLastReport } from "../../services/report.api.routes";
+
 
 const ProjectIndex = () => {
   const { projects, setProjects, showNotification } = useGlobalContext();
@@ -48,6 +50,28 @@ const ProjectIndex = () => {
   }, [success, error, notificationType, showNotification]);
 
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleCreateReport = async (projectid) => {
+    
+    const { response, success, error, notificationType } = await createReport(
+      projectid
+    );
+
+    console.log("ProjectReport", response.report);
+
+    if (success) {
+      showNotification(success, notificationType);
+    }
+
+    if (error) {
+      showNotification(error, notificationType);
+    }
+
+    setSelectedProjectId(null);
+    if (response?.status === 200) {
+      navigate("/projects");
+    }
+  };
 
   const deleteHandler = async (id) => {
     const { response, success, error, notificationType } = await handleDelete(
@@ -111,10 +135,11 @@ const ProjectIndex = () => {
               </h2>
               <p className="mb-2 text-white">{project.description}</p>
               <h5 className=" font-bold mb-2 text-white">
-                Inicio: {project.startDate} 
-                
+                Inicio: {project.startDate}
               </h5>
-              <h3 className="font-bold mb-2 text-white">Fin: {project.endDate}</h3>
+              <h3 className="font-bold mb-2 text-white">
+                Fin: {project.endDate}
+              </h3>
               <div>
                 <Link
                   to={`/projects/details/${project.id}`}
@@ -125,6 +150,7 @@ const ProjectIndex = () => {
                 <Link
                   to={`/projects/dashboards/${project.id}`}
                   className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                  onClick={handleCreateReport(project.id)}
                 >
                   Dashboards
                 </Link>

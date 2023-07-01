@@ -133,6 +133,22 @@ export const GlobalProvider = ({ children }) => {
     area: 0,
   });
 
+  //reports
+
+  const [reports, setReports] = useState([]);
+  const [report, setReport] = useState({
+    id:0,
+    projectId: 0,
+    userId: 1,
+    actualBudget: 0,
+    estimatedBudget: 0,
+    numberOfTasks: 0,
+    taskCompleted: 0,
+    budgetVariance:0,
+    timeVariance: 0,  
+    date:  '',    
+  });
+
   const [lastNotification, setLastNotification] = useState(null);
 
   const showNotification = (currentNotification, type) => {
@@ -214,7 +230,15 @@ export const GlobalProvider = ({ children }) => {
     projectPlanning,
     setProjectPlanning,
 
+    //reports
+    report,
+    setReport,
+    reports,
+    setReports,
+
     showNotification,
+
+
   };
 
   return (

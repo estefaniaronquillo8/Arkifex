@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { getAllProjects } from "../../services/project.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
+
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import DashboardStateGrid from "./DashboardStatsGrid";
 import ResourcesChart from "./ResourcesChart";
+import BudgetChart from "./budgetChart.";
 import LineChart from "./LineChart";
 import BuyerChart from "./BuyerChart";
 import Navbar from "../../components/Navbar";
@@ -74,12 +76,13 @@ const ProjectDashboards = () => {
       <Navbar />
       <div className="flex flex-col gap-4 mt-8">
         <DashboardStateGrid />
+        
         <div className="flex flex-row gap-2 w-full">
-          <ResourcesChart />
-          <BuyerChart />
+        <LineChart />
+          
         </div>
 
-        <LineChart />
+        <ResourcesChart/>
         
       </div>
     

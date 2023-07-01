@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import {getAllReports,getLastReport, createReport} from  "../../services/report.api.routes";
+import { useGlobalContext } from "../../contexts/GlobalContext";
+
 
 const data = [
     {
@@ -47,9 +50,54 @@ const data = [
   ];
 
 function ResourcesChart() {
+
+  const { reports, setReports, showNotification } = useGlobalContext();
+  const [data,getData] = useState([]);
+  //const [Yaxis,getYaxis] = useState([]);
+
+  const handleData = ()=>{
+    const NewData = reports.map((report)=>{
+      return{
+        name: report.date,
+        uv: report.actualBudget,
+        pv: report.estimatedBudget,
+        amt: 2100,
+      }
+    });
+    console.log('VALUES',NewData);
+    getData(NewData);
+
+  }
+
+
+  //const [data, setData] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getAllReports(1);
+        setReports(response.response.reportData);
+        handleData();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (reports !== null) {
+      console.log("DATOSLINEA", reports);
+    } else {
+      console.log("EXISTE");
+    }
+  }, [reports]);
+
+  
+
     return (
         <div className="h-[22rem] bg-white p-4 rounded-sm border-gray-200 flex flex-col flex-1">
-            <strong className="text-gray-700 font-medium">Recursos Lineal</strong>
+            <strong className="text-gray-700 font-medium">Cambio en el presupuesto</strong>
             <div className="w-full mt-3 flex-1 text-xs">
               
             <LineChart 
@@ -61,7 +109,8 @@ function ResourcesChart() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" strokeWidth={2} />
+          <Line type="monotone" dataKey="pv" stroke="#ff0000" strokeWidth={2} />
+          <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
                 
             </div>
