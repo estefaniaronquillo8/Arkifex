@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { handleLogout } from "../services/user.api.routes";
-import { BsFillCalendarCheckFill } from "react-icons/bs";
 import { AiOutlineUsergroupAdd, AiFillProject } from "react-icons/ai";
 import { FaWindowRestore } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
@@ -10,6 +9,7 @@ import { useGlobalContext } from "../contexts/GlobalContext";
 import { MdBuild } from "react-icons/md";
 
 const Sidebar = () => {
+  const { clearAuthData } = useGlobalContext();
   const navigate = useNavigate();
   const location = useLocation();
   const { roleInSession,userInSession } = useGlobalContext();
@@ -33,6 +33,7 @@ const Sidebar = () => {
   }, [location]);
 
   const handleLogoutClick = () => {
+    clearAuthData();
     handleLogout(navigate);
   };
 

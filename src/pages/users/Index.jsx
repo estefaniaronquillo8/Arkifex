@@ -17,6 +17,10 @@ const UserIndex = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!routesProtection()) navigate("/login");
+  }, []);
+  
+  useEffect(() => {
     const checkRouteProtection = async () => {
       if (!routesProtection()) {
         navigate("/login");

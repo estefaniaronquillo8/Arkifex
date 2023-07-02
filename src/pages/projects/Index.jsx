@@ -8,35 +8,74 @@ import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import CostCreate from "../projects/Create";
+import { getAllUsers } from "../../services/user.api.routes";
+
 
 const ProjectIndex = () => {
-  const { projects, setProjects, showNotification } = useGlobalContext();
-  const [success, setSuccess] = useState();
-  const [error, setError] = useState();
-  const [notificationType, setNotificationType] = useState();
+  const {
+    projects,
+    setProjects,
+    users,
+    setUsers,
+    userInSession,
+    roleInSession,
+    setSelectedProjectId,
+    showNotification,
+  } = useGlobalContext();
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const isClient = roleInSession && roleInSession.name === "client";
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const { response, success, error, notificationType } =
-        await getAllProjects();
-      if (response?.projects) {
-        setProjects(response.projects);
+    if (roleInSession) {
+      console.log(roleInSession.name);
+    }
+  }, [roleInSession]);
+
+  useEffect(() => {
+    const fetchProjectsAndUsers = async () => {
+      const { response: userResponse } = await getAllUsers();
+      let filteredProjects = [];
+
+      if (isClient) {
+        // Filtrar proyectos por cliente
+        filteredProjects = projects.filter(
+          (project) => project.userId === userInSession.id
+        );
+      } else {
+        // Obtener todos los proyectos
+        const {
+          response,
+          success,
+          error,
+          notificationType,
+        } = await getAllProjects();
+        if (response?.projects) {
+          filteredProjects = response.projects;
+        }
+        setError(error);
+        setSuccess(success);
+        setNotificationType(notificationType);
       }
 
-      setError(error);
-      setSuccess(success);
-      setNotificationType(notificationType);
+      if (filteredProjects.length > 0) {
+        setProjects(filteredProjects);
+      }
+
+      if (userResponse?.users) {
+        setUsers(userResponse.users);
+      }
     };
 
-    fetchProjects();
-  }, []);
+    fetchProjectsAndUsers();
+  }, [userInSession, isClient]);
 
   useEffect(() => {
     if (success) {
@@ -46,6 +85,21 @@ const ProjectIndex = () => {
       showNotification(error, notificationType);
     }
   }, [success, error, notificationType, showNotification]);
+
+  useEffect(() => {
+    // Limpiar los datos relevantes cuando el usuario cambie
+    setProjects([]);
+    setUsers([]);
+    setSelectedProjectId(null);
+    setSuccess(null);
+    setError(null);
+    setNotificationType(null);
+  }, [userInSession]);
+
+  const handleCreateProject = () => {
+    setSelectedProjectId(null);
+    navigate("/projects/create");
+  };
 
   const [isHovered, setIsHovered] = useState(false);
 
@@ -77,60 +131,70 @@ const ProjectIndex = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="px-4 py-2 border border-gray-300 rounded mb-4"
       />
+
       <div className="grid grid-cols-3 gap-4">
-        <Link
-          to="/projects/create"
-          className="bg-gray-300 bg-opacity-60 text-white px-4 py-3 rounded flex flex-col items-center text-center"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <br />
-          <span className="mb-2">
-            <BsFillPlusCircleFill
-              size={50}
-              color={isHovered ? "#4D14D9" : "#7256EE"}
-            />
-          </span>
-          <span className="text-xl font-semibold text-gray-800">
-            Crear Proyecto
-          </span>
-        </Link>
+        {!isClient && (
+          <Link
+            to="/projects/create"
+            className="bg-gray-300 bg-opacity-60 text-white px-4 py-3 rounded flex flex-col items-center text-center"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <br />
+
+            <span className="mb-2">
+              <BsFillPlusCircleFill
+                size={50}
+                color={isHovered ? "#4D14D9" : "#7256EE"}
+              />
+            </span>
+            <span className="text-xl font-semibold text-gray-800">
+              Crear Proyecto
+            </span>
+          </Link>
+        )}
 
         {filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-white shadow-md rounded-lg p-4"
-              style={{
-                backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
-                backgroundPosition: "center",
-              }}
-            >
-              <h2 className="text-xl font-bold mb-2 text-white">
-                {project.name}
-              </h2>
-              <p className="mb-2 text-white">{project.description}</p>
-              <h5 className=" font-bold mb-2 text-white">
-                Inicio: {project.startDate} 
-                
-              </h5>
-              <h3 className="font-bold mb-2 text-white">Fin: {project.endDate}</h3>
-              <div>
-                <Link
-                  to={`/projects/details/${project.id}`}
-                  className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                >
-                  Detalles
-                </Link>
-                <Link
-                  to={`/projects/dashboards/${project.id}`}
-                  className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
-                >
-                  Dashboards
-                </Link>
+          filteredProjects.map((project) => {
+            const user = users.find((user) => user.id === project.userId);
+            return (
+              <div
+                key={project.id}
+                className="bg-white shadow-md rounded-lg p-4"
+                style={{
+                  backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
+                  backgroundPosition: "center",
+                }}
+              >
+                <h2 className="text-xl font-bold mb-2 text-white">
+                  {project.name}
+                </h2>
+                <h5 className=" font-bold mb-2 text-white">
+                  Encargado: {user ? user.name + " " + user.lastname : "Unknown"}
+                </h5>
+                <h5 className=" font-bold mb-2 text-white">
+                  Inicio: {project.startDate}
+                </h5>
+                <h3 className="font-bold mb-2 text-white">
+                  Fin: {project.endDate}
+                </h3>
+                <div>
+                  <Link
+                    to={`/projects/details/${project.id}`}
+                    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Detalles
+                  </Link>
+                  <Link
+                    to={`/projects/dashboards/${project.id}`}
+                    className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                  >
+                    Dashboards
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p>No se encontraron proyectos.</p>
         )}
