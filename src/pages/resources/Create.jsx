@@ -67,10 +67,7 @@ const ResourceCreate = () => {
     <div className="flex justify-center py-3">
       <div className="w-1/2 flex items-center justify-center">
         <form onSubmit={handleSubmit(createHandler)}>
-          <br />
-          <br />
-          <br />
-          <br />
+     
           <h1 className="mb-6 text-2xl font-bold text-center">
             {resourceType === "Personal"
               ? "Creación de Nuevo Personal"
@@ -101,7 +98,6 @@ const ResourceCreate = () => {
                 })}
               />
 
-              
               {errors.name && (
                 <p className="text-red-800">{errors.name.message}</p>
               )}
@@ -222,11 +218,20 @@ const ResourceCreate = () => {
       </div>
 
       <div className="w-1/2 flex items-center justify-center">
-        <img
-          className="img-resize"
-          src="/src/assets/materials.png"
-          alt="Materials"
-        />
+        {resourceType === "Material" && (
+          <img
+            className="img-resize"
+            src="/src/assets/materials.png"
+            alt="Materials"
+          />
+        )}
+        {resourceType === "Personal" && (
+          <img
+            className="img-resize"
+            src="/src/assets/personal.jpg"
+            alt="Personal"
+          />
+        )}
       </div>
     </div>
   );

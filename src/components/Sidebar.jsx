@@ -90,8 +90,9 @@ const Sidebar = () => {
             Bienvenid@ <br />{userInSession.name} {userInSession.lastname}
           </h1>
           
-          <Link className="inline-block text-center text-white px-4 py-2 rounded mr-2">
-  Editar
+          <Link to="/users/edit/1" className="inline-block text-center text-white px-4 py-2 rounded mr-2">
+           
+  Editar Perfil
 </Link>
 
               <div className="mt-10 flex flex-col gap-5 relative">

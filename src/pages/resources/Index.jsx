@@ -7,6 +7,7 @@ import {
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
+import ResourceCreate from "../resources/Create"; 
 
 const ResourceIndex = () => {
   const { resources, setResources, roleInSession, showNotification } =
@@ -161,6 +162,13 @@ const ResourceIndex = () => {
   const endIndexp = startIndexp + itemsPersonalPage;
   const currentResourcesp = filteredResources.slice(startIndexp, endIndexp);
 
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  
+
+  const toggleResourcesCreate = () => {
+    setShowCreateForm(!showCreateForm);
+  };
+
   return (
     <div className="flex-container">
       <div className="container mx-auto px-4 py-6">
@@ -191,13 +199,16 @@ const ResourceIndex = () => {
             <h1 className="text-2xl font-semibold mb-3">TABLA DE MATERIALES</h1>
             <div className="flex justify-between items-center">
               {roleInSession && roleInSession.name !== "client" && (
-                <Link
-                  to="/resources/create"
-                  onClick={() => localStorage.setItem("type", "Material")}
-                  className="mt-1 bg-blue-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
-                >
-                  Crear Material
-                </Link>
+              <Link
+              
+              onClick={() => {
+                localStorage.setItem("type", "Material");
+                toggleResourcesCreate();
+              }}
+              className="mt-1 bg-blue-500 text-white px-4 py-2 mr-5 rounded mb-4 inline-block"
+            >
+              Crear Material
+            </Link>
               )}
 
               <input
@@ -208,6 +219,8 @@ const ResourceIndex = () => {
                 onChange={handleSearchTermChange}
               />
             </div>
+
+            {showCreateForm && <ResourceCreate />}
 
             <div className="overflow-x-auto">
               <table className="mt-4 min-w-full">
@@ -295,14 +308,18 @@ const ResourceIndex = () => {
               TABLA DE PERSONAL
             </h1>
             <div className="flex justify-between items-center">
+            {roleInSession && roleInSession.name !== "client" && (
               <Link
-                to="/resources/create"
-                onClick={() => localStorage.setItem("type", "Personal")}
+               
+               onClick={() => {
+                localStorage.setItem("type", "Personal");
+                toggleResourcesCreate();
+              }}
                 className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block"
               >
                 Crear Personal
               </Link>
-
+            )}
               <input
                 type="text"
                 placeholder="Buscar Personal"
@@ -311,6 +328,8 @@ const ResourceIndex = () => {
                 onChange={handlePersonalSearchTermChange}
               />
             </div>
+
+            {showCreateForm && <ResourceCreate />}
 
             <table className="mt-4 min-w-full">
               <thead>

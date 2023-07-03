@@ -28,6 +28,7 @@
     "react-map-gl": "^7.0.25",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.10.0",
+    "react-select": "^5.7.3",
     "react-to-print": "^2.14.13",
     "react-toastify": "^9.1.2",
     "react-transition-group": "^4.4.5",
