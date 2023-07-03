@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { getAllUsers } from "../../services/user.api.routes";
 
-
 const ProjectIndex = () => {
   const {
     projects,
@@ -42,40 +41,28 @@ const ProjectIndex = () => {
   useEffect(() => {
     const fetchProjectsAndUsers = async () => {
       const { response: userResponse } = await getAllUsers();
-      let filteredProjects = [];
-
-      if (isClient) {
-        // Filtrar proyectos por cliente
-        filteredProjects = projects.filter(
-          (project) => project.userId === userInSession.id
-        );
-      } else {
-        // Obtener todos los proyectos
-        const {
-          response,
-          success,
-          error,
-          notificationType,
-        } = await getAllProjects();
-        if (response?.projects) {
-          filteredProjects = response.projects;
-        }
-        setError(error);
-        setSuccess(success);
-        setNotificationType(notificationType);
-      }
-
-      if (filteredProjects.length > 0) {
-        setProjects(filteredProjects);
-      }
+      const {
+        response: projectResponse,
+        success,
+        error,
+        notificationType,
+      } = await getAllProjects();
 
       if (userResponse?.users) {
         setUsers(userResponse.users);
       }
+
+      if (projectResponse?.projects) {
+        setProjects(projectResponse.projects);
+      }
+
+      setError(error);
+      setSuccess(success);
+      setNotificationType(notificationType);
     };
 
     fetchProjectsAndUsers();
-  }, [userInSession, isClient]);
+  }, []);
 
   useEffect(() => {
     if (success) {
@@ -108,18 +95,38 @@ const ProjectIndex = () => {
       id
     );
     if (response?.status === 200) {
-      setProjects(response.projects);
+      setProjects((prevProjects) =>
+        prevProjects.filter((project) => project.id !== id)
+      );
     }
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
   };
 
-  const filteredProjects = projects.filter(
-    (project) =>
-      !project.parentId &&
-      project.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filterProjects = () => {
+    if (roleInSession && (roleInSession.name === "superAdmin" || roleInSession.name === "admin")) {
+      // Mostrar todos los proyectos para los usuarios con roles de "SuperAdmin" y "Admin"
+      return projects.filter(
+        (project) =>
+          !project.parentId &&
+          project.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    } else if (roleInSession && roleInSession.name === "client") {
+      // Mostrar solo los proyectos del tipo "Client" para los usuarios con el rol de "Client"
+      return projects.filter(
+        (project) =>
+          !project.parentId &&
+          project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          project.userId === userInSession.id
+      );
+    } else {
+      // Otro caso (por ejemplo, si no se ha cargado el rol del usuario)
+      return [];
+    }
+  };
+  
+  const filteredProjects = filterProjects();
 
   return (
     <div className="container mx-auto px-4 py-6 mt-5">
@@ -155,38 +162,36 @@ const ProjectIndex = () => {
         )}
 
         {filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => {
-            const user = users.find((user) => user.id === project.userId);
+          filteredProjects.map(({ id, name, startDate, endDate, userId }) => {
+            const user = users.find((user) => user.id === userId);
             return (
               <div
-                key={project.id}
+                key={id}
                 className="bg-white shadow-md rounded-lg p-4"
                 style={{
                   backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
                   backgroundPosition: "center",
                 }}
               >
-                <h2 className="text-xl font-bold mb-2 text-white">
-                  {project.name}
-                </h2>
+                <h2 className="text-xl font-bold mb-2 text-white">{name}</h2>
                 <h5 className=" font-bold mb-2 text-white">
-                  Encargado: {user ? user.name + " " + user.lastname : "Unknown"}
+                  Encargado: {user ? `${user.name} ${user.lastname}` : "Unknown"}
                 </h5>
                 <h5 className=" font-bold mb-2 text-white">
-                  Inicio: {project.startDate}
+                  Inicio: {startDate}
                 </h5>
                 <h3 className="font-bold mb-2 text-white">
-                  Fin: {project.endDate}
+                  Fin: {endDate}
                 </h3>
                 <div>
                   <Link
-                    to={`/projects/details/${project.id}`}
+                    to={`/projects/details/${id}`}
                     className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                   >
                     Detalles
                   </Link>
                   <Link
-                    to={`/projects/dashboards/${project.id}`}
+                    to={`/projects/dashboards/${id}`}
                     className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
                   >
                     Dashboards

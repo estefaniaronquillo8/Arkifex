@@ -35,9 +35,8 @@ const ResourceIndex = () => {
       localStorage.setItem("token", token);
     }
   }, []);
-
   useEffect(() => {
-    if (roleInSession) {
+    if (roleInSession && roleInSession.name) {
       console.log(roleInSession.name);
     }
   }, [roleInSession]);
@@ -190,9 +189,8 @@ const ResourceIndex = () => {
           <>
             <br />
             <h1 className="text-2xl font-semibold mb-3">TABLA DE MATERIALES</h1>
-
             <div className="flex justify-between items-center">
-              {roleInSession.name !== "client" && (
+              {roleInSession && roleInSession.name !== "client" && (
                 <Link
                   to="/resources/create"
                   onClick={() => localStorage.setItem("type", "Material")}
@@ -205,7 +203,7 @@ const ResourceIndex = () => {
               <input
                 type="text"
                 placeholder="Buscar materiales"
-                className=" p-2 border border-gray-300 rounded"
+                className="p-2 border border-gray-300 rounded"
                 value={searchTerm}
                 onChange={handleSearchTermChange}
               />
@@ -233,7 +231,9 @@ const ResourceIndex = () => {
                   </select> */}
                     </th>
 
-                    {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
+                    {roleInSession && roleInSession.name !== "client" &&(
+                      <th className="px-4 py-2">Acciones</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -242,25 +242,27 @@ const ResourceIndex = () => {
                       <td className="px-4 py-2">{resource.name}</td>
                       <td className="px-4 py-2">{resource.description}</td>
                       <td className="px-4 py-2">{resource.marketPrice}</td>
-                      {roleInSession.name !== "client" && (
-                      <td className="px-4 py-2">
-                        <Link
-                          to={`/resources/edit/${resource.id}`}
-                          onClick={() =>
-                            localStorage.setItem("type", "Material")
-                          }
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Editar M
-                        </Link>
+                      {roleInSession && roleInSession.name !== "client" && (
+                        <td className="px-4 py-2">
+                          <Link
+                            to={`/resources/edit/${resource.id}`}
+                            onClick={() =>
+                              localStorage.setItem("type", "Material")
+                            }
+                            className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                          >
+                            Editar M
+                          </Link>
 
-                        <button
-                          onClick={async () => await deleteHandler(resource.id)}
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar M
-                        </button>
-                      </td>
+                          <button
+                            onClick={async () =>
+                              await deleteHandler(resource.id)
+                            }
+                            className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                          >
+                            Eliminar M
+                          </button>
+                        </td>
                       )}
                     </tr>
                   ))}
@@ -310,24 +312,26 @@ const ResourceIndex = () => {
               />
             </div>
 
-        <table className="mt-4 min-w-full">
-          <thead>
-            <tr>
-              <th className="px-4 py-2">Nombre</th>
-              <th className="px-4 py-2">Descripción</th>
-              <th className="px-4 py-2">Precio en el Mercado</th>
-              {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {currentResources.map((resource) => (
-              <tr key={resource.id}>
-                <td className="border px-4 py-2">{resource.name}</td>
-                <td className="border px-4 py-2">{resource.description}</td>
-                <td className="border px-4 py-2">{resource.marketPrice}</td>
-                {roleInSession.name !== "client" && (
-                  <td className="border px-4 py-2">
-                    <Link
+            <table className="mt-4 min-w-full">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2">Nombre</th>
+                  <th className="px-4 py-2">Descripción</th>
+                  <th className="px-4 py-2">Precio en el Mercado</th>
+                  {roleInSession && roleInSession.name !== "client" && (
+                    <th className="px-4 py-2">Acciones</th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {currentResources.map((resource) => (
+                  <tr key={resource.id}>
+                    <td className="border px-4 py-2">{resource.name}</td>
+                    <td className="border px-4 py-2">{resource.description}</td>
+                    <td className="border px-4 py-2">{resource.marketPrice}</td>
+                    {roleInSession && roleInSession.name !== "client" && (
+                      <td className="border px-4 py-2">
+                        <Link
                           to={`/resources/edit/${resource.id}`}
                           onClick={() =>
                             localStorage.setItem("type", "Personal")
@@ -336,18 +340,18 @@ const ResourceIndex = () => {
                         >
                           Editar
                         </Link>
-                    <button
-                      onClick={() => deleteHandler(resource.id)}
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                        <button
+                          onClick={() => deleteHandler(resource.id)}
+                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
             <div className="flex justify-between mt-4">
               <button

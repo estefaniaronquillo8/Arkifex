@@ -30,7 +30,7 @@ const TemplateIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (roleInSession) {
+    if (roleInSession && roleInSession.name) {
       console.log(roleInSession.name);
     }
   }, [roleInSession]);
@@ -93,7 +93,7 @@ const TemplateIndex = () => {
           <div>
             {!project.parentId && (
               <>
-               {roleInSession.name !== "client" && (
+               {roleInSession && roleInSession.name !== "client" && (
             
       <button
         onClick={handleCreateTemplate}
