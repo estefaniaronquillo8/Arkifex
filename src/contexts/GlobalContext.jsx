@@ -194,6 +194,7 @@ export const GlobalProvider = ({ children }) => {
     /* // Templates
     templates, 
     setTemplates,
+     roleInSession, 
     template, 
     setTemplate, */
 

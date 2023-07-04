@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { handleRegister } from "../../services/user.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
+import { BsFillBuildingsFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -12,32 +14,54 @@ const Register = () => {
     control,
     formState: { errors },
   } = useForm();
-  
+
   const registerHandler = async (data) => {
-    const { response, success, error, notificationType } = await handleRegister(data);
-    if (success){
+    const { response, success, error, notificationType } = await handleRegister(
+      data
+    );
+    if (success) {
       showNotification(success, notificationType);
     }
-    
-    if (error){
+
+    if (error) {
       showNotification(error, notificationType);
     }
 
-    if (response?.status === 200){
+    if (response?.status === 200) {
       navigate("/login");
     }
-  } 
-
- 
+  };
   return (
-    <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-light-blue-500 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
+    <div className="w-full h-screen flex flex-col md:flex-row-reverse">
+      <div className="w-full md:w-1/2 h-1/2 md:h-full relative">
+        <img
+          src="src/assets/Register.gif"
+          className="w-full h-full object-cover rounded-lg filter contrast-500 gif-with-relief"
+          alt="Background"
+        />
+        <div className="absolute top-[75%] left-[38%] flex flex-col">
+          <h1 className="text-3xl text-white font-bold my-4">
+            Un paso mas...
+          </h1>
+        </div>
+      </div>
+
+      <div className="w-full md:w-1/2 h-full bg-[#F5F5F5] flex flex-col p-10 justify-between items-center">
+        <h1 className="w-full max-w-[500px] mx-auto text-xl text-black font-bold mr-auto">
+          <BsFillBuildingsFill className="inline-block mr-3 mb-1 react-icons-gi text-3xl" />
+          Arkifex
+        </h1>
+        <div className="w-full flex flex-col max-w-[500px] ">
+          <div className="w-full flex flex-col mb-2">
+            <h3 className="text-2xl font- mb-2">Inicia Sesion</h3>
+            <p className="text-base mb-2">
+              Bienvenid@ Ingresa tus datos aqui!!
+            </p>
+          </div>
+          <div>
           <form
             onSubmit={handleSubmit(async (data) => await registerHandler(data))}
           >
-            <h1 className="mb-6 text-2xl font-bold text-center">Registro</h1>
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -141,17 +165,24 @@ const Register = () => {
               >
                 Registrarse
               </button>
-              <span className="text-center">
-                ¿Ya tienes cuenta?
-                <a
-                  href="/login"
-                  className="text-blue-800 underline underline-offset-2 px-1"
-                >
-                  Ingresa
-                </a>
-              </span>
+              
             </div>
           </form>
+          </div>
+        </div>
+
+        <div className="w-full flex items-center justify-center">
+          <p className="text-sm font-normal text-black">
+          ¿Ya tienes cuenta?
+            <span className="font-semibold underline underline-offset-2 cursor-pointer">
+              <a
+                href="/login"
+                className="text-blue-800 underline underline-offset-2 px-1"
+              >
+                Inicia Sesión!
+              </a>
+            </span>
+          </p>
         </div>
       </div>
     </div>

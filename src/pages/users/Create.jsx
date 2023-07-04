@@ -7,7 +7,7 @@ import { routesProtection } from "../../assets/routesProtection";
 
 const UserCreate = () => {
   const navigate = useNavigate();
-  const { showNotification } = useGlobalContext();
+  const { showNotification, roleInSession } = useGlobalContext();
 
   const {
     register,
@@ -24,7 +24,7 @@ const UserCreate = () => {
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
-    //if (currentUser.roleId !== 1) navigate("/resources");
+    if (roleInSession.name !== "superAdmin") navigate("/resources"); //checar
   }, []);
 
   const createHandler = async (data) => {

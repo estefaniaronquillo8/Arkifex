@@ -29,6 +29,8 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoibHVpc3ZpdGVyaSIsImEiOiJjbGljbnh1MTAwbHF6M3NvMnJ5djFrajFzIn0.f63Fk2kZyxR2JPe5pL01cQ"; // Replace with your Mapbox access token
 
 const ProjectDetails = () => {
+  const [currentSection, setCurrentSection] = useState("details");
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
@@ -44,6 +46,7 @@ const ProjectDetails = () => {
     selectedProjectId,
     setSelectedProjectId,
     showNotification,
+    roleInSession,
   } = useGlobalContext();
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
@@ -51,11 +54,18 @@ const ProjectDetails = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [markerCoordinates, setMarkerCoordinates] = useState(null);
+  const [showSubprojectsButton, setShowSubprojectsButton] = useState(true);
 
   useEffect(() => {
     console.log("EEEEL IIIIIIIIIIIDDDDDDDDDDDDDDD", id);
     if (!routesProtection()) navigate("/login");
   }, []);
+
+  useEffect(() => {
+    if (roleInSession) {
+      console.log(roleInSession.name);
+    }
+  }, [roleInSession]);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -158,6 +168,7 @@ const ProjectDetails = () => {
   }, []);
 
   const handleBack = () => {
+    setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
     if (project.parentId) {
       navigate(`/projects/details/${project.parentId}`);
     } else {
@@ -320,69 +331,70 @@ const ProjectDetails = () => {
     };
   }, []);
 
-  return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">
-        Detalles de {project.name}
-      </h2>
-      {project && (
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <div className="space-y-6">
-            <div className="flex flex-wrap space-x-4">
-              {project.parentId === null && (
-                <>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Encargado</h2>
-                    <p>{project.userId}</p>
-                  </div>
-                </>
-              )}
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Nombre</h2>
-                <p>{project.name}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Descripción</h2>
-                <p>{project.description}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Status</h2>
-                <p>{project.status}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
-                <p>{project.startDate}</p>
-              </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
-                <p>{project.endDate}</p>
-              </div>
+  const ProjectDetailsSection = ({ project }) => {
+    return (
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <div className="space-y-6">
+          <div className="flex flex-wrap space-x-4">
+            {project.parentId === null && (
+              <>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Encargado</h2>
+                  <p>{project.userId}</p>
+                </div>
+              </>
+            )}
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Nombre</h2>
+              <p>{project.name}</p>
             </div>
-            <Link
-              to={`/projects/edit/${project.id}`}
-              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Editar
-            </Link>
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Descripción</h2>
+              <p>{project.description}</p>
+            </div>
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Status</h2>
+              <p>{project.status}</p>
+            </div>
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Fecha de Inicio</h2>
+              <p>{project.startDate}</p>
+            </div>
+            <div className="flex-1 bg-white rounded-lg shadow p-4">
+              <h2 className="font-bold text-lg mb-2">Fecha de Fin</h2>
+              <p>{project.endDate}</p>
+            </div>
+          </div>
+          {roleInSession && roleInSession.name !== "client" && (
+            <>
+              <Link
+                to={`/projects/edit/${project.id}`}
+                className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Editar 1
+              </Link>
 
-            <button
-              onClick={async () => await deleteHandler(project.id)}
-              className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Eliminar
-            </button>
-            <button
-              onClick={handleIsTemplateUpdate}
-              className="bg-teal-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block mr-2"
-            >
-              {isTemplateText}
-            </button>
-            <button
-              onClick={handleDuplicateProject}
-              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Duplicar Proyecto
-            </button>
+              <button
+                onClick={async () => await deleteHandler(project.id)}
+                className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Eliminar
+              </button>
+          
+          <button
+            onClick={handleIsTemplateUpdate}
+            className="bg-teal-500 text-white px-4 py-2 rounded mb-4 inline-block mr-2"
+          >
+            {isTemplateText}
+          </button>
+          <button
+            onClick={handleDuplicateProject}
+            className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Duplicar Proyecto
+          </button>
+          </>
+          )}
 
             {locationForThisProject && (
               <div className="flex space-x-4">
@@ -414,151 +426,219 @@ const ProjectDetails = () => {
               </div>
             )}
 
-            <div>
-              <button
-                onClick={handleLocationClick}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                {locationButtonText}
-              </button>
-            </div>
-
-            <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+          <div>
             <button
-              onClick={handleCreateProjectPlanning}
+              onClick={handleLocationClick}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
             >
-              Crear Nueva Planificación
+              {locationButtonText}
             </button>
+          </div>
 
+          <button
+            onClick={handleBack}
+            className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Volver
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const TaskCreationSection = ({ project }) => {
+    return (
+      <div>
+        <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+        {roleInSession.name !== "client" && (
+            
+        <button
+          onClick={handleCreateProjectPlanning}
+          className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+        >
+          Crear Nueva Tarea
+        </button>
+
+        )}
+        <div className="bg-white shadow-md rounded-lg">
+          <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+            <div className="col-span-1 pl-3">Nombre</div>
+            <div className="col-span-1">Descripción</div>
+            <div className="col-span-1">Status</div>
+            <div className="col-span-1">Fecha de Inicio</div>
+            <div className="col-span-1">Fecha de Fin</div>
+            {roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
+          </div>
+          {projectPlannings &&
+            projectPlannings.map((projectPlanning) => {
+              // Buscar el recurso correspondiente a esta asignación
+              /* const resource = resources.find(
+                    (resource) => resource.id === resourceAssignment.resourceId
+                  ); */
+
+              return (
+                <div
+                  key={projectPlanning.id}
+                  className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
+                >
+                  {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
+                  {/* <div className="col-span-1">
+                        {resource ? resource.name : "Desconocido"}
+                      </div> */}
+                  <div className="col-span-1">{projectPlanning.name}</div>
+                  <div className="col-span-1">
+                    {projectPlanning.description}
+                  </div>
+                  <div className="col-span-1">{projectPlanning.status}</div>
+                  <div className="col-span-1">{projectPlanning.startDate}</div>
+                  <div className="col-span-1">{projectPlanning.endDate}</div>
+
+                  <div className="col-span-2">
+                  {roleInSession.name !== "client" && (
+            <>
+                    <Link
+                      to={`/projectPlannings/details/${projectPlanning.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Detalles
+                    </Link>
+                    <Link
+                      to={`/projectPlannings/edit/${projectPlanning.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Editar
+                    </Link>
+                    <button
+                      onClick={async () =>
+                        await deleteHandlerPP(projectPlanning.id)
+                      }
+                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Eliminar
+                    </button>
+                    </>
+                  )}
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    );
+  };
+
+  //SUBPROYECTOS AQUIII
+  const SubprojectsSection = ({ project }) => {
+    return (
+      <div>
+        {!project.parentId && (
+          <>
+            <h1 className="text-4xl font-semibold mb-6">Sub-Proyectossss</h1>
+            {roleInSession.name !== "client" && (
+            
+            <button
+              onClick={handleCreateSubproject}
+              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+            >
+              Crear Nuevo Subproyecto
+            </button>
+            )}
+            {/* <Link
+                  to="/projects/create"
+                  className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+                >
+                  Crear Sub-Proyecto
+                </Link> */}
             <div className="bg-white shadow-md rounded-lg">
               <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                <div className="col-span-1 pl-3">Nombre</div>
+                <div className="col-span-1 ml-5">Nombre</div>
                 <div className="col-span-1">Descripción</div>
                 <div className="col-span-1">Status</div>
                 <div className="col-span-1">Fecha de Inicio</div>
                 <div className="col-span-1">Fecha de Fin</div>
                 <div className="col-span-2">Acciones</div>
               </div>
-              {projectPlannings &&
-                projectPlannings.map((projectPlanning) => {
-                  // Buscar el recurso correspondiente a esta asignación
-                  /* const resource = resources.find(
-                    (resource) => resource.id === resourceAssignment.resourceId
-                  ); */
-
+              {projects &&
+                projects.map((project) => {
                   return (
                     <div
-                      key={projectPlanning.id}
-                      className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
+                      key={project.id}
+                      className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
                     >
-                      {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
-                      {/* <div className="col-span-1">
-                        {resource ? resource.name : "Desconocido"}
-                      </div> */}
-                      <div className="col-span-1">{projectPlanning.name}</div>
-                      <div className="col-span-1">
-                        {projectPlanning.description}
-                      </div>
-                      <div className="col-span-1">{projectPlanning.status}</div>
-                      <div className="col-span-1">
-                        {projectPlanning.startDate}
-                      </div>
-                      <div className="col-span-1">
-                        {projectPlanning.endDate}
-                      </div>
+                      <div className="col-span-1 ml-5">{project.name}</div>
+                      <div className="col-span-1"> {project.description}</div>
+                      <div className="col-span-1">{project.status}</div>
+                      <div className="col-span-1">{project.startDate}</div>
+                      <div className="col-span-1">{project.endDate}</div>
 
                       <div className="col-span-2">
                         <Link
-                          to={`/projectPlannings/details/${projectPlanning.id}`}
+                          to={`/projects/details/${project.id}`}
+                          onClick={() => {
+                            setShowSubprojectsButton(false);
+                            setCurrentSection("details");
+                          }}
                           className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                         >
-                          Detalles
+                          Detalles1
                         </Link>
-                        <Link
-                          to={`/projectPlannings/edit/${projectPlanning.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Editar
-                        </Link>
-                        <button
-                          onClick={async () =>
-                            await deleteHandlerPP(projectPlanning.id)
-                          }
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar
-                        </button>
                       </div>
                     </div>
                   );
                 })}
             </div>
+          </>
+        )}
+      </div>
+    );
+  };
 
-            {!project.parentId && (
-              <>
-                <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
-                <button
-                  onClick={handleCreateSubproject}
-                  className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-                >
-                  Crear Nuevo Subproyecto
-                </button>
-                {/* <Link
-                  to="/projects/create"
-                  className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
-                >
-                  Crear Sub-Proyecto
-                </Link> */}
-                <div className="bg-white shadow-md rounded-lg">
-                  <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                    <div className="col-span-1 ml-5">Nombre</div>
-                    <div className="col-span-1">Descripción</div>
-                    <div className="col-span-1">Status</div>
-                    <div className="col-span-1">Fecha de Inicio</div>
-                    <div className="col-span-1">Fecha de Fin</div>
-                    <div className="col-span-2">Acciones</div>
-                  </div>
-                  {projects &&
-                    projects.map((project) => {
-                      return (
-                        <div
-                          key={project.id}
-                          className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
-                        >
-                          <div className="col-span-1 ml-5">{project.name}</div>
-                          <div className="col-span-1">
-                            {" "}
-                            {project.description}
-                          </div>
-                          <div className="col-span-1">{project.status}</div>
-                          <div className="col-span-1">{project.startDate}</div>
-                          <div className="col-span-1">{project.endDate}</div>
+  return (
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-4xl font-semibold mb-6">
+        Detalles del {project.name}
+      </h2>
 
-                          <div className="col-span-2">
-                            <Link
-                              to={`/projects/details/${project.id}`}
-                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                            >
-                              Detalles
-                            </Link>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </>
-            )}
-
+      <div>
+        <nav className="navres">
+          <button
+            className={`btnnav text-white px-7 py-6 rounded inline-block ${
+              currentSection === "details" ? "active" : ""
+            }`}
+            onClick={() => setCurrentSection("details")}
+          >
+            Detalles Generales
+          </button>
+          <button
+            className={`btnnav text-white px-7 py-6 rounded inline-block ${
+              currentSection === "creation" ? "active" : ""
+            }`}
+            onClick={() => setCurrentSection("creation")}
+          >
+            Creacion de Tareas
+          </button>
+          {showSubprojectsButton && (
             <button
-              onClick={handleBack}
-              className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`btnnav text-white px-7 py-6 rounded inline-block ${
+                currentSection === "subprojects" ? "active" : ""
+              }`}
+              onClick={() => setCurrentSection("subprojects")}
             >
-              Volver
+              Sub-Proyectos
             </button>
-          </div>
-        </div>
-      )}
+          )}
+        </nav>
+        {currentSection === "details" && (
+          <ProjectDetailsSection project={project} />
+        )}
+        {currentSection === "creation" && (
+          <TaskCreationSection project={project} />
+        )}
+
+        {currentSection === "subprojects" && (
+          <SubprojectsSection project={project} />
+        )}
+      </div>
     </div>
   );
 };

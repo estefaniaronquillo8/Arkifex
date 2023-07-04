@@ -8,7 +8,7 @@ import { routesProtection } from "../../assets/routesProtection";
 function ProjectEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { project, setProject, showNotification } = useGlobalContext();
+  const { project, setProject,  showNotification } = useGlobalContext();
   const { users, setUsers } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
