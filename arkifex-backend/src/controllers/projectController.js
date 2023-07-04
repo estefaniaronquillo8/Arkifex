@@ -17,6 +17,7 @@ exports.getProjects = async (req, res) => {
 };
 
 exports.edit = async (req, res) => {
+  console.log("CONSOLE DEL EXPORTS.EEDTI",req.params.id);
   const response = await findById(req.params.id);
   return res.status(response.status).json(response);
 };

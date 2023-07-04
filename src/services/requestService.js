@@ -22,7 +22,7 @@ export const requestHandler = async (method, url, data) => {
       notificationType: response?.data?.notificationType,
     };
   } catch (error) {
-    console.log(error)
+    console.log("erroor", error)
     return {
       response: error?.response?.data,
       success: null,

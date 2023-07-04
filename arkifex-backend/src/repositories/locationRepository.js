@@ -23,7 +23,7 @@ const createLocation = async (locationData) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.log(error)
+    console.log("ERROR EN EL BACK DEL CREATE",error)
     return {
       status: 500,
       message: "Internal server error",

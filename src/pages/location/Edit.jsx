@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useGlobalContext } from "../../contexts/GlobalContext";
@@ -11,7 +11,7 @@ function LocationEdit() {
   const navigate = useNavigate();
   const { showNotification } = useGlobalContext();
 
-  const { register, handleSubmit, getValues, setValue } = useForm({
+  const { register, handleSubmit, getValues, setValue, watch } = useForm({
     defaultValues: {
       projectId: "",
       address: "",
@@ -21,6 +21,12 @@ function LocationEdit() {
       polygon: [],
     },
   });
+
+  // Creamos una referencia para los valores iniciales
+  const initialFormValues = useRef(null);
+
+  // Observamos todos los cambios en los campos del formulario
+  const currentFormValues = watch();
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
@@ -33,7 +39,6 @@ function LocationEdit() {
       if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
       if (data?.address) setValue("address", data.address);
       if (data?.area) setValue("area", data.area);
-      
     },
     [setValue]
   );
@@ -47,7 +52,10 @@ function LocationEdit() {
         setValue("area", response.location.area);
         setValue("lat", response.location.lat);
         setValue("lng", response.location.lng);
-        setValue("polygon", JSON.stringify(response.location.polygon));
+        setValue("polygon", JSON.parse(response.location.polygon));
+
+        // Guardamos los valores iniciales del formulario
+        initialFormValues.current = getValues();
       }
       if (success || error) {
         showNotification(success || error, success ? "success" : "error");
@@ -58,12 +66,19 @@ function LocationEdit() {
   }, [id, setValue, showNotification, setLocationData]);
 
   const onSubmit = async (data) => {
+    // Comparamos los valores iniciales con los actuales
+    if (JSON.stringify(initialFormValues.current) === JSON.stringify(currentFormValues)) {
+      // No hubo cambios, simplemente redirigimos
+      navigate(`/projects/details/${data?.projectId}`);
+      return;
+    }
+    
     const { response, success, error } = await handleUpdate(id, data);
     if (success || error) {
       showNotification(success || error, success ? "success" : "error");
     }
     if (success) {
-      navigate(`/projects/details/${response?.data?.projectId}`);
+      navigate(`/projects/details/${data?.projectId}`);
     }
   };
 
@@ -73,7 +88,7 @@ function LocationEdit() {
       <div className="bg-white shadow-md rounded-lg p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
-            <div>
+            {/* <div>
               <label
                 htmlFor="projectId"
                 className="block text-sm font-medium text-gray-700"
@@ -100,7 +115,7 @@ function LocationEdit() {
                 {...register("address")}
                 className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
               />
-            </div>
+            </div> */}
             <div>
               <label
                 htmlFor="area"

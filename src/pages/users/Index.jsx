@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 
 const UserIndex = () => {
-  const { users, setUsers, roleInSession, showNotification } =
+  const { users, setUsers, roleInSession, userInSession, showNotification } =
     useGlobalContext();
   const [isLoading, setIsLoading] = useState(true);
   const [success, setSuccess] = useState();
@@ -22,6 +22,7 @@ const UserIndex = () => {
   useEffect(() => {
     if (roleInSession) {
       console.log(roleInSession.name)
+      console.log(userInSession.name)
       setIsLoading(false);
     }
   }, [roleInSession]);

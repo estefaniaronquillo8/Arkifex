@@ -8,11 +8,11 @@ const mapContainerStyle = {
   width: "100%",
 };
 
-const LocationDetails = ({ locationId, mode, setLocationData }) => {
+const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: "AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y",
-    libraries: ["drawing", "geometry"],
+    libraries: ["drawing", "geometry", "places"],
   });
 
   const [location, setLocation] = useState();
@@ -50,21 +50,34 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
 
   useEffect(() => {
     if (mode === "create") {
-      setLocation({
-        address: "",
-        area: "",
-        lat: "",
-        lng: "",
-        polygon: [],
-      });
-      setCenter({
-        lat: 0, // Se pueden establecer estos valores a la ubicación que se prefiera.
-        lng: 0,
-      });
+      const fetchLocationAddress = async () => {
+        if (address) {
+          console.log("CON ADDRESS", address);
+          const geo = await getGeocode(address);
+          if (geo) {
+            setCenter(geo);
+          }
+        } else {
+          console.log("SIN ADDRESS");
+          setLocation({
+            address: "",
+            area: "",
+            lat: "",
+            lng: "",
+            polygon: [],
+          });
+          setCenter({
+            lat: -0.1833, // Se pueden establecer estos valores a la ubicación que se prefiera.
+            lng: -78.4816,
+          });
+        }
+      };
+      fetchLocationAddress();
     } else if (locationId) {
       const fetchLocation = async () => {
         const { response } = await handleEdit(locationId);
         if (response?.location) {
+          console.log("CONSOLE LOG", response.location.polygon);
           let polygonData = JSON.parse(response.location.polygon).map(
             (point) => {
               return {
@@ -79,12 +92,13 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
             polygon: polygonData,
           });
 
-          if (response.location.address) {
+          // Se comentó para que se ponga el punto en el mapa solamente por las coordenadas
+          /* if (response.location.address) {
             const geo = await getGeocode(response.location.address);
             if (geo) {
               setCenter(geo);
             }
-          } else if (response.location.lat && response.location.lng) {
+          } else  */ if (response.location.lat && response.location.lng) {
             setCenter({
               lat: parseFloat(response.location.lat),
               lng: parseFloat(response.location.lng),
@@ -96,7 +110,7 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
 
       fetchLocation();
     }
-  }, [mode, locationId]);
+  }, [mode, locationId, address]);
 
   const onLoad = useCallback(
     (map) => {
@@ -179,6 +193,25 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
             }
           }
         );
+
+        // Inicializar el servicio de autocompletado
+        const autocomplete = new window.google.maps.places.Autocomplete(
+          document.getElementById("location-search-input")
+        );
+
+        // Cuando el usuario selecciona una dirección desde el dropdown, se extrae la información de la dirección
+        autocomplete.addListener("place_changed", () => {
+          const place = autocomplete.getPlace();
+
+          // Si el lugar tiene una geometría, entonces presenta sus detalles en el mapa
+          if (place.geometry) {
+            map.setCenter(place.geometry.location);
+            map.setZoom(18); // Haz zoom a la ubicación seleccionada
+            /* setCenter(place.geometry.location.toJSON()); // Actualiza el estado del centro
+            map.setZoom(18); */ // Haz zoom a la ubicación seleccionada
+          }
+        });
+
       }
 
       if (location?.polygon) {
@@ -189,7 +222,7 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
         polygonRef.current = polygon; // Store reference to the initial polygon
       }
 
-      if (center) {
+      if (center && mode !== "create") {
         let marker = new window.google.maps.Marker({
           position: center,
           map: map,
@@ -202,15 +235,18 @@ const LocationDetails = ({ locationId, mode, setLocationData }) => {
 
   const mapOptions = {
     center,
-    zoom: 15,
+    zoom: mode === "create" ? 11 : 16,
   };
 
   return isLoaded && center && location ? (
-    <GoogleMap
-      mapContainerStyle={mapContainerStyle}
-      options={mapOptions}
-      onLoad={onLoad}
-    />
+    <>
+      <input id="location-search-input" type="text" />
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        options={mapOptions}
+        onLoad={onLoad}
+      />
+    </>
   ) : (
     <div>Loading...</div>
   );
