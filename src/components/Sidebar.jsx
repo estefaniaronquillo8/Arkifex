@@ -86,12 +86,21 @@ const Sidebar = () => {
                 />
               </div>
               
-          <h1 className="mt-10 text-center text-white font-bold my-4 ">
-            Bienvenid@ <br />{userInSession.name} {userInSession.lastname}
-          </h1>
-          
-          <Link to="/users/edit/1" className="inline-block text-center text-white px-4 py-2 rounded mr-2">
-           
+              <h1
+  className={`mt-10 text-center text-white font-bold  ${
+    open ? "" : "sidebar-closed-text"
+  }`}
+>
+  Bienvenid@ <br />
+  {userInSession.name} {userInSession.lastname}
+</h1>
+
+<Link
+  to="/users/edit/1"
+  className={`inline-block text-center text-white px-4 py-2 rounded mr-2 ${
+    open ? "" : "sidebar-closed-text"
+  }`}
+>
   Editar Perfil
 </Link>
 

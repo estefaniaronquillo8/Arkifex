@@ -118,11 +118,8 @@ th {
     background-color: rgb(12, 104, 185);   
 }
 
-.btn-confirm{
-  background: green;
-}
-
-.btnnav.active {
-  background-color: rgb(12, 104, 185);    /* Cambia al color deseado */
-  /* Estilos adicionales... */
+.sidebar-closed-text {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
