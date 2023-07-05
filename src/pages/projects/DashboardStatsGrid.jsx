@@ -9,6 +9,7 @@ import {
 //import { getReports } from "../../../arkifex-backend/src/repositories/reportRepository";
 //import { useGlobalContext } from "../../contexts/GlobalContext";
 import BudgetChart from "./budgetChart.";
+import PlanningsChart from "./planningsChart";
 function DashboardStateGrid() {
   const { report, setReport, showNotification, project } = useGlobalContext();
 
@@ -35,87 +36,96 @@ function DashboardStateGrid() {
   }, [report]);
 
   return (
-    <div className="flex gap-4 w-full">
-      <BoxWrapper>
-        <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
-          <IoBagHandle className="text-2xl text-white" />
-        </div>
-        <div className="pl-4 ">
-          <span className="text-sm text-gray-500 font-light">Presupuesto</span>
-          <div className="flex items-center">
-            <strong className="text-xl text-gray-700 font-semibold">
-              {report ? (
-                <ul>
-                  <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Estimado</ul>
-                      {report.estimatedBudget}
-                    </strong>
-                  </ul>
-                  <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Actual</ul>
-                      {report.actualBudget}
-                    </strong>
-                  </ul>
-                  <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Diferencia</ul>
-                      {report.budgetVariance}
-                    </strong>
-                  </ul>
-                </ul>
-              ) : (
-                <p>No data available.</p>
-              )}
-            </strong>
+    <div>
+      <div className="flex gap-4 w-full">
+        <BoxWrapper>
+          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
+            <IoBagHandle className="text-2xl text-white" />
           </div>
-        </div>
-      </BoxWrapper>
-      <BoxWrapper>
-            <BudgetChart/>
-      
-      </BoxWrapper>
-
-
-      <BoxWrapper>
-        <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
-          <IoBagHandle className="text-2xl text-white" />
-        </div>
-        <div className="pl-4 ">
-          <span className="text-sm text-gray-500 font-light">Tareas en proyecto</span>
-          <div className="flex items-center">
-            <strong className="text-xl text-gray-700 font-semibold">
-              {report ? (
-                <ul>
+          <div className="pl-4 ">
+            <span className="text-sm text-gray-500 font-light">
+              Presupuesto
+            </span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {report ? (
                   <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Total</ul>
-                      {report.numberOfTasks}
-                    </strong>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Estimado</ul>
+                        {report.estimatedBudget}
+                      </strong>
+                    </ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Actual</ul>
+                        {report.actualBudget}
+                      </strong>
+                    </ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Diferencia</ul>
+                        {report.budgetVariance}
+                      </strong>
+                    </ul>
                   </ul>
-                  <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Completadas</ul>
-                      {report.taskCompleted}
-                    </strong>
-                  </ul>
-                  <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>On Target</ul>
-                      {report.timeVariance}
-                    </strong>
-                  </ul>
-                </ul>
-              ) : (
-                <p>No data available.</p>
-              )}
-            </strong>
+                ) : (
+                  <p>No data available.</p>
+                )}
+              </strong>
+            </div>
           </div>
-        </div>
-      </BoxWrapper>
-
+        </BoxWrapper>
+        <BoxWrapper>
+          <PlanningsChart />
+        </BoxWrapper>
+        
+      </div>
       
+      <div className="flex gap-4 w-full">
+        <BoxWrapper>
+          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
+            <IoBagHandle className="text-2xl text-white" />
+          </div>
+          <div className="pl-4 ">
+            <span className="text-sm text-gray-500 font-light">
+              Tareas en proyecto
+            </span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {report ? (
+                  <ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Total</ul>
+                        {report.numberOfTasks}
+                      </strong>
+                    </ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Completadas</ul>
+                        {report.taskCompleted}
+                      </strong>
+                    </ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>On Target</ul>
+                        {report.timeVariance}
+                      </strong>
+                    </ul>
+                  </ul>
+                ) : (
+                  <p>No data available.</p>
+                )}
+              </strong>
+            </div>
+          </div>
+        </BoxWrapper>
+        <BoxWrapper>
+          <BudgetChart />
+        </BoxWrapper>
+        
+      </div>
     </div>
   );
 }
