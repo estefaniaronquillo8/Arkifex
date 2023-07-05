@@ -239,6 +239,9 @@ const ProjectDetails = () => {
     isTemplateText = "Que ya no sea plantilla";
   }
 
+  
+
+
   const handleDuplicateProject = async () => {
     const { response, success, error, notificationType } =
       await duplicateProject(project.id);
@@ -360,7 +363,7 @@ const ProjectDetails = () => {
               <p>{project.endDate}</p>
             </div>
           </div>
-          {roleInSession.name !== "client" && (
+            {roleInSession && roleInSession.name !== "client" && (
             <>
               <Link
                 to={`/projects/edit/${project.id}`}
@@ -538,6 +541,14 @@ const ProjectDetails = () => {
               Crear Nuevo Subproyecto
             </button>
             )}
+            {roleInSession.name !== "client" && (
+            
+
+            <Link to="/templates/subprojects" className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block">
+            Crear desde plantilla
+          </Link>
+            )}
+
             {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"

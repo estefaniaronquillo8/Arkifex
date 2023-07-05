@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 
 
-const TemplateIndex = () => {
+const TemplateSub = () => {
   const [currentSection, setCurrentSection] = useState("templates");
   const {
     projects,
@@ -28,6 +28,18 @@ const TemplateIndex = () => {
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
+
+  const handleDuplicateProject = async () => {
+    const { response, success, error, notificationType } =
+      await duplicateProject(projects.id);
+
+    if (success) {
+      navigate(`/projects`);
+      showNotification(success, notificationType);
+    } else if (error) {
+      showNotification(error, notificationType);
+    }
+  };
 
   useEffect(() => {
     if (roleInSession && roleInSession.name) {
@@ -114,6 +126,9 @@ const TemplateIndex = () => {
           <div className="col-span-1 ml-5">Nombre</div>
           <div className="col-span-1">Descripción</div>
           <div className="col-span-1">Status</div>
+          {/* <div className="col-span-1">Encargado</div>
+          <div className="col-span-1">Fecha de Inicio</div>
+          <div className="col-span-1">Fecha de Fin</div> */}
           <div className="col-span-2">Acciones</div>
         </div>
         {projects &&
@@ -130,6 +145,12 @@ const TemplateIndex = () => {
                     <div className="col-span-1 ml-5">{project.name}</div>
                     <div className="col-span-1">{project.description}</div>
                     <div className="col-span-1">{project.status}</div>
+                    {/* <div className="col-span-1 pl-3">
+                    {user ? user.name + " " + user.lastname : "Sin encargado"}
+                  </div>
+                  <div className="col-span-1">{project.startDate}</div>
+                  <div className="col-span-1">{project.endDate}</div> */}
+
                     <div className="col-span-2">
                       <Link
                         to={`/templates/details/${project.id}`}
@@ -149,58 +170,8 @@ const TemplateIndex = () => {
           </div>
         );
       };
-    //PROYECTOS AQUIII
 
-    const ProjectsSection = ({ project }) => {
-      return(
-<div>
-<h1 className="text-4xl font-semibold mb-6">Proyectos</h1>
-      <div className="bg-white shadow-md rounded-lg">
-        <div className="grid grid-cols-8 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-          <div className="col-span-1 ml-5">Nombre</div>
-          <div className="col-span-1">Descripción</div>
-          <div className="col-span-1">Encargado</div>
-          <div className="col-span-1">Status</div>
-          <div className="col-span-1">Fecha de Inicio</div>
-          <div className="col-span-1">Fecha de Fin</div>
-          <div className="col-span-2">Acciones</div>
-        </div>
-        {projects &&
-          projects
-            .filter((project) => project.status !== "Template" && !project.parentId)
-            .map((project) => {
-              const user = users.find((user) => user.id === project.userId);
-              return (
-                <div
-                  key={project.id}
-                  className="grid grid-cols-8 gap-4 py-2 border-b border-gray-200"
-                >
-                  <div className="col-span-1 ml-5">{project.name}</div>
-                  <div className="col-span-1">{project.description}</div>
-                  <div className="col-span-1 pl-3">
-                    {user ? user.name + " " + user.lastname : "Sin encargado"}
-                  </div>
-                  <div className="col-span-1">{project.status}</div>
-                  <div className="col-span-1">{project.startDate}</div>
-                  <div className="col-span-1">{project.endDate}</div>
-
-                  <div className="col-span-2">
-                    <Link
-                      to={`/projects/details/${project.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Detalles
-                    </Link>
-                  </div>
-                </div>
-              );
-              return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
-            })}
-      </div>
-
-</div>
-      
-    );};
+  
   //SUBPROYECTOS AQUIII
   const SubprojectsSection = ({ project }) => {
     return (
@@ -210,11 +181,7 @@ const TemplateIndex = () => {
         <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
           <div className="col-span-1 ml-5">Nombre</div>
           <div className="col-span-1">Descripción</div>
-          {/* <div className="col-span-1">Encargado</div> */}
-          <div className="col-span-1">Status</div>
-          <div className="col-span-1">Fecha de Inicio</div>
-          <div className="col-span-1">Fecha de Fin</div>
-          <div className="col-span-2">Acciones</div>
+          <div className="col-span-2">Monto</div>
         </div>
         {projects &&
           projects.map((project) => {
@@ -226,24 +193,13 @@ const TemplateIndex = () => {
                   className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
                 >
                   <div className="col-span-1 ml-5">{project.name}</div>
-                  <div className="col-span-1">{project.description}</div>
-                  {/* <div className="col-span-1 pl-3">
-                    {user ? user.name + " " + user.lastname : "Sin encargado"}
-                  </div> */}
-                  <div className="col-span-1">{project.status}</div>
-                  <div className="col-span-1">{project.startDate}</div>
                   <div className="col-span-1">{project.endDate}</div>
-
-                  <Link
-                          to={`/projects/details/${project.id}`}
-                          onClick={() => {
-                            setShowSubprojectsButton(false);
-                            setCurrentSection("details");
-                          }}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Detalles 2
-                        </Link>
+                  <button
+            onClick={handleDuplicateProject}
+            className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Duplicar Proyecto
+          </button>
                 </div>
               );
             }
@@ -254,6 +210,8 @@ const TemplateIndex = () => {
     
     );
   };
+
+
 
 
   return (
@@ -271,12 +229,6 @@ const TemplateIndex = () => {
     >
       Nuevas Plantillas
     </button>
-        <button
-         className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "projects" ? "active" : ""}`}
-           onClick={() => setCurrentSection("projects")}
-        >
-          Proyectos
-        </button>
         {showSubprojectsButton && (
             <button
               className={`btnnav text-white px-7 py-6 rounded inline-block ${
@@ -299,4 +251,4 @@ const TemplateIndex = () => {
   );
 };
 
-export default TemplateIndex;
+export default TemplateSub;

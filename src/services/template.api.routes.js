@@ -13,3 +13,4 @@ export const handleCreate = (template) => {
 export const duplicateProject = (id) => {
   return requestHandler("post", `/templates/duplicate/${id}`);
 };
+

@@ -10,6 +10,7 @@ import { GiWeight } from "react-icons/gi";
 import { BsDropbox } from "react-icons/bs";
 
 const ResourceCreate = () => {
+  const [refreshPage, setRefreshPage] = useState(false);
   const navigate = useNavigate();
   const { showNotification } = useGlobalContext();
   const {
@@ -67,7 +68,6 @@ const ResourceCreate = () => {
     <div className="flex justify-center py-3">
       <div className="w-1/2 flex items-center justify-center">
         <form onSubmit={handleSubmit(createHandler)}>
-     
           <h1 className="mb-6 text-2xl font-bold text-center">
             {resourceType === "Personal"
               ? "Creación de Nuevo Personal"
@@ -204,12 +204,20 @@ const ResourceCreate = () => {
             <br />
             <br />
             {resourceType === "Material" && (
-              <button type="submit" className="btn-custom btn-primary">
+              <button
+                type="submit"
+                className="btn-custom btn-primary"
+                onClick={() => window.location.reload()}
+              >
                 Crear Material
               </button>
             )}
             {resourceType === "Personal" && (
-              <button type="submit" className="btn-custom btn-primary">
+              <button
+               type="submit" 
+               className="btn-custom btn-primary"
+               onClick={() => window.location.reload()}
+               >
                 Crear Personal
               </button>
             )}
