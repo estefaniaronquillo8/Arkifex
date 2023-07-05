@@ -336,7 +336,7 @@ const ResourceIndex = () => {
                 <tr>
                   <th className="px-4 py-2">Nombre</th>
                   <th className="px-4 py-2">Descripción</th>
-                  <th className="px-4 py-2">Precio en el Mercado</th>
+                  <th className="px-4 py-2">Pago/hora</th>
                   {roleInSession && roleInSession.name !== "client" && (
                     <th className="px-4 py-2">Acciones</th>
                   )}

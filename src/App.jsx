@@ -18,8 +18,7 @@ import { LocationCreate, LocationIndex, LocationEdit, LocationDetails } from "./
 // ResourceAssignment
 import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from "./pages/resourceAssignment/ResourceAssignments";
 // Templates
-//import { TemplateCreate, TemplateIndex, TemplateEdit, } from "./pages/templates/Templates";
-import { TemplateCreate, TemplateIndex, TemplateEdit, TemplateDetails } from "./pages/templates/Templates";
+import { TemplateCreate, TemplateIndex, TemplateDetails, TemplatesSubprojects } from "./pages/templates/Templates";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -60,15 +59,16 @@ function App() {
             <Route path="/projects/details/:id" element={<ProjectDetails />} />
             <Route path="/projects/dashboards/:id" element={<ProjectDashboards />} />
 
-                <Route path="/templates" element={<TemplateIndex />} />
-                <Route path="/templates/create" element={<TemplateCreate />} />
-                <Route path="/templates/edit/:id" element={<TemplateEdit />} />
-                <Route path="/templates/details/:id" element={<TemplateDetails />} />
+            <Route path="/templates" element={<TemplateIndex />} />
+            <Route path="/templates/create" element={<TemplateCreate />} />
+            <Route path="/templates/details/:id" element={<TemplateDetails />} />
+            <Route path="/templates/subprojects" element={<TemplatesSubprojects />} />
 
             <Route path="/locations" element={<LocationIndex />} />
             <Route path="/locations/create" element={<LocationCreate />} />
             <Route path="/locations/edit/:id" element={<LocationEdit />} />
-            <Route path="/locations/details/:id" element={<LocationDetails />} />
+            <Route path="/locations/details/:id" element={<LocationDetails />} />4
+            
 
             <Route path="/resourceAssignments" element={<ResourceAssignmentIndex />} />
             <Route path="/resourceAssignments/create" element={<ResourceAssignmentCreate />} />

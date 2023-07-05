@@ -9,6 +9,8 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { getAllUsers } from "../../services/user.api.routes";
+import Swal from "sweetalert2";
+
 
 const ProjectIndex = () => {
   const {
@@ -88,6 +90,27 @@ const ProjectIndex = () => {
     navigate("/projects/create");
   };
 
+  const handleClick = () => {
+    Swal.fire({
+      title: '¿Qué deseas crear?',
+      showCancelButton: true,
+      confirmButtonText: 'Proyecto desde 0',
+      cancelButtonText: 'Desde plantilla',
+      confirmButtonColor: '#405BF1', // Color de fondo del botón de confirmación (rojo)
+      cancelButtonColor: '#7C63BA', // Color de
+    }).then((result) => {
+      if (result.value === true) {
+        // Redirigir a la página "Desde 0"
+        navigate('/projects/create');
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Redirigir a la página "Desde plantilla"
+        navigate('/templates/create');
+      }
+    });
+    
+
+  };
+
   const [isHovered, setIsHovered] = useState(false);
 
   const deleteHandler = async (id) => {
@@ -127,6 +150,7 @@ const ProjectIndex = () => {
   };
   
   const filteredProjects = filterProjects();
+  
 
   return (
     <div className="container mx-auto px-4 py-6 mt-5">
@@ -142,10 +166,11 @@ const ProjectIndex = () => {
       <div className="grid grid-cols-3 gap-4">
         {!isClient && (
           <Link
-            to="/projects/create"
+            //to="/projects/create"
             className="bg-gray-300 bg-opacity-60 text-white px-4 py-3 rounded flex flex-col items-center text-center"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={handleClick}
           >
             <br />
 
@@ -160,7 +185,6 @@ const ProjectIndex = () => {
             </span>
           </Link>
         )}
-
         {filteredProjects.length > 0 ? (
           filteredProjects.map(({ id, name, startDate, endDate, userId }) => {
             const user = users.find((user) => user.id === userId);

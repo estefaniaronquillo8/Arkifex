@@ -118,6 +118,9 @@ th {
     background-color: rgb(12, 104, 185);   
 }
 
+.btn-confirm{
+  background: green;
+}
 
 .btnnav.active {
   background-color: rgb(12, 104, 185);    /* Cambia al color deseado */

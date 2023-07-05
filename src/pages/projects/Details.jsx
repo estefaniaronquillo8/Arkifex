@@ -20,7 +20,6 @@ import LocationDetails from "../location/Details";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw";
 import "mapbox-gl/dist/mapbox-gl.css";
-import ReactMapGL, { Marker } from "react-map-gl";
 
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "tailwindcss/tailwind.css";
@@ -73,9 +72,7 @@ const ProjectDetails = () => {
         id
       );
       if (response?.project) {
-        console.log(project);
         setProject(response.project);
-        console.log(project);
       }
       setError(error);
       setNotificationType(notificationType);
@@ -184,7 +181,7 @@ const ProjectDetails = () => {
     navigate("/projects");
 
     if (response?.status === 200) {
-      setProject(response.projects);
+      setProject(response.project);
     }
     setError(error);
     setNotificationType(notificationType);
@@ -241,6 +238,9 @@ const ProjectDetails = () => {
   if (project.isTemplate === true) {
     isTemplateText = "Que ya no sea plantilla";
   }
+
+  
+
 
   const handleDuplicateProject = async () => {
     const { response, success, error, notificationType } =
@@ -319,9 +319,7 @@ const ProjectDetails = () => {
 
       marker.on("dragend", handleMarkerDragEnd);
 
-      <Marker latitude={latitude} longitude={longitude}>
-        <div>📍</div>
-      </Marker>
+      // Add marker to the map
     }
 
     return () => {
@@ -365,7 +363,7 @@ const ProjectDetails = () => {
               <p>{project.endDate}</p>
             </div>
           </div>
-          {roleInSession && roleInSession.name !== "client" && (
+            {roleInSession && roleInSession.name !== "client" && (
             <>
               <Link
                 to={`/projects/edit/${project.id}`}
@@ -396,35 +394,35 @@ const ProjectDetails = () => {
           </>
           )}
 
-            {locationForThisProject && (
-              <div className="flex space-x-4">
-                <div>
-                  <h1 className="text-4xl font-semibold mb-6">
-                    Localización del Proyecto
-                  </h1>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Dirección</h2>
-                    <p>{locationForThisProject.address}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Latitud</h2>
-                    <p>{locationForThisProject.lat}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Longitud</h2>
-                    <p>{locationForThisProject.lng}</p>
-                  </div>
-                  <div className="flex-1 bg-white rounded-lg shadow p-4">
-                    <h2 className="font-bold text-lg mb-2">Area</h2>
-                    <p>{locationForThisProject.area}</p>
-                  </div>
+          {locationForThisProject && (
+            <div className="flex space-x-4">
+              <div>
+                <h1 className="text-4xl font-semibold mb-6">
+                  Localización del Proyecto
+                </h1>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Dirección</h2>
+                  <p>{locationForThisProject.address}</p>
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
-                  <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                  <LocationDetails locationId={locationForThisProject.id} mode="show" />
+                  <h2 className="font-bold text-lg mb-2">Latitud</h2>
+                  <p>{locationForThisProject.lat}</p>
+                </div>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Longitud</h2>
+                  <p>{locationForThisProject.lng}</p>
+                </div>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Area</h2>
+                  <p>{locationForThisProject.area}</p>
                 </div>
               </div>
-            )}
+              <div className="flex-1 bg-white rounded-lg shadow p-4">
+                <h2 className="font-bold text-lg mb-2">Mapa</h2>
+                <LocationDetails locationId={locationForThisProject.id} />
+              </div>
+            </div>
+          )}
 
           <div>
             <button
@@ -543,6 +541,14 @@ const ProjectDetails = () => {
               Crear Nuevo Subproyecto
             </button>
             )}
+            {roleInSession.name !== "client" && (
+            
+
+            <Link to="/templates/subprojects" className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block">
+            Crear desde plantilla
+          </Link>
+            )}
+
             {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
