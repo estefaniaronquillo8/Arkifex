@@ -126,7 +126,7 @@ function LocationEdit() {
                 htmlFor="calculatedArea"
                 className="block text-sm font-medium text-gray-700"
               >
-                Calculated Area:
+                Área del polígono:
               </label>
               <input
                 id="calculatedArea"
@@ -142,7 +142,7 @@ function LocationEdit() {
                 htmlFor="area"
                 className="block text-sm font-medium text-gray-700"
               >
-                Area to save:
+                Area del proyecto:
               </label>
               <input
                 id="area"
