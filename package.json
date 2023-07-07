@@ -32,7 +32,8 @@
     "react-to-print": "^2.14.13",
     "react-toastify": "^9.1.2",
     "react-transition-group": "^4.4.5",
-    "recharts": "^2.7.2"
+    "recharts": "^2.7.2",
+    "sweetalert2": "^11.7.12"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

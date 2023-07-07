@@ -198,7 +198,7 @@ const TemplateDetails = () => {
                 <p>{project.description}</p>
               </div>
               <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Status</h2>
+                <h2 className="font-bold text-lg mb-2">Status5</h2>
                 <p>{project.status}</p>
               </div>
             </div>
@@ -297,12 +297,15 @@ const TemplateDetails = () => {
             {!project.parentId && (
               <>
                 <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
+
                 <button
                   onClick={handleCreateSubproject}
                   className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
                 >
                   Crear Nuevo Subproyecto
                 </button>
+
+           
                 {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
