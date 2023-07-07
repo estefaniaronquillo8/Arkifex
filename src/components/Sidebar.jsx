@@ -115,7 +115,7 @@ const Sidebar = () => {
                         menu.name !== "Usuarios") ||
                       (roleInSession &&
                         roleInSession.name === "client" &&
-                        menu.name !== "Usuarios" )
+                        menu.name !== "Usuarios" &&  menu.name !== "Plantillas")
                         // dentro si se queire tapa&&menu.name !== "Resources"
                   )
                   .map((menu, i) => (
