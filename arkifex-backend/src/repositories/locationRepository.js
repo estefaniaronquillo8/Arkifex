@@ -4,14 +4,14 @@ const axios = require('axios');
 const createLocation = async (locationData) => {
   const transaction = await sequelize.transaction();
   try {
-    const response = await findLocationByAddress(locationData.address);
+    /* const response = await findLocationByAddress(locationData.address);
     if (response?.location) {
       return {
         status: 409,
         message: "Location already exists",
         notificationType: "info",
       };
-    }
+    } */
 
     const location = await Location.create(locationData, { transaction });
     await transaction.commit();

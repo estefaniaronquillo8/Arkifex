@@ -28,6 +28,8 @@ function LocationEdit() {
   // Observamos todos los cambios en los campos del formulario
   const currentFormValues = watch();
 
+  const [calculatedArea, setCalculatedArea] = useState(0);
+
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, [navigate]);
@@ -38,7 +40,7 @@ function LocationEdit() {
       if (data?.lng) setValue("lng", data.lng);
       if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
       if (data?.address) setValue("address", data.address);
-      if (data?.area) setValue("area", data.area);
+      if (data?.area) setCalculatedArea(data.area); // Descomenta esta línea
     },
     [setValue]
   );
@@ -67,12 +69,15 @@ function LocationEdit() {
 
   const onSubmit = async (data) => {
     // Comparamos los valores iniciales con los actuales
-    if (JSON.stringify(initialFormValues.current) === JSON.stringify(currentFormValues)) {
+    if (
+      JSON.stringify(initialFormValues.current) ===
+      JSON.stringify(currentFormValues)
+    ) {
       // No hubo cambios, simplemente redirigimos
       navigate(`/projects/details/${data?.projectId}`);
       return;
     }
-    
+
     const { response, success, error } = await handleUpdate(id, data);
     if (success || error) {
       showNotification(success || error, success ? "success" : "error");
@@ -118,10 +123,26 @@ function LocationEdit() {
             </div> */}
             <div>
               <label
+                htmlFor="calculatedArea"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Calculated Area:
+              </label>
+              <input
+                id="calculatedArea"
+                type="number"
+                step="any"
+                value={calculatedArea}
+                readOnly
+                className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+              />
+            </div>
+            <div>
+              <label
                 htmlFor="area"
                 className="block text-sm font-medium text-gray-700"
               >
-                Area:
+                Area to save:
               </label>
               <input
                 id="area"
@@ -131,6 +152,7 @@ function LocationEdit() {
                 className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
               />
             </div>
+
             <div>
               {/* <label
                 htmlFor="lat"

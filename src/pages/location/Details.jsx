@@ -87,9 +87,15 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             }
           );
 
+          // Calcular el área del polígono existente
+          const area =
+            window.google.maps.geometry.spherical.computeArea(polygonData);
+          console.log("Area of the existing polygon is: ", area);
+
           setLocation({
             ...response.location,
             polygon: polygonData,
+            area: area,
           });
 
           // Se comentó para que se ponga el punto en el mapa solamente por las coordenadas
@@ -105,7 +111,7 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             });
           }
         }
-        if (mode !== "show") setLocationData(response.location); // Update location data in parent
+        if (mode !== "show") setLocationData({ ...response.location, area: area }); // Actualiza los datos de la ubicación en el componente padre incluyendo el área calculada
       };
 
       fetchLocation();
@@ -128,6 +134,7 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             ],
           },
         });
+        
 
         drawingManager.setMap(map);
 
@@ -211,7 +218,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             map.setZoom(18); */ // Haz zoom a la ubicación seleccionada
           }
         });
-
       }
 
       if (location?.polygon) {

@@ -11,14 +11,20 @@ const LocationCreate = () => {
   const { showNotification, selectedProjectId, setSelectedProjectId } =
     useGlobalContext();
   const [address, setAddress] = useState("");
-  console.log("LUEGO",address)
+  console.log("LUEGO", address);
 
-  const { register, handleSubmit, setValue, getValues } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       projectId: "",
       address: address,
       area: 0,
-      lat: 0,
+      lat: "",
       lng: 0,
       polygon: [],
     },
@@ -31,7 +37,8 @@ const LocationCreate = () => {
       if (data?.lng) setValue("lng", data.lng);
       if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
       if (data?.address) setValue("address", data.address);
-      if (data?.area) setValue("area", data.area);
+      //if (data?.area) setValue("area", data.area);
+      if (data?.area) setValue("displayArea", data.area);      
     },
     [setValue]
   );
@@ -87,7 +94,7 @@ const LocationCreate = () => {
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div> */}
-          {/* <div>
+          <div>
             <label
               htmlFor="address"
               className="block text-sm font-medium text-gray-700"
@@ -99,67 +106,94 @@ const LocationCreate = () => {
               type="text"
               {...register("address")}
               onChange={(e) => setAddress(e.target.value)}
+              readOnly
               className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
             />
-          </div> */}
-          {<div>
+          </div>
+
+          <div>
+            <label
+              htmlFor="displayArea"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Area del polígono:
+            </label>
+            <input
+              id="displayArea"
+              type="text"
+              {...register("displayArea")}
+              readOnly
+              className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+            />
+          </div>
+
+          <div>
             <label
               htmlFor="area"
               className="block text-sm font-medium text-gray-700"
             >
-              Area:
+              Area del proyecto:
             </label>
             <input
               id="area"
-              //type="hidden"
+              type="number"
               step="any"
               {...register("area")}
               className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
             />
-          </div>}
-          {/* <div>
-                <label
-                htmlFor="lat"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Latitude:
-              </label>
-                <input
-                  id="lat"
-                  type="hidden"
-                  {...register("lat")}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div>
-              <div>
-                <label
-                htmlFor="lng"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Longitude:
-              </label>
-                <input
-                  id="lng"
-                  type="hidden"
-                  {...register("lng")}
-                  className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
-              </div> */}
+          </div>
         </div>
-        {/* <div>
-              <label
-              htmlFor="polygon"
+        <div>
+          {/* <label
+              htmlFor="lat"
               className="block text-sm font-medium text-gray-700"
             >
-              Polygon:
+              Latitude:
+            </label> */}
+          <input
+            id="lat"
+            type="hidden"
+            {...register("lat", {
+              required: "Ingrese un marcador en el mapa.",
+            })}
+            readOnly
+            className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+          />
+          {errors.lat && <p className="text-red-800">{errors.lat.message}</p>}
+        </div>
+        {/* <div>
+            <label
+              htmlFor="lng"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Longitude:
             </label>
-              <input
-                id="polygon"
-                type="hidden"
-                {...register("polygon", )}
-                className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-              />
-            </div> */}
+            <input
+              id="lng"
+              //type="hidden"
+              {...register("lng")}
+              className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+            />
+          </div> */}
+        <div>
+          {/* <label
+            htmlFor="polygon"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Polygon:
+          </label> */}
+          <input
+            id="polygon"
+            type="hidden"
+            {...register("polygon", {
+              required: "Ingrese el polígono en el mapa.",
+            })}
+            className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+          />
+          {errors.polygon && (
+            <p className="text-red-800">{errors.polygon.message}</p>
+          )}
+        </div>
         <button
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
