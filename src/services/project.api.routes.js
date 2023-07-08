@@ -22,7 +22,9 @@ export const handleUpdate = (id, project) => {
 };
 
 export const handleDelete = async (id) => {
+  console.log("iddddddddd DEL HANDLEDELETE DE LA API", id)
   const { response, success, error, notificationType } = await requestHandler("delete", `/projects/delete/${id}`);
+  console.log("REEEESPOOONSEEEEE DEL HANDLEDELETE DE LA API", response)
   if (response?.status === 200){
     return { ... await getAllProjects() };
   }

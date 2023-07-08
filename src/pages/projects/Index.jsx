@@ -98,7 +98,7 @@ const ProjectIndex = () => {
         navigate('/projects/create');
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Redirigir a la página "Desde plantilla"
-        navigate('/templates/create');
+        navigate('/templates');
       }
     });
     

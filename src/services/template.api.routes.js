@@ -14,6 +14,7 @@ export const duplicateProject = (id) => {
 };
 
 export const duplicateSubproject = (id, parentId) => {
+  console.log("PARENT ID DUPLICATE SUBPROJECT DEL API ROUTE", parentId)
   return requestHandler("post", `/templates/duplicate-subpry/${id}`, { parentId });
 };
 

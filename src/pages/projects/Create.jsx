@@ -71,7 +71,11 @@ const ProjectCreate = () => {
 
     setSelectedProjectId(null);
     if (response?.status === 200) {
-      navigate("/projects");
+      if (selectedProjectId) {
+        navigate(`/projects/details/${data.parentId}`);
+      } else {
+        navigate("/projects");
+      }
     }
   };
 

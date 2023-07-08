@@ -31,10 +31,12 @@ const TemplateSub = () => {
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
-  
-  const handleDuplicateSubproject = async (projectId, parentId) => {    
+
+  const handleDuplicateSubproject = async (projectId, parentId) => {
+    console.log("PARENT ID DEL HANDLE ANTES", parentId);
+    console.log("SELECTED PROJECT ID DEL HANDLE ANTE", selectedProjectId);
     const { response, success, error, notificationType } =
-    await duplicateSubproject(projectId, parentId);
+      await duplicateSubproject(projectId, parentId);
 
     if (success) {
       navigate(`/projects`);
@@ -98,7 +100,7 @@ const TemplateSub = () => {
               <div className="grid grid-cols-5 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
                 <div className="col-span-1 ml-5">Nombre</div>
                 <div className="col-span-1">Descripción</div>
-                <div className="col-span-1">Status</div>
+                <div className="col-span-1">Monto</div>
                 <div className="col-span-2">Acciones</div>
               </div>
               {projects &&
@@ -115,15 +117,20 @@ const TemplateSub = () => {
                           <div className="col-span-1">
                             {project.description}
                           </div>
-                          <div className="col-span-1">{project.status}</div>
+                          <div className="col-span-1">$MONTO</div>
 
                           <div className="col-span-2">
-                            <Link
-                              to={`/templates/details/${project.id}`}
-                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                            <button
+                              onClick={() =>
+                                handleDuplicateSubproject(
+                                  project.id,
+                                  selectedProjectId
+                                )
+                              }
+                              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
                             >
-                              Detalles
-                            </Link>
+                              Duplicar Plantilla
+                            </button>
                           </div>
                         </div>
                       );
@@ -162,7 +169,9 @@ const TemplateSub = () => {
                     <div className="col-span-1">{project.endDate}</div>
                     <div className="col-span-1">$MONTO</div>
                     <button
-                      onClick={() => handleDuplicateSubproject(project.id, selectedProjectId)}
+                      onClick={() =>
+                        handleDuplicateSubproject(project.id, selectedProjectId)
+                      }
                       className="inline-block bg-green-500 text-white px-4 py-2 rounded"
                     >
                       Duplicar Proyecto

@@ -14,7 +14,7 @@ import { handleDelete as handleDeletePP } from "../../services/projectPlanning.a
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
-import { duplicateProject } from '../../services/template.api.routes';
+import { duplicateProject } from "../../services/template.api.routes";
 
 const TemplateDetails = () => {
   const { id } = useParams();
@@ -35,7 +35,7 @@ const TemplateDetails = () => {
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
   const [notificationType, setNotificationType] = useState();
-  
+
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
@@ -183,12 +183,15 @@ const TemplateDetails = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Detalles de {project.name}</h2>
+      {project && (
+        <h2 className="text-4xl font-semibold mb-6">
+          Detalles de {project.name}
+        </h2>
+      )}
       {project && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-6">
             <div className="flex flex-wrap space-x-4">
-              
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Nombre</h2>
                 <p>{project.name}</p>
@@ -305,7 +308,6 @@ const TemplateDetails = () => {
                   Crear Nuevo Subproyecto
                 </button>
 
-           
                 {/* <Link
                   to="/projects/create"
                   className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
@@ -329,7 +331,9 @@ const TemplateDetails = () => {
                           className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
                         >
                           <div className="col-span-1 ml-5">{project.name}</div>
-                          <div className="col-span-1">{project.description}</div>
+                          <div className="col-span-1">
+                            {project.description}
+                          </div>
                           <div className="col-span-1">{project.status}</div>
                           <div className="col-span-1">{project.startDate}</div>
                           <div className="col-span-1">{project.endDate}</div>

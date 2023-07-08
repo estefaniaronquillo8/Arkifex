@@ -104,6 +104,18 @@ const updateProject = async (id, projectData) => {
 const deleteProject = async (id) => {
   const transaction = await sequelize.transaction();
   try {
+    console.log("IDDDDD EN LA FUNCION DE DELETEPROJECT BACK", id)
+
+    // Añade la validación para subproyectos
+    const subProjects = await Project.findAll({ where: { parentId: id } });
+    if (subProjects && subProjects.length > 0) {
+      return {
+        status: 200,
+        message: "No se puede eliminar el proyecto porque tiene subproyectos asociados. Por favor, elimine los subproyectos primero.",
+        notificationType: "info",
+      };
+    }
+
     await Project.destroy({ where: { id }, transaction });
     await transaction.commit();
     return {
@@ -112,6 +124,7 @@ const deleteProject = async (id) => {
       notificationType: "success",
     };
   } catch (error) {
+    console.log("EEEERRRRRRRROOOOOORRRRRRRRRR", error);
     await transaction.rollback();
     return {
       status: 500,
@@ -120,6 +133,7 @@ const deleteProject = async (id) => {
     };
   }
 };
+
 
 // TEMPLATES
 const createTemplate = async (projectData) => {
@@ -240,6 +254,7 @@ async function duplicateProject(projectId) {
 
 async function duplicateSubproject(projectId, parentId) {
   try {
+    console.log("PARENT ID EN EL DUPLICATE SUBPROJECT", parentId)
     // Encuentra el proyecto original
     const originalProject = await Project.findOne({ where: { id: projectId } });
     // Duplica el proyecto excluyendo el id
