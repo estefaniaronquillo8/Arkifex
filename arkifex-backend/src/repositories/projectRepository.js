@@ -36,7 +36,6 @@ const createProject = async (projectData) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.log("ERROR DEL CREATE PROJECT", error);
     return {
       status: 500,
       message: "Internal server error",
@@ -151,7 +150,6 @@ const createTemplate = async (projectData) => {
     };
   } catch (error) {
     await transaction.rollback();
-    console.log("ERROR DEL CREATE TEMPLATE", error);
     return {
       status: 500,
       message: "Internal server error",
@@ -187,7 +185,6 @@ async function duplicateProject(projectId) {
   try {
     // Encuentra el proyecto original
     const originalProject = await Project.findOne({ where: { id: projectId } });
-    console.log(originalProject)
     // Duplica el proyecto excluyendo el id
     let { id, ...projectData } = originalProject.get({ plain: true }); // Excluye el id 
     const newProject = await Project.create({
@@ -232,7 +229,64 @@ async function duplicateProject(projectId) {
       notificationType: "success",
     };
   } catch (error) {
-    console.log("EEEEERRRRRRRRROOOOOOOOOORRRRRRR", error);
+    await transaction.rollback();
+    return {
+      status: 500,
+      message: "Error interno del servidor",
+      notificationType: "error",
+    };
+  }
+}
+
+async function duplicateSubproject(projectId, parentId) {
+  try {
+    // Encuentra el proyecto original
+    const originalProject = await Project.findOne({ where: { id: projectId } });
+    // Duplica el proyecto excluyendo el id
+    let { id, ...projectData } = originalProject.get({ plain: true }); // Excluye el id 
+    const newProject = await Project.create({
+      ...projectData,
+      status: "Comenzando",
+      parentId: parentId,
+      isTemplate: false,
+      name: `${originalProject.name}_duplicate`,
+    });
+
+    // Encuentra y duplica los datos de ProjectPlannings
+    const originalProjectPlannings = await ProjectPlanning.findAndCountAll({
+      where: { projectId },
+    });
+    for (const opp of originalProjectPlannings.rows) {
+      // Excluye id y projectId al crear el nuevo ProjectPlanning
+      let { id, projectId, ...planningData } = opp.get({ plain: true });
+      const newProjectPlanning = await ProjectPlanning.create({
+        ...planningData,
+        projectId: newProject.id,
+      });
+
+      // Encuentra y duplica los datos de ResourceAssignments para cada ProjectPlanning
+      const originalResourceAssignments =
+        await ResourceAssignment.findAndCountAll({
+          where: { projectPlanningId: opp.id },
+        });
+      for (const ora of originalResourceAssignments.rows) {
+        // Excluye id y projectPlanningId al crear el nuevo ResourceAssignment
+        let { id, projectPlanningId, ...assignmentData } = ora.get({
+          plain: true,
+        });
+        await ResourceAssignment.create({
+          ...assignmentData,
+          projectPlanningId: newProjectPlanning.id,
+        });
+      }
+    }
+    return {
+      status: 200,
+      project: newProject,
+      message: "Proyecto duplicado con éxito",
+      notificationType: "success",
+    };
+  } catch (error) {
     await transaction.rollback();
     return {
       status: 500,
@@ -295,6 +349,7 @@ module.exports = {
   createTemplate,
   getAllTemplates,
   duplicateProject,
+  duplicateSubproject,
 
   findProjectByName,
   findById,

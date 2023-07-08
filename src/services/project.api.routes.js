@@ -10,7 +10,6 @@ export const getProjectById = (id) => {
 };
 
 export const handleCreate = (project) => {
-  console.log(project)
   return requestHandler("post", "/projects/create", project);
 };
 

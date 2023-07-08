@@ -61,8 +61,6 @@ const ProjectCreate = () => {
       data
     );
 
-    console.log("DATA DEL PROJECT", data);
-
     if (success) {
       showNotification(success, notificationType);
     }

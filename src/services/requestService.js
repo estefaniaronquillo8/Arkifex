@@ -14,7 +14,6 @@ api.interceptors.request.use((config) => {
 export const requestHandler = async (method, url, data) => {
   try {
     const response = await api[method](url, data);
-    console.log(response)
     return {
       response: response.data,
       success: response?.data?.message,
@@ -22,7 +21,6 @@ export const requestHandler = async (method, url, data) => {
       notificationType: response?.data?.notificationType,
     };
   } catch (error) {
-    console.log("erroor", error)
     return {
       response: error?.response?.data,
       success: null,

@@ -6,11 +6,14 @@ export const getAllTemplates = () => {
 };
 
 export const handleCreate = (template) => {
-  console.log(template)
   return requestHandler("post", "/templates/create", template);
 };
 
 export const duplicateProject = (id) => {
   return requestHandler("post", `/templates/duplicate/${id}`);
+};
+
+export const duplicateSubproject = (id, parentId) => {
+  return requestHandler("post", `/templates/duplicate-subpry/${id}`, { parentId });
 };
 

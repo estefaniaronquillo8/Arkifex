@@ -38,9 +38,7 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
       );
-      console.log(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
-      );
+      
       const { results } = response.data;
       return results[0].formatted_address;
     } catch (error) {
@@ -52,13 +50,11 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
     if (mode === "create") {
       const fetchLocationAddress = async () => {
         if (address) {
-          console.log("CON ADDRESS", address);
           const geo = await getGeocode(address);
           if (geo) {
             setCenter(geo);
           }
         } else {
-          console.log("SIN ADDRESS");
           setLocation({
             address: "",
             area: "",
@@ -77,7 +73,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
       const fetchLocation = async () => {
         const { response } = await handleEdit(locationId);
         if (response?.location) {
-          console.log("CONSOLE LOG", response.location.polygon);
           let polygonData = JSON.parse(response.location.polygon).map(
             (point) => {
               return {
@@ -90,7 +85,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
           // Calcular el área del polígono existente
           const area =
             window.google.maps.geometry.spherical.computeArea(polygonData);
-          console.log("Area of the existing polygon is: ", area);
 
           setLocation({
             ...response.location,
@@ -111,7 +105,7 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             });
           }
         }
-        if (mode !== "show") setLocationData({ ...response.location, area: area }); // Actualiza los datos de la ubicación en el componente padre incluyendo el área calculada
+        if (mode !== "show" && setLocationData) setLocationData(response.location); // Update location data in parent
       };
 
       fetchLocation();
@@ -134,7 +128,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             ],
           },
         });
-        
 
         drawingManager.setMap(map);
 
@@ -155,7 +148,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
                 marker.position.lat(),
                 marker.position.lng()
               );
-              console.log("address", address);
 
               setLocationData({
                 address: address,
@@ -185,7 +177,6 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
                     return { lat: latLng.lat(), lng: latLng.lng() };
                   })
               );
-              console.log("Area of the polygon is: ", area);
 
               setLocationData({
                 polygon: polygon

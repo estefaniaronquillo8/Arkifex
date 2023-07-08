@@ -30,12 +30,6 @@ const TemplateIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (roleInSession && roleInSession.name) {
-      console.log(roleInSession.name);
-    }
-  }, [roleInSession]);
-
-  useEffect(() => {
     const fetchProjectsAndUsers = async () => {
       const { response: userResponse } = await getAllUsers();
       const {

@@ -35,12 +35,6 @@ const ProjectIndex = () => {
   }, []);
 
   useEffect(() => {
-    if (roleInSession) {
-      console.log(roleInSession.name);
-    }
-  }, [roleInSession]);
-
-  useEffect(() => {
     const fetchProjectsAndUsers = async () => {
       const { response: userResponse } = await getAllUsers();
       const {

@@ -53,7 +53,6 @@ export const GlobalProvider = ({ children }) => {
   const setAuthData = (token) => {
     localStorage.setItem("token", token);
     const decodedToken = jwtDecode(token);
-    console.log(decodedToken)
     setUserInSession(decodedToken.user);
     setRoleInSession(decodedToken.role);
   };
@@ -88,19 +87,6 @@ export const GlobalProvider = ({ children }) => {
     endDate: null,
     isTemplate: null,
   });
-  /* 
-  const [templates, setTemplates] = useState([]);
-  const [template, setTemplate] = useState({
-    id: 0,
-    userId: 0,
-    parentId: 0,
-    name: "",
-    description: "",
-    status: "",
-    startDate: null,
-    endDate: null,
-    isTemplate: null,
-  }); */
 
   const [projectPlannings, setProjectPlannings] = useState([]);
   const [projectPlanning, setProjectPlanning] = useState({
@@ -190,14 +176,7 @@ export const GlobalProvider = ({ children }) => {
 
     selectedProjectId,
     setSelectedProjectId,
-
-    /* // Templates
-    templates, 
-    setTemplates,
-     roleInSession, 
-    template, 
-    setTemplate, */
-
+    
     // Locations
     locations,
     setLocations,

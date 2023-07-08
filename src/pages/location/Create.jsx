@@ -11,7 +11,6 @@ const LocationCreate = () => {
   const { showNotification, selectedProjectId, setSelectedProjectId } =
     useGlobalContext();
   const [address, setAddress] = useState("");
-  console.log("LUEGO", address);
 
   const {
     register,
@@ -23,7 +22,7 @@ const LocationCreate = () => {
     defaultValues: {
       projectId: "",
       address: address,
-      area: 0,
+      area: "",
       lat: "",
       lng: 0,
       polygon: [],
@@ -32,7 +31,6 @@ const LocationCreate = () => {
 
   const setLocationData = useCallback(
     (data) => {
-      console.log("setLocationData", data);
       if (data?.lat) setValue("lat", data.lat);
       if (data?.lng) setValue("lng", data.lng);
       if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
@@ -48,17 +46,11 @@ const LocationCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-    console.log("data", data);
-    console.log("selectedProjectId", selectedProjectId);
-
-    console.log("current form state", getValues());
 
     data.projectId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
-
-    console.log(response);
 
     if (success) {
       showNotification(success, notificationType);
@@ -138,9 +130,12 @@ const LocationCreate = () => {
               id="area"
               type="number"
               step="any"
-              {...register("area")}
+              {...register("area", {
+                required: "Ingrese el área del proyecto del mapa.",
+              })}
               className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
             />
+            {errors.area && <p className="text-red-800">{errors.area.message}</p>}
           </div>
         </div>
         <div>

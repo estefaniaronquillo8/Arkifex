@@ -6,7 +6,6 @@ export const getAllResourceAssignments = () => {
 };
 
 export const handleCreate = (resourceAssignment) => {
-  console.log(resourceAssignment)
   return requestHandler("post", "/resourceAssignments/create", resourceAssignment);
 };
 

@@ -111,7 +111,6 @@ const deleteResourceAssignment = async (id) => {
 
 const findResourceAssignmentByProjectPlanningIdAndResourceId = async (projectPlanningId, resourceId) => {
   const resourceAssignment = await ResourceAssignment.findOne({ where: { projectPlanningId, resourceId }});
-  console.log('RA', resourceAssignment);
   if (!resourceAssignment){
     return { status: 404 };
   }

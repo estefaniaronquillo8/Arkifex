@@ -36,11 +36,6 @@ const ResourceIndex = () => {
       localStorage.setItem("token", token);
     }
   }, []);
-  useEffect(() => {
-    if (roleInSession && roleInSession.name) {
-      console.log(roleInSession.name);
-    }
-  }, [roleInSession]);
 
   useEffect(() => {
     const fetchResources = async () => {
