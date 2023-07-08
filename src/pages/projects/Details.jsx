@@ -308,8 +308,10 @@ const ProjectDetails = () => {
               </div>
             </div>
           )}
-
+  {roleInSession && roleInSession.name !== "client" && (
           <div>
+
+        
             <button
               onClick={handleLocationClick}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -317,6 +319,7 @@ const ProjectDetails = () => {
               {locationButtonText}
             </button>
           </div>
+  )}
 
           <button
             onClick={handleBack}
@@ -333,13 +336,15 @@ const ProjectDetails = () => {
     return (
       <div>
         <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
-        {roleInSession.name !== "client" && (
-          <button
-            onClick={handleCreateProjectPlanning}
-            className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-          >
-            Crear Nueva Tarea
-          </button>
+        {roleInSession && roleInSession.name !== "client" && (
+            
+        <button
+          onClick={handleCreateProjectPlanning}
+          className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+        >
+          Crear Nueva Tarea
+        </button>
+
         )}
         <div className="bg-white shadow-md rounded-lg">
           <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
@@ -348,9 +353,7 @@ const ProjectDetails = () => {
             <div className="col-span-1">Status</div>
             <div className="col-span-1">Fecha de Inicio</div>
             <div className="col-span-1">Fecha de Fin</div>
-            {roleInSession.name !== "client" && (
-              <th className="px-4 py-2">Acciones</th>
-            )}
+            {roleInSession && roleInSession.name !== "client" && <th className="px-4 py-2">Acciones</th>}
           </div>
           {projectPlannings &&
             projectPlannings.map((projectPlanning) => {
@@ -368,16 +371,30 @@ const ProjectDetails = () => {
                   <div className="col-span-1">{projectPlanning.endDate}</div>
 
                   <div className="col-span-2">
-                    {roleInSession.name !== "client" && (
-                      <>
-                        <Link
-                          to={`/projectPlannings/details/${projectPlanning.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Detalles
-                        </Link>
-                      </>
-                    )}
+                  {roleInSession && roleInSession.name !== "client" && (
+            <>
+                    <Link
+                      to={`/projectPlannings/details/${projectPlanning.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Detalles
+                    </Link>
+                    {/* <Link
+                      to={`/projectPlannings/edit/${projectPlanning.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Editar
+                    </Link>
+                    <button
+                      onClick={async () =>
+                        await deleteHandlerPP(projectPlanning.id)
+                      }
+                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Eliminar
+                    </button> */}
+                    </>
+                  )}
                   </div>
                 </div>
               );
@@ -394,21 +411,21 @@ const ProjectDetails = () => {
         {!project.parentId && (
           <>
             <h1 className="text-4xl font-semibold mb-6">Sub-Proyectossss</h1>
-            {roleInSession.name !== "client" && (
-              <button
-                onClick={handleCreateSubproject}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                Crear Nuevo Subproyecto
-              </button>
+            {roleInSession && roleInSession.name !== "client" && (
+            
+            <button
+              onClick={handleCreateSubproject}
+              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+            >
+              Crear Nuevo Subproyecto
+            </button>
             )}
-            {roleInSession.name !== "client" && (
-              <button
-                onClick={handleCreateSubprojectFromTemplate}
-                className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                Crear desde plantilla
-              </button>
+            {roleInSession && roleInSession.name !== "client" && (
+            
+
+            <Link to="/templates/subprojects" className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block">
+            Crear desde plantilla
+          </Link>
             )}
             <div className="bg-white shadow-md rounded-lg">
               <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
@@ -417,7 +434,7 @@ const ProjectDetails = () => {
                 <div className="col-span-1">Status</div>
                 <div className="col-span-1">Fecha de Inicio</div>
                 <div className="col-span-1">Fecha de Fin</div>
-                <div className="col-span-2">Acciones</div>
+                <div className="col-span-2">Accionesss</div>
               </div>
               {projects &&
                 projects.map((project) => {

@@ -173,31 +173,30 @@ const ProjectCreate = () => {
               )}
             </div>
 
-
-          <div className="mb-4">
-  <label
-    htmlFor="status"
-    className="block text-gray-700 text-sm font-bold mb-2"
-  >
-    Status
-  </label>
-  <select
-    id="status"
-    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-    {...register("status", {
-      required: "El campo es requerido.",
-    })}
-  >
-    <option value="">Selecciona el estado del proyecto</option>
-    <option value="iniciado">Iniciado</option>
-    <option value="planificado">Planificado</option>
-    <option value="en_curso">En curso</option>
-    <option value="terminado">Terminado</option>
-  </select>
-  {errors.status && (
-    <p className="text-red-800">{errors.status.message}</p>
-  )}
-</div>
+            <div className="mb-4">
+              <label
+                htmlFor="status"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                Status
+              </label>
+              <select
+                id="status"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                {...register("status", {
+                  required: "El campo es requerido.",
+                })}
+              >
+                <option value="">Selecciona el estado del proyecto</option>
+                <option value="iniciado">Iniciado</option>
+                <option value="planificado">Planificado</option>
+                <option value="en_curso">En curso</option>
+                <option value="terminado">Terminado</option>
+              </select>
+              {errors.status && (
+                <p className="text-red-800">{errors.status.message}</p>
+              )}
+            </div>
             <div className="mb-4">
               <label
                 htmlFor="startDate"

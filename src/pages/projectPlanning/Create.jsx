@@ -119,19 +119,20 @@ const ProjectPlanningCreate = () => {
               >
                 Status
               </label>
-              <input
-                type="text"
+              <select
                 id="status"
-                placeholder="Status de la Planificación"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 {...register("status", {
                   required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "El status debe tener al menos 3 caracteres.",
-                  },
                 })}
-              />
+              >
+                <option value="">Selecciona el estado de la tarea</option>
+                <option value="No_Iniciado">No Iniciado</option>
+                <option value="iniciado">Iniciado</option>
+                <option value="planificado">Planificado</option>
+                <option value="en_curso">En curso</option>
+                <option value="terminado">Terminado</option>
+              </select>
               {errors.status && (
                 <p className="text-red-800">{errors.status.message}</p>
               )}
