@@ -6,6 +6,7 @@ import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../../components/Spinner";
 import jsPDF from "jspdf";
+import Swal from "sweetalert2";
 
 const UserIndex = () => {
   const { users, setUsers, roleInSession, userInSession, showNotification } =
@@ -19,7 +20,7 @@ const UserIndex = () => {
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
-  
+
   useEffect(() => {
     const checkRouteProtection = async () => {
       if (!routesProtection()) {
@@ -32,8 +33,8 @@ const UserIndex = () => {
 
   useEffect(() => {
     if (roleInSession) {
-      console.log(roleInSession.name)
-      console.log(userInSession.name)
+      console.log(roleInSession.name);
+      console.log(userInSession.name);
       setIsLoading(false);
     }
   }, [roleInSession]);
@@ -96,7 +97,7 @@ const UserIndex = () => {
     const doc = new jsPDF();
 
     // Agregar contenido al documento PDF
-    doc.setFontSize(16);
+    doc.setFontSize(30);
     doc.text("Lista de usuarios", 15, 15);
 
     users.forEach((user, index) => {
@@ -137,7 +138,10 @@ const UserIndex = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-4xl font-semibold mb-6">Usuarios protegidos</h1>
+      <h1 className="mt-4 UserIndex text-4xl font-bold mb-6">
+        Usuarios protegidos
+      </h1>
+
       <button
         onClick={exportToPDF}
         className="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block"
@@ -150,44 +154,66 @@ const UserIndex = () => {
       >
         Crear Usuario
       </Link>
-      <div className="bg-white shadow-md rounded-lg">
-        <div className="grid grid-cols-6 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-          <div className="col-span-1 pl-2">Nombre</div>
-          <div className="col-span-1">Apellido</div>
-          <div className="col-span-1">Rol</div>
-          <div className="col-span-1">Correo electrónico</div>
-          <div className="col-span-2">Acciones</div>
-        </div>
-        {users &&
-          users.map((user) => (
-            <div
-              key={user.id}
-              className="grid grid-cols-6 gap-4 py-2 border-b border-gray-200"
-            >
-              {user.roleId !== 1 && (
-                <>
-                  <div className="col-span-1 pl-3">{user.name}</div>
-                  <div className="col-span-1">{user.lastname}</div>
-                  <div className="col-span-1">{getRoleName(user.roleId)}</div>
-                  <div className="col-span-1">{user.email}</div>
-                  <div className="col-span-2">
-                    <Link
-                      to={`/users/edit/${user.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      onClick={async () => await deleteHandler(user.id)}
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </>
+      <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr>
+              <th className="pl-2">Nombre</th>
+              <th>Apellido</th>
+              <th>Rol</th>
+              <th>Correo electrónico</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users &&
+              users.map(
+                (user) =>
+                  user.roleId !== 1 && (
+                    <tr key={user.id}>
+                      <td className="pl-3">{user.name}</td>
+                      <td>{user.lastname}</td>
+                      <td>{getRoleName(user.roleId)}</td>
+                      <td>{user.email}</td>
+                      <td>
+                        <Link
+                          to={`/users/edit/${user.id}`}
+                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        >
+                          Editar
+                        </Link>
+                        <button
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "¿Estás seguro?",
+                              text: "¡No podrás revertir esto!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Sí, eliminarlo",
+                              cancelButtonText: "Cancelar",
+                            });
+
+                            if (result.isConfirmed) {
+                              await deleteHandler(user.id);
+                              Swal.fire(
+                                "¡Eliminado!",
+                                "Tu usuario ha sido eliminado.",
+                                "success"
+                              );
+                            }
+                          }}
+                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  )
               )}
-            </div>
-          ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

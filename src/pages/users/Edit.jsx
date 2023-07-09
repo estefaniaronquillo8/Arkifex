@@ -3,11 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/user.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
+import Swal from 'sweetalert2';
+
 
 function UserEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, setUser, roleInSession, showNotification } = useGlobalContext();
+  const { user, setUser, roleInSession, userInSession, showNotification } =
+    useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const [notificationType, setNotificationType] = useState();
@@ -56,6 +59,18 @@ function UserEdit() {
     setUser({ ...user, [event.target.name]: event.target.value });
   };
 
+  useEffect(() => {
+    if (roleInSession) {
+      console.log(roleInSession.name);
+      console.log(userInSession.name);
+    }
+  }, [roleInSession]);
+
+  const isSuperAdmin =
+    roleInSession &&
+    roleInSession.name === "superAdmin" &&
+    id !== userInSession.id;
+
   return (
     <div className="container mx-auto px-4 py-6">
       <h2 className="text-4xl font-semibold mb-6">Editar usuario</h2>
@@ -63,24 +78,27 @@ function UserEdit() {
         <div className="bg-white shadow-md rounded-lg p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
-              <div className="mb-4">
-                <label
-                  htmlFor="roleId"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Rol
-                </label>
-                <select
-                  id="roleId"
-                  name="roleId"
-                  value={user.roleId}
-                  onChange={handleChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  <option value="2">Administrador</option>
-                  <option value="3">Cliente</option>
-                </select>
-              </div>
+              {id !== "1" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="roleId"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    Rol
+                  </label>
+                  <select
+                    id="roleId"
+                    name="roleId"
+                    value={user.roleId}
+                    onChange={handleChange}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  >
+                    <option value="2">Administrador</option>
+                    <option value="3">Cliente</option>
+                  </select>
+                </div>
+              )}
+
               <div>
                 <label
                   htmlFor="name"

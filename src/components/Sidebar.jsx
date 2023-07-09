@@ -12,13 +12,12 @@ const Sidebar = () => {
   const { clearAuthData } = useGlobalContext();
   const navigate = useNavigate();
   const location = useLocation();
-  const { roleInSession,userInSession } = useGlobalContext();
+  const { roleInSession, userInSession } = useGlobalContext();
   const menus = [
     { name: "Usuarios", link: "/users", icon: AiOutlineUsergroupAdd },
-    { name: "Recursos", link: "/resources", icon:  MdBuild},
+    { name: "Recursos", link: "/resources", icon: MdBuild },
     { name: "Proyectos", link: "/projects", icon: AiFillProject },
-    { name: "Plantillas", link: "/templates", icon: FaWindowRestore},
-    
+    { name: "Plantillas", link: "/templates", icon: FaWindowRestore },
   ];
 
   const [open, setOpen] = useState(true);
@@ -61,11 +60,7 @@ const Sidebar = () => {
   }, []);
 
   if (!sessionId) {
-    return (
-      <>
-        {/* Código cuando no hay sesión */}
-      </>
-    );
+    return <>{/* Código cuando no hay sesión */}</>;
   }
 
   return (
@@ -85,38 +80,38 @@ const Sidebar = () => {
                   onClick={() => setOpen(!open)}
                 />
               </div>
-              
+
               <h1
-  className={`mt-10 text-center text-white font-bold  ${
-    open ? "" : "sidebar-closed-text"
-  }`}
->
-  Bienvenid@ <br />
-  {userInSession.name} {userInSession.lastname}
-</h1>
+                className={`mt-10 text-center text-white font-bold  ${
+                  open ? "" : "sidebar-closed-text"
+                }`}
+              >
+                Bienvenid@ <br />
+                {userInSession.name} {userInSession.lastname}
+              </h1>
 
-<Link
-  to="/users/edit/1"
-  className={`inline-block text-center text-white px-4 py-2 rounded mr-2 ${
-    open ? "" : "sidebar-closed-text"
-  }`}
->
-  Editar Perfil
-</Link>
-
+              <Link
+                to={`/users/edit/${userInSession.id}`}
+                onClick={() => window.location.reload()}
+                className={`inline-block text-center text-white px-4 py-2 rounded mr-2 ${
+                  open ? "" : "sidebar-closed-text"
+                }`}
+              >
+                Editar Perfil
+              </Link>
               <div className="mt-10 flex flex-col gap-5 relative">
                 {menus
                   ?.filter(
                     (menu) =>
-                      (roleInSession &&
-                        roleInSession.name === "superAdmin") ||
+                      (roleInSession && roleInSession.name === "superAdmin") ||
                       (roleInSession &&
                         roleInSession.name === "admin" &&
                         menu.name !== "Usuarios") ||
                       (roleInSession &&
                         roleInSession.name === "client" &&
-                        menu.name !== "Usuarios" &&  menu.name !== "Plantillas")
-                        // dentro si se queire tapa&&menu.name !== "Resources"
+                        menu.name !== "Usuarios" &&
+                        menu.name !== "Plantillas")
+                    // dentro si se queire tapa&&menu.name !== "Resources"
                   )
                   .map((menu, i) => (
                     <Link
@@ -149,7 +144,6 @@ const Sidebar = () => {
                       >
                         {menu?.name}
                       </h2>
-                      
                     </Link>
                   ))}
 
@@ -158,7 +152,7 @@ const Sidebar = () => {
                   onClick={handleLogoutClick}
                   className="text-white flex items-center justify-center mt-30"
                 >
-                <RiLogoutBoxFill size={30} className="mr-2" /> Salir
+                  <RiLogoutBoxFill size={30} className="mr-2" /> Salir
                 </button>
               </div>
             </div>
@@ -174,7 +168,11 @@ const Sidebar = () => {
             </div>
           )}
 
-          <div className={`text-xl text-gray-900 font-semibold ${!showSidebar && 'hidden'}`}></div>
+          <div
+            className={`text-xl text-gray-900 font-semibold ${
+              !showSidebar && "hidden"
+            }`}
+          ></div>
         </section>
       </>
     </div>
