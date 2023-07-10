@@ -148,6 +148,14 @@ const ResourceIndex = () => {
       }
     });
 
+    const Navbar = () => {
+      const [showPersonal, setShowPersonal] = useState(true);
+      const [selectedTable, setSelectedTable] = useState("materiales");
+    
+      const hidePersonalOption = () => {
+        setShowPersonal(false);
+      };
+    }
   // Obtener los recursos para la página actual
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -163,6 +171,7 @@ const ResourceIndex = () => {
   const toggleResourcesCreate = () => {
     setShowCreateForm(!showCreateForm);
   };
+
 
   return (
     <div className="flex-container">
