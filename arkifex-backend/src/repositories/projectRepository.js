@@ -110,7 +110,7 @@ const deleteProject = async (id) => {
     const subProjects = await Project.findAll({ where: { parentId: id } });
     if (subProjects && subProjects.length > 0) {
       return {
-        status: 200,
+        status: 400,
         message: "No se puede eliminar el proyecto porque tiene subproyectos asociados. Por favor, elimine los subproyectos primero.",
         notificationType: "info",
       };
