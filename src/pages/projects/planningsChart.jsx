@@ -7,47 +7,50 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 
 function PlanningsChart() {
-    const { report, setReport, showNotification } = useGlobalContext();
-  const [data,getData] = useState([]);
+    const { report} = useGlobalContext();
+  const [data,getData] = useState();
   //const [Yaxis,getYaxis] = useState([]);
 
   const handleData = ()=>{
-    const NewData = report.map((report)=>{
-      return{
+    const NewData = {
         name: report.date,
-        uv: report.actualBudget,
-        pv: report.estimatedBudget,
+        PresupuestoActual: report.actualBudget,
+        PresupuestoEstimado: report.estimatedBudget,
         amt: 2100,
       }
-    });
+    
     console.log('VALUES',NewData);
     getData(NewData);
 
   }
 
+  useEffect(() => {
+    handleData();
+  }, []);
+
 
   //const [data, setData] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getLastReport(1);
-        setReport(response.response.reportData);
-        handleData();
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getLastReport(1);
+  //       setReport(response.response.reportData);
+  //       handleData();
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  useEffect(() => {
-    if (report !== null) {
-      console.log("DATOSBAR", report);
-    } else {
-      console.log("EXISTE");
-    }
-  }, [report]);
+  // useEffect(() => {
+  //   if (report !== null) {
+  //     console.log("DATOSBARrrrrrrrrr", data);
+  //   } else {
+  //     console.log("EXISTE");
+  //   }
+  // }, [report]);
 
   return (
     <div className="w-[20rem] h-[22rem]  bg-gray-100 p-4 rounded-3xl border border-gray-200 flex flex-col">
@@ -60,8 +63,8 @@ function PlanningsChart() {
           data={data}
           margin={{
             top: 20,
-            right: 30,
-            left: 20,
+            right: 10,
+            left: 10,
             bottom: 5,
           }}
         >
@@ -71,8 +74,8 @@ function PlanningsChart() {
           <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
           <Tooltip />
           <Legend />
-          <Bar yAxisId="left" dataKey="pv" fill="#8884d8" />
-          <Bar yAxisId="right" dataKey="uv" fill="#82ca9d" />
+          <Bar yAxisId="left" dataKey="PresupuestoActual" fill="#8884d8" />
+          <Bar yAxisId="right" dataKey="PresupuestoEstimado" fill="#82ca9d" />
         </BarChart>
       </ResponsiveContainer>
       </div>

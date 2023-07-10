@@ -8,11 +8,11 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 function ResourcesChart() {
 
-  const { reports, setReports, showNotification } = useGlobalContext();
-  const [data,getData] = useState([]);
+  const { reports} = useGlobalContext();
+  const [data,getData] = useState();
   //const [Yaxis,getYaxis] = useState([]);
 
-  const handleData = ()=>{
+  const handleData = () => {
     const NewData = reports.map((report)=>{
       return{
         name: report.date,
@@ -26,29 +26,33 @@ function ResourcesChart() {
 
   }
 
+  useEffect(() => {
+    handleData();
+  }, []);
+
 
   //const [data, setData] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getAllReports(1);
-        setReports(response.response.reportData);
-        handleData();
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getAllReports(1);
+  //       setReports(response.response.reportData);
+  //       handleData();
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  useEffect(() => {
-    if (reports !== null) {
-      console.log("DATOSLINEA", reports);
-    } else {
-      console.log("EXISTE");
-    }
-  }, [reports]);
+  // useEffect(() => {
+  //   if (reports !== null) {
+  //     console.log("DATOSLINEAS", data);
+  //   } else {
+  //     console.log("EXISTE");
+  //   }
+  // }, [reports]);
 
   
 

@@ -10,30 +10,31 @@ import {
 //import { useGlobalContext } from "../../contexts/GlobalContext";
 import BudgetChart from "./budgetChart.";
 import PlanningsChart from "./planningsChart";
+import { useParams } from "react-router-dom";
 function DashboardStateGrid() {
   const { report, setReport, showNotification, project } = useGlobalContext();
-
+  //const {id} = useParams;
   //const [data, setData] = useState();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getLastReport(1);
-        setReport(response.response.reportData[0]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await getLastReport(id);
+  //       setReport(response.response.reportData);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
-  useEffect(() => {
-    if (report !== null) {
-      console.log("DATOS", report);
-    } else {
-      console.log("EXISTE");
-    }
-  }, [report]);
+  // useEffect(() => {
+  //   if (report !== null) {
+  //     console.log("DATOSGRAPH", report);
+  //   } else {
+  //     console.log("EXISTE");
+  //   }
+  // }, [report]);
 
   return (
     <div>
@@ -62,12 +63,7 @@ function DashboardStateGrid() {
                         {report.actualBudget}
                       </strong>
                     </ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Diferencia</ul>
-                        {report.budgetVariance}
-                      </strong>
-                    </ul>
+                    
                   </ul>
                 ) : (
                   <p>No data available.</p>
@@ -78,6 +74,30 @@ function DashboardStateGrid() {
         </BoxWrapper>
         <BoxWrapper>
           <PlanningsChart />
+        </BoxWrapper>
+        <BoxWrapper>
+          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
+            <IoBagHandle className="text-2xl text-white" />
+          </div>
+          <div className="pl-4 ">
+            <span className="text-sm text-gray-500 font-light">
+              Restante
+            </span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {report ? (
+                  <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Presupuesto Restante</ul>
+                        {-report.budgetVariance}
+                      </strong>
+                    </ul>
+                ) : (
+                  <p>No data available.</p>
+                )}
+              </strong>
+            </div>
+          </div>
         </BoxWrapper>
         
       </div>
@@ -107,12 +127,6 @@ function DashboardStateGrid() {
                         {report.taskCompleted}
                       </strong>
                     </ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>On Target</ul>
-                        {report.timeVariance}
-                      </strong>
-                    </ul>
                   </ul>
                 ) : (
                   <p>No data available.</p>
@@ -123,6 +137,39 @@ function DashboardStateGrid() {
         </BoxWrapper>
         <BoxWrapper>
           <BudgetChart />
+        </BoxWrapper>
+
+        <BoxWrapper>
+          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
+            <IoBagHandle className="text-2xl text-white" />
+          </div>
+          <div className="pl-4 ">
+            <span className="text-sm text-gray-500 font-light">
+              Tareas en proyecto
+            </span>
+            <div className="flex items-center">
+              <strong className="text-xl text-gray-700 font-semibold">
+                {report ? (
+                  <ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Terminadas</ul>
+                        {report.taskCompleted}
+                      </strong>
+                    </ul>
+                    <ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Dias atrasados</ul>
+                        {report.timeVariance}
+                      </strong>
+                    </ul>
+                  </ul>
+                ) : (
+                  <p>No data available.</p>
+                )}
+              </strong>
+            </div>
+          </div>
         </BoxWrapper>
         
       </div>

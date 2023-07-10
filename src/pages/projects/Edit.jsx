@@ -15,6 +15,14 @@ function ProjectEdit() {
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
+    if (project !== null) {
+      console.log("INDEX", id);
+    } else {
+      console.log("INDEX");
+    }
+  }, [project]);
+
+  useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
 

@@ -82,7 +82,7 @@ const createReport  = async (projectId) => {
 
             const report = await Report.create({
             projectId: projectId,
-            userId: 1,
+            userId: project.userId,
             actualBudget: actualBudget,
             estimatedBudget: estimatedBudget,
             numberOfTasks: tasks,
@@ -93,9 +93,11 @@ const createReport  = async (projectId) => {
 
           },{transaction});
           
-          await createDetailReportPlanning(projectId,report.id);
+          
 
           await transaction.commit();
+
+          await createDetailReportPlanning(projectId,report.id);
           //console.log (tasksActualCost);
         return { status:200,message: 'Report Created Successfully', report: report};      
            
@@ -112,11 +114,15 @@ const createReport  = async (projectId) => {
 
 const getLastReport = async (projectId) => {
   try {
-    const project = await Project.findAll({where: {id:projectId}});
+    const project = await Project.findOne({where: {id:projectId}});
 
-    const maxdate = await Report.max('date');
+    const maxdate = await Report.max('date',{
+      where: {
+        projectId: projectId
+      }
+    });
     //console.log(response.toJSON);
-    const report = await Report.findAll({where:{projectId: projectId, date: maxdate}});
+    const report = await Report.findOne({where:{projectId: projectId, date: maxdate}});
 
     if (!project || !report) {
       return {
@@ -152,9 +158,11 @@ const getLastReport = async (projectId) => {
 
 const getReports = async (projectId) => {
   try {
-    //const project = await Project.findByPk(projectId);
-
-    //const maxdate = await Report.max('date');
+    // const maxdate = await Report.max('date',{
+    //   where: {
+    //     projectId: projectId
+    //   }
+    // });
     //console.log(response.toJSON);
     const report = await Report.findAll({where:{projectId: projectId}});
 

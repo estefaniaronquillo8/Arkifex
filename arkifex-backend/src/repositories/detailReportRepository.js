@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const {Report,Project,ProjectPlanning,DetailReport,Resource, sequelize, ResourceAssignment} = require ("../models");
 
 const createDetailReportPlanning  = async (projectId, reportId) => {
@@ -123,7 +124,7 @@ const createDetailReportPlanning  = async (projectId, reportId) => {
       
               const newDetailResourceReport = await DetailReport.create({
                 projectId: projectId,
-                reportId: 1,
+                reportId: reportId,
                 isProjectPlanning: "No",
                 projectPlanningId: ProjectPlanningId,
                 projectPlanningName: formattedName,
@@ -156,7 +157,7 @@ const createDetailReportPlanning  = async (projectId, reportId) => {
     }
 }; 
 
-const getBudgetByProjectPlanningReport = async (reportId) => {
+const getBudgetByProjectPlanningReport = async (projectId) => {
   try {
     const project = await Project.findByPk(projectId);
 
@@ -217,8 +218,143 @@ const getBudgetByProjectPlanningReport = async (reportId) => {
 
 }
 
+const getLateTasks = async (projectId) => {
+  try {
+    const project = await Project.findByPk(projectId);
+
+    const maxdate = await Report.max('date');
+    //console.log(response.toJSON);
+    const report = await Report.findAll({where:{projectId: projectId, date: maxdate}});
+
+    if (!project || !report) {
+      return {
+        status: 409,
+        message: "Project doesn't exists",
+        notificationType: "info",
+        //return: response.toJSON(),
+      };
+    }
+
+      // const [budgetByTask, metadatabudgetByTask] = await sequelize.query(
+      //   "SELECT PPS.id as ProjectPlanningId, PPS.name,SUM(RAS.actualCost) as ActualCostOfTask, SUM(RAS.estimatedCost) as EstimatedCostOfTask FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE projectId = "+projectId+" GROUP BY PPS.id,PPS.name");
+      // const [budgetByResources, metadaBudgetByResources] = await sequelize.query(
+      //   "SELECT RES.type, SUM(RAS.actualCost) as ActualCostOfResource, SUM(RAS.estimatedCost) as EstimatedCostOfResource, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as ResourceCostVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id LEFT JOIN Resources RES ON RAS.resourceId = RES.id WHERE projectId = "+projectId+" GROUP BY RES.type"
+      // );
+
+      const lateTasks = await DetailReport.findAll({
+        attributes: [
+          'projectPlanningId',
+          'projectPlanningName',
+          'actualTotalCost',
+          'estimatedTotalCost',
+          'countOfResources',
+          'totalCostVariance',
+          'timeVariance'
+        ],
+        where: {isProjectPlanning: 'Si', reportId: report.id, timeVariance:{[Op]:0}},
+        group: ['projectPlanningId']
+      });
+
+     
+
+      return { 
+        status:200,
+        report: lateTasks,
+
+       // projectplannings: budgetByTask, 
+       // resourcebudget:budgetByResources 
+      };
+
+      
+
+  } catch (error) {
+    //await transaction.rollback();
+    console.log("ERROR GET REPORT PROJECT PLANNING",error)
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+
+}
+
+const getDetailResources = async (projectId) => {
+  try {
+    const project = await Project.findByPk(projectId);
+
+    const maxdate = await Report.max('date',{
+      where: {
+        projectId: projectId
+      }
+    });
+    //console.log(response.toJSON);
+    const report = await Report.findOne({where:{projectId: projectId, date: maxdate}});
+
+    if (!project || !report) {
+      return {
+        status: 409,
+        message: "Project doesn't exists",
+        notificationType: "info",
+        //return: response.toJSON(),
+      };
+    }
+
+    //console.log(report.id);
+
+      // const [budgetByTask, metadatabudgetByTask] = await sequelize.query(
+      //   "SELECT PPS.id as ProjectPlanningId, PPS.name,SUM(RAS.actualCost) as ActualCostOfTask, SUM(RAS.estimatedCost) as EstimatedCostOfTask FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE projectId = "+projectId+" GROUP BY PPS.id,PPS.name");
+      // const [budgetByResources, metadaBudgetByResources] = await sequelize.query(
+      //   "SELECT RES.type, SUM(RAS.actualCost) as ActualCostOfResource, SUM(RAS.estimatedCost) as EstimatedCostOfResource, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as ResourceCostVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id LEFT JOIN Resources RES ON RAS.resourceId = RES.id WHERE projectId = "+projectId+" GROUP BY RES.type"
+      // );
+
+      const lateTasks = await DetailReport.findAll({
+        attributes: [
+          "projectId",
+          "reportId",
+          "isProjectPlanning",
+          "projectPlanningId",
+          "projectPlanningName",
+          "resourceType",
+          "actualUnitaryCost",
+          "estimatedUnitaryCost",
+          "actualTotalCost" ,
+          "estimatedTotalCost",
+          "countOfResources",
+          "totalCostVariance",
+          "unitaryCostVariance"
+        ],
+        where: {isProjectPlanning: 'No', reportId: report.id},
+        limit: 10,
+      });
+
+     
+
+      return { 
+        status:200,
+        report: lateTasks,
+
+       // projectplannings: budgetByTask, 
+       // resourcebudget:budgetByResources 
+      };
+
+      
+
+  } catch (error) {
+    //await transaction.rollback();
+    console.log("ERROR GET REPORT PROJECT PLANNING",error)
+    return {
+      status: 500,
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+
+}
+
 module.exports = {
   createDetailReportPlanning,
   getBudgetByProjectPlanningReport,
+  getDetailResources,
   
 }

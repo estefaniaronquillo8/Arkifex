@@ -8,6 +8,10 @@ export const getLastReport = (projectId) => {
   return requestHandler("get", `/reports/${projectId}`);
 };
 
+export const getDetailReport = (projectId) => {
+  return requestHandler("get", `/reports/detail/${projectId}`);
+};
+
 export const createReport = (projectId) => {
   return requestHandler("post", `/reports/create/${projectId}`);
 };

@@ -64,7 +64,7 @@ function BudgetChart() {
 
   return (
     <div className="w-[20rem] h-[22rem]  bg-gray-100 p-4 rounded-3xl border border-gray-200 flex flex-col">
-      <strong className="text-gray-700 font-medium">Tareas atrasadas</strong>
+      <strong className="text-gray-700 font-medium">Procentaje de Tareas a tiempo</strong>
       <div className="w-full mt-3 flex-1 text-xs">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={500}>

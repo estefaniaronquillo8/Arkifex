@@ -67,10 +67,8 @@ const ProjectIndex = () => {
       showNotification(error, notificationType);
     }
 
-    setSelectedProjectId(null);
-    if (response?.status === 200) {
-      navigate("/projects");
-    }
+    //setSelectedProjectId(projectid);
+   
   };
 
   const deleteHandler = async (id) => {
@@ -150,7 +148,7 @@ const ProjectIndex = () => {
                 <Link
                   to={`/projects/dashboards/${project.id}`}
                   className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
-                  onClick={handleCreateReport(project.id)}
+                  onClick={()=> handleCreateReport(project.id)}
                 >
                   Dashboards
                 </Link>
