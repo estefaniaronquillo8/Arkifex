@@ -3,12 +3,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import {getAllReports,getLastReport, createReport} from  "../../services/report.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-
-
-
 function ResourcesChart() {
 
-  const { reports} = useGlobalContext();
+  const { reports } = useGlobalContext();
   const [data,getData] = useState();
   //const [Yaxis,getYaxis] = useState([]);
 
@@ -21,14 +18,14 @@ function ResourcesChart() {
         amt: 2100,
       }
     });
-    console.log('VALUES',NewData);
+    console.log('VALUES', NewData);
     getData(NewData);
 
   }
 
   useEffect(() => {
     handleData();
-  }, []);
+  }, [reports]);
 
 
   //const [data, setData] = useState();

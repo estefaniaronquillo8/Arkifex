@@ -14,7 +14,6 @@ import Navbar from "../../components/Navbar";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable'; 
 
-
 const generateProjectBudgetReport = (reportData, linesData) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();

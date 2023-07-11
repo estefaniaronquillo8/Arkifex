@@ -7,7 +7,6 @@ import {
   createReport,
 } from "../../services/report.api.routes";
 //import { getReports } from "../../../arkifex-backend/src/repositories/reportRepository";
-//import { useGlobalContext } from "../../contexts/GlobalContext";
 import BudgetChart from "./budgetChart.";
 import PlanningsChart from "./planningsChart";
 import { useParams } from "react-router-dom";
@@ -16,17 +15,17 @@ function DashboardStateGrid() {
   //const {id} = useParams;
   //const [data, setData] = useState();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getLastReport(id);
-  //       setReport(response.response.reportData);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  /* useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getLastReport(id);
+        setReport(response.response.reportData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []); */
 
   // useEffect(() => {
   //   if (report !== null) {
