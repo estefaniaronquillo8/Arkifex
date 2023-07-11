@@ -11,7 +11,6 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { getAllUsers } from "../../services/user.api.routes";
 import Swal from "sweetalert2";
 
-
 const ProjectIndex = () => {
   const {
     projects,
