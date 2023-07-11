@@ -56,6 +56,29 @@ const getAllProjectPlannings = async () => {
   }
 };
 
+const getAllProjectPlanningsByProject = async (projectId) => {
+  try {
+    const projectPlannings = await ProjectPlanning.findAll({Where:{projectId: projectId }});
+
+    if (projectPlannings?.length === 0) {
+      return {
+        status: 200,
+        projectPlannings: projectPlannings,
+        message: "Actualmente no existen recursos",
+        notificationType: "info",
+      };
+    }
+    return { status: 200, projectPlannings: projectPlannings };
+  } catch (error) {
+    return {
+      status: 500,
+      projectPlannings: [],
+      message: "Internal server error",
+      notificationType: "error",
+    };
+  }
+};
+
 const updateProjectPlanning = async (id, projectPlanningData) => {
   const transaction = await sequelize.transaction();
   try {
@@ -163,6 +186,7 @@ const getAllProjectPlanningsByProjectId = async (projectId) => {
 module.exports = {
   createProjectPlanning,
   getAllProjectPlannings,
+  getAllProjectPlanningsByProject,
   updateProjectPlanning,
   deleteProjectPlanning,
   findProjectPlanningByNameAndProjectId,

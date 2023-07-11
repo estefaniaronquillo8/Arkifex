@@ -30,7 +30,15 @@ const Version = sequelize.define("Version", {
     type: DataTypes.FLOAT,
     allowNull: false,
   },
-  time: {
+  workload: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  budget: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  timeInDays: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

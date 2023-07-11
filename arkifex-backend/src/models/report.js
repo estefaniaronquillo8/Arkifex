@@ -26,14 +26,34 @@ const Report = sequelize.define("Report", {
       key: "id",
     },
   },
+  actualBudget: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  estimatedBudget: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  numberOfTasks: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  taskCompleted:{
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  budgetVariance: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
+  timeVariance: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },  
   date: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
   },
-  /* archivo: {
-      type: ,
-      allowNull: false,
-    }, */
 });
 
 module.exports = Report;

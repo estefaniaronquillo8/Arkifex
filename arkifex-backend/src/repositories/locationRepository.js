@@ -97,7 +97,7 @@ const deleteLocation = async (id) => {
     };
   } catch (error) {
     await transaction.rollback();
-    return {
+    return { 
       status: 500,
       message: "Internal server error",
       notificationType: "error",

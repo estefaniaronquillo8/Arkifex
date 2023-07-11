@@ -10,6 +10,7 @@ const ResourceAssignment = require('./resourceAssignment');
 const Version = require('./version');
 const Report = require('./report');
 const Location = require('./location');
+const DetailReport = require('./detailReport');
 
 // Associations
 User.belongsTo(Role, { foreignKey: 'roleId', onDelete: 'CASCADE' });
@@ -70,6 +71,7 @@ module.exports = {
   ResourceAssignment,
   Version,
   Report,
+  DetailReport,
   Location,
   sequelize,
   syncDatabase,

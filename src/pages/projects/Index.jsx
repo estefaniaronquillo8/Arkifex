@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import { getAllUsers } from "../../services/user.api.routes";
 import Swal from "sweetalert2";
+import { createReport, getLastReport } from "../../services/report.api.routes";
+
 
 const ProjectIndex = () => {
   const {
@@ -105,6 +107,26 @@ const ProjectIndex = () => {
   };
 
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleCreateReport = async (projectid) => {
+    
+    const { response, success, error, notificationType } = await createReport(
+      projectid
+    );
+
+    console.log("ProjectReport", response.report);
+
+    if (success) {
+      showNotification(success, notificationType);
+    }
+
+    if (error) {
+      showNotification(error, notificationType);
+    }
+
+    //setSelectedProjectId(projectid);
+   
+  };
 
   const deleteHandler = async (id) => {
     const { response, success, error, notificationType } = await handleDelete(
@@ -210,6 +232,7 @@ const ProjectIndex = () => {
                   <Link
                     to={`/projects/dashboards/${id}`}
                     className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                    onClick={()=> handleCreateReport(id)}
                   >
                     Dashboards
                   </Link>

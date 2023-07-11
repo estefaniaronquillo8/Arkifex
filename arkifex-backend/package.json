@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.0",
     "mssql": "^9.1.1",
     "react-map-gl": "^7.0.25",
+    "mysql2": "^3.3.5",
     "sequelize": "^6.31.0"
   },
   "devDependencies": {
