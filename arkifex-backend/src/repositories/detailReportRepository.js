@@ -51,8 +51,8 @@ const createDetailReportPlanning = async (projectId, reportId) => {
           "CostVariance",
         ],
         [
-          //sequelize.literal("DATEDIFF(MAX(endDate), CURDATE())"),
-          sequelize.literal("DATEDIFF(DAY, MAX(endDate), GETDATE())"),
+          sequelize.literal("DATEDIFF(MAX(endDate), CURDATE())"),
+          //sequelize.literal("DATEDIFF(DAY, MAX(endDate), GETDATE())"),
           "dateVariance",
         ],
       ],

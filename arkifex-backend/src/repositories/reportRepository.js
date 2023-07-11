@@ -10,7 +10,7 @@ const {
 const { createDetailReportPlanning } = require("./detailReportRepository");
 
 const createReport = async (projectId) => {
-  //const transaction = await sequelize.transaction();
+  const transaction = await sequelize.transaction();
   try {
     const project = await Project.findByPk(projectId);
     //console.log(response.toJSON);
@@ -70,11 +70,11 @@ const createReport = async (projectId) => {
           sequelize.literal("SUM(actualCost) - SUM(estimatedCost)"),
           "CostVariance",
         ],
-        //[sequelize.literal('DATEDIFF(MAX(endDate), CURDATE())'), 'dateVariance']
-        [
-          sequelize.literal("DATEDIFF(DAY, MAX(endDate), GETDATE())"),
-          "dateVariance",
-        ],
+        [sequelize.literal('DATEDIFF(MAX(endDate), CURDATE())'), 'dateVariance']
+        // [
+        //   sequelize.literal("DATEDIFF(DAY, MAX(endDate), GETDATE())"),
+        //   "dateVariance",
+        // ],
       ],
       include: [
         {
@@ -115,7 +115,7 @@ const createReport = async (projectId) => {
       //{ transaction }
     );
 
-    //await transaction.commit();
+    await transaction.commit();
 
     await createDetailReportPlanning(projectId, report.id);
     //console.log (tasksActualCost);
@@ -125,7 +125,7 @@ const createReport = async (projectId) => {
       report: report,
     };
   } catch (error) {
-    //await transaction.rollback();
+    await transaction.rollback();
     console.log("ERROR DEL CREATE PROJECT", error);
     return {
       status: 500,
