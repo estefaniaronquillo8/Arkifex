@@ -15,9 +15,9 @@ function BudgetChart() {
   const [value, setValue] = useState(50);
 
   const data = [
-    { name: 'OverBudget', value: 33.33, color: '#00ff00' },//'#ff0000' 
-    { name: 'OnTarget', value: 33.33, color: '#FFFF00' },//'#00ff00'
-    { name: 'OverTarget', value: 33.33, color: '#ff0000' },//'#0000ff'
+    { name: 'En Riesgo (66.6% +)', value: 33.33, color: '#00ff00' },//'#ff0000' 
+    { name: 'Advertencia (33.3%-66.6%)', value: 33.33, color: '#FFFF00' },//'#00ff00'
+    { name: 'Manejable (0%-33.3%)', value: 33.33, color: '#ff0000' },//'#0000ff'
   ];
 
     const RADIAN = Math.PI / 180;
@@ -27,7 +27,7 @@ function BudgetChart() {
     const oR = 100;
 
   const needle = (value, data, cx, cy, iR, oR, color) => {
-    const total = 200;
+    const total = 100;
     const ang = 180.0 * (1 - value / total);
     const length = (iR + 2 * oR) / 3;
     const sin = Math.sin(-RADIAN * ang);
@@ -54,17 +54,17 @@ function BudgetChart() {
 
   
 
-  useEffect(() => {
-    // Simulating API call
+  // useEffect(() => {
+  //   // Simulating API call
 
-    setTimeout(() => {
-      setValue(75);
-    }, 2000);
-  }, []);
+  //   setTimeout(() => {
+  //     setValue(75);
+  //   }, 2000);
+  // }, []);
 
   return (
     <div className="w-[20rem] h-[22rem]  bg-gray-100 p-4 rounded-3xl border border-gray-200 flex flex-col">
-      <strong className="text-gray-700 font-medium">Procentaje de Tareas a tiempo</strong>
+      <strong className="text-gray-700 font-medium">Procentaje de Tareas atrasadas</strong>
       <div className="w-full mt-3 flex-1 text-xs">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={500}>
@@ -85,7 +85,7 @@ function BudgetChart() {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            {needle(((report.latePlanningRatio)*200),data, cx, cy, iR, oR, '#0000ff')}
+            {needle(((report.latePlanningRatio)*100),data, cx, cy, iR, oR, '#0000ff')}
           </PieChart>
         </ResponsiveContainer>
       </div>

@@ -133,6 +133,7 @@ export const GlobalProvider = ({ children }) => {
     taskCompleted: 0,
     budgetVariance:0,
     timeVariance: 0,  
+    latePlanningRatio: 0,
     date:  '',    
   });
 

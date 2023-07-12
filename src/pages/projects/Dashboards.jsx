@@ -288,6 +288,7 @@ function ProjectDashboards () {
       try {
         const response = await getLastReport(id);
         setReport(response.response.reportData);
+        //console.log('REPUESTAAAAAAAAA',response.response.reportData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -295,13 +296,13 @@ function ProjectDashboards () {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   if (report !== null) {
-  //     console.log("PROJECTIDSSSS", reports);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [report]);
+  useEffect(() => {
+    if (report !== null) {
+      console.log("PROJECTIDSSSS", report);
+    } else {
+      console.log("EXISTE");
+    }
+  }, [report]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -336,7 +337,6 @@ function ProjectDashboards () {
           
         </div>
 
-        <ResourcesChart/>
         
       </div>
     
