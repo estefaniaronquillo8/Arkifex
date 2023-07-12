@@ -29,13 +29,22 @@ const createReport = async (projectId) => {
     let tasks = 0;
     let tasksEstimatedCost = 0;
     let tasksActualCost = 0;
+    let lateTasks = 0;
 
     const date = new Date();
 
     //Number of tasks and number of tasks completed
+
+    
     projectplannings.map(async (planning) => {
-      if (planning.status === "Finished") {
+      if (planning.status === "completado") {
         taskfinshed++;
+      }
+
+      
+      //console.log('DATEEEEEEEEEEEEEEEEEEEEEE', new Date(planning.endDate), date,new Date(planning.endDate) <= date);
+      if (new Date(planning.endDate) <= date && planning.status !== "completado"){
+        lateTasks++;
       }
       const resourceAssignments = (
         await ResourceAssignment.findAll({
@@ -67,7 +76,7 @@ const createReport = async (projectId) => {
           "EstimatedBudget",
         ],
         [
-          sequelize.literal("SUM(actualCost) - SUM(estimatedCost)"),
+          sequelize.literal("SUM(estimatedCost)-SUM(actualCost)"),
           "CostVariance",
         ],
         [sequelize.literal('DATEDIFF(MAX(endDate), CURDATE())'), 'dateVariance']
@@ -110,6 +119,7 @@ const createReport = async (projectId) => {
         taskCompleted: taskfinshed,
         budgetVariance: costVariance,
         timeVariance: dateVariance,
+        latePlanningRatio: lateTasks/tasks,
         date: date,
       },
       //{ transaction }

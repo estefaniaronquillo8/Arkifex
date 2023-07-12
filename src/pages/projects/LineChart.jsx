@@ -13,8 +13,8 @@ function ResourcesChart() {
     const NewData = reports.map((report)=>{
       return{
         name: report.date,
-        uv: report.actualBudget,
-        pv: report.estimatedBudget,
+        Presupuesto_Actual: report.actualBudget,
+        Presupuesto_Estimado: report.estimatedBudget,
         amt: 2100,
       }
     });
@@ -67,8 +67,8 @@ function ResourcesChart() {
                         <YAxis />
                         <Tooltip />
                         <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#ff0000" strokeWidth={2} />
-          <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={2} />
+          <Line type="monotone" dataKey="Presupuesto_Actual" stroke="#ff0000" strokeWidth={2} />
+          <Line type="monotone" dataKey="Presupuesto_Estimado" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
         </ResponsiveContainer>  
             </div>

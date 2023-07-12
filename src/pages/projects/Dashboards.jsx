@@ -80,19 +80,21 @@ const generateProjectBudgetReport = (reportData, linesData) => {
 
     // Table headers for "Personal Asignado"
     const personalTableHeaders = [
-      "Project Planning Name",
-      "Actual Unitary Cost",
-      "Estimated Unitary Cost",
-      "Actual Total Cost",
-      "Estimated Total Cost",
-      "Count of Resources",
-      "Total Cost Variance",
-      "Unitary Cost Variance",
+      'Project Planning Name',
+      'Nombre',
+      'Actual Unitary Cost',
+      'Estimated Unitary Cost',
+      'Actual Total Cost',
+      'Estimated Total Cost',
+      'Count of Resources',
+      'Total Cost Variance',
+      'Unitary Cost Variance',
     ];
 
     // Table data for "Personal Asignado"
     const personalTableData = personalLinesData.map((line) => [
       line.projectPlanningName,
+      line.resourceName,
       line.actualUnitaryCost,
       line.estimatedUnitaryCost,
       line.actualTotalCost,
@@ -304,6 +306,7 @@ function ProjectDashboards() {
       try {
         const response = await getLastReport(id);
         setReport(response.response.reportData);
+        //console.log('REPUESTAAAAAAAAA',response.response.reportData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -311,13 +314,13 @@ function ProjectDashboards() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   if (report !== null) {
-  //     console.log("PROJECTIDSSSS", reports);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [report]);
+  useEffect(() => {
+    if (report !== null) {
+      console.log("PROJECTIDSSSS", report);
+    } else {
+      console.log("EXISTE");
+    }
+  }, [report]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -345,9 +348,7 @@ function ProjectDashboards() {
           </button>
         </div>
 
-        <div className="flex flex-col gap-4 mt-2">
-          <DashboardStateGrid />
-        </div>
+        
       </div>
     </div>
   );

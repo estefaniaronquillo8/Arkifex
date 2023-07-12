@@ -93,11 +93,11 @@ function DashboardStateGrid() {
               >
                 {report ? (
                   <ul>
-                    <strong className="text-xl text-gray-700 font-semibold">
-                      <ul>Presupuesto Restante</ul>
-                      {-report.budgetVariance}
-                    </strong>
-                  </ul>
+                      <strong className="text-xl text-gray-700 font-semibold">
+                        <ul>Presupuesto Restante</ul>
+                        {report.budgetVariance}
+                      </strong>
+                    </ul>
                 ) : (
                   <p>No data available.</p>
                 )}

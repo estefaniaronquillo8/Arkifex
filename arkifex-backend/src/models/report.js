@@ -50,6 +50,10 @@ const Report = sequelize.define("Report", {
     type: DataTypes.INTEGER,
     allowNull: true,
   },  
+  latePlanningRatio: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+  },
   date: {
     type: DataTypes.DATE,
     allowNull: false,
