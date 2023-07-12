@@ -6,7 +6,7 @@ const Navbar = () => {
   const sessionId = localStorage.getItem("token");
 
   return (
-    <nav className="bg-gray-800 py-3 px-6">
+    <nav className="bg-[#032d50] py-3 px-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <MdOutlineConstruction className="text-4xl text-white mr-2" />

@@ -15,6 +15,7 @@ import { duplicateProject } from "../../services/template.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
 import LocationDetails from "../location/Details";
 import "tailwindcss/tailwind.css";
+import Swal from "sweetalert2";
 
 const ProjectDetails = () => {
   const [currentSection, setCurrentSection] = useState("details");
@@ -181,16 +182,15 @@ const ProjectDetails = () => {
     const { success, error, notificationType } = await handleUpdate(
       project.id,
       updatedProject
-    ); // Hacer la llamada al servidor para actualizar el proyecto
+    );
 
     if (success) {
-      setProject(updatedProject); // Si la actualización fue exitosa, actualizar el estado del proyecto localmente
+      setProject(updatedProject);
+      setIsTemplateProject(!project.isTemplate); // Actualizar el estado de isTemplateProject
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
     }
-
-    //navigate(`/projects/details/${project.id}`);
   };
 
   let isTemplateText = "Hacer Plantilla";
@@ -201,14 +201,18 @@ const ProjectDetails = () => {
   const handleDuplicateProject = async () => {
     const { response, success, error, notificationType } =
       await duplicateProject(project.id);
-
+    console.log("RESPONDE DEL HANDLE", response, response.project.id);
     if (success) {
-      navigate(`/projects`);
+      navigate(`/projects/edit/${response.project.id}`);
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
     }
   };
+
+  const [isTemplateProject, setIsTemplateProject] = useState(
+    project?.isTemplate || false
+  );
 
   const handleEditLocation = () => {
     const locationForThisProject = locations.find(
@@ -289,8 +293,28 @@ const ProjectDetails = () => {
               )}
 
               <button
-                onClick={async () => await deleteHandler(project.id)}
-                className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
+                onClick={async () => {
+                  const result = await Swal.fire({
+                    title: "¿Estás seguro de eliminar tu proyecto?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, eliminarlo",
+                    cancelButtonText: "Cancelar",
+                  });
+
+                  if (result.isConfirmed) {
+                    await deleteHandler(project.id);
+                    Swal.fire(
+                      "¡Eliminado!",
+                      "Tu proyecto ha sido eliminado.",
+                      "success"
+                    );
+                  }
+                }}
+                className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
               >
                 Eliminar
               </button>
@@ -301,12 +325,14 @@ const ProjectDetails = () => {
               >
                 {isTemplateText}
               </button>
-              <button
-                onClick={handleDuplicateProject}
-                className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-              >
-                Duplicar Proyecto
-              </button>
+              {isTemplateProject && (
+                <button
+                  onClick={handleDuplicateProject}
+                  className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                >
+                  Duplicar Plantilla
+                </button>
+              )}
             </>
           )}
 
@@ -408,20 +434,6 @@ const ProjectDetails = () => {
                         >
                           Detalles
                         </Link>
-                        {/* <Link
-                      to={`/projectPlannings/edit/${projectPlanning.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      onClick={async () =>
-                        await deleteHandlerPP(projectPlanning.id)
-                      }
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button> */}
                       </>
                     )}
                   </div>

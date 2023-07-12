@@ -125,6 +125,7 @@ const ProjectIndex = () => {
     }
 
     //setSelectedProjectId(projectid);
+     window.location.reload();
    
   };
 

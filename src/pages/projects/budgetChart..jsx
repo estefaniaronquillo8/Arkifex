@@ -15,9 +15,9 @@ function BudgetChart() {
   const [value, setValue] = useState(50);
 
   const data = [
-    { name: 'OverBudget', value: 33.33, color: '#00ff00' },//'#ff0000' 
-    { name: 'OnTarget', value: 33.33, color: '#FFFF00' },//'#00ff00'
-    { name: 'OverTarget', value: 33.33, color: '#ff0000' },//'#0000ff'
+    { name: 'OverBudget', value: 33.33, color: '#75CB5C' },//'#ff0000' 
+    { name: 'OnTarget', value: 33.33, color: '#FAE509' },//'#00ff00'
+    { name: 'OverTarget', value: 33.33, color: '#FF3737' },//'#0000ff'
   ];
 
     const RADIAN = Math.PI / 180;
