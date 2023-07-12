@@ -30,7 +30,7 @@ const DetailReport = sequelize.define("DetailReport", {
     allowNull: true,
   },
   resourceName:{
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: true,
   },
   resourceType: {

@@ -69,6 +69,7 @@ const generateProjectBudgetReport = (reportData, linesData) => {
     // Table headers for "Personal Asignado"
     const personalTableHeaders = [
       'Project Planning Name',
+      'Nombre',
       'Actual Unitary Cost',
       'Estimated Unitary Cost',
       'Actual Total Cost',
@@ -81,6 +82,7 @@ const generateProjectBudgetReport = (reportData, linesData) => {
     // Table data for "Personal Asignado"
     const personalTableData = personalLinesData.map((line) => [
       line.projectPlanningName,
+      line.resourceName,
       line.actualUnitaryCost,
       line.estimatedUnitaryCost,
       line.actualTotalCost,

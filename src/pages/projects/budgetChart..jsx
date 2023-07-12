@@ -85,7 +85,7 @@ function BudgetChart() {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            {needle(((report.estimatedBudget/report.actualBudget)*200),data, cx, cy, iR, oR, '#0000ff')}
+            {needle(((report.latePlanningRatio)*200),data, cx, cy, iR, oR, '#0000ff')}
           </PieChart>
         </ResponsiveContainer>
       </div>

@@ -88,7 +88,7 @@ function DashboardStateGrid() {
                   <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
                         <ul>Presupuesto Restante</ul>
-                        {-report.budgetVariance}
+                        {report.budgetVariance}
                       </strong>
                     </ul>
                 ) : (

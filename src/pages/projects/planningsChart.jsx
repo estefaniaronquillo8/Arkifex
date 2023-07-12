@@ -8,21 +8,33 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 
 function PlanningsChart() {
     const { report} = useGlobalContext();
-  const [data,getData] = useState();
+  const [data,setData] = useState([]);
   //const [Yaxis,getYaxis] = useState([]);
 
-  const handleData = ()=>{
-    const NewData = {
-        name: report.date,
-        PresupuestoActual: report.actualBudget,
-        PresupuestoEstimado: report.estimatedBudget,
-        amt: 2100,
-      }
-    
-    console.log('VALUES',NewData);
-    getData(NewData);
+  const handleData = () => {
+    const newData = {
+      name: report.date,
+      PresupuestoActual: report.actualBudget,
+      PresupuestoEstimado: report.estimatedBudget,
+      amt: 2100,
+    };
+    setData([newData]);
+    console.log('VALUES',newData);
+  //   getData(NewData);
+  };
 
-  }
+  // const handleData = ()=>{
+  //   const NewData = {
+  //       name: report.date,
+  //       PresupuestoActual: report.actualBudget,
+  //       PresupuestoEstimado: report.estimatedBudget,
+  //       amt: 2100,
+  //     }
+    
+  //   console.log('VALUES',NewData);
+  //   getData(NewData);
+
+  // }
 
   useEffect(() => {
     handleData();
