@@ -8,7 +8,7 @@ import { routesProtection } from "../../assets/routesProtection";
 function ProjectEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { project, setProject,  showNotification } = useGlobalContext();
+  const { project, setProject, showNotification } = useGlobalContext();
   const { users, setUsers } = useGlobalContext();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
@@ -164,14 +164,19 @@ function ProjectEdit() {
                 >
                   Status:
                 </label>
-                <input
+                <select
                   id="status"
-                  type="text"
                   name="status"
                   value={project.status}
                   onChange={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-                />
+                >
+                  <option value="No Comenzado">No Comenzado</option>
+                  <option value="En Proceso">En Proceso</option>
+                  <option value="En Espera">En Espera</option>
+                  <option value="Completado">Completado</option>
+                  <option value="Cancelado">Cancelado</option>
+                </select>
               </div>
               <div>
                 <label

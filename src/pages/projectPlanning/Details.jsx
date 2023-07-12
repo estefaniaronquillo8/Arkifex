@@ -15,10 +15,12 @@ const ProjectPlanningDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
-  const [projectPlannings, setProjectPlannings] = useState([]);
+  //const [projectPlannings, setProjectPlannings] = useState([]);
   const {
     projectPlanning,
     setProjectPlanning,
+    resourceAssignment,
+    setResourceAssignment,
     resources,
     setResources,
     selectedProjectId,
@@ -111,8 +113,15 @@ const ProjectPlanningDetails = () => {
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
 
-    if (success) {
+    console.log("CONSOLE LOG EN EL DELETE DEL RA", success, error, response)
+    console.log("CONSOLE LOG EN EL DELETE DEL RA 2222", response?.status)
+
+    if (response?.status === 200) {
+      setResourceAssignment(response.resourceAssignment);
       navigate("/projects");
+    }
+
+    if (success) {
     }
     setSuccess(success);
     setError(error);

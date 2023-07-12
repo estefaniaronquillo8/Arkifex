@@ -12,6 +12,7 @@ import {
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import LocationDetails from "../location/Details";
 import "tailwindcss/tailwind.css";
 
@@ -26,6 +27,8 @@ const ProjectDetails = () => {
   const {
     project,
     setProject,
+    users,
+    setUsers,
     setSelectedProjectId,
     showNotification,
     roleInSession,
@@ -69,6 +72,19 @@ const ProjectDetails = () => {
       setNotificationType(notificationType);
     };
 
+    const fetchUsers = async () => {
+      const { response, success, error, notificationType } =
+        await getAllUsers();
+
+      if (response?.users) {
+        setUsers(response.users);
+      }
+
+      setError(error);
+      setSuccess(success);
+      setNotificationType(notificationType);
+    };
+
     const fetchProjectPlannings = async () => {
       const { response, success, error, notificationType } =
         await getAllProjectPlannings();
@@ -98,9 +114,10 @@ const ProjectDetails = () => {
     };
 
     if (project) {
+      fetchProjects();
+      fetchUsers();
       fetchProjectPlannings();
       fetchLocations();
-      fetchProjects();
     }
   }, [project]);
 
@@ -120,14 +137,14 @@ const ProjectDetails = () => {
   };
 
   const deleteHandler = async (id) => {
-    console.log("IDDDDDDDDDDD", id)
+    console.log("IDDDDDDDDDDD", id);
     const { response, success, error, notificationType } = await handleDelete(
       id
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
     navigate("/projects");
-    console.log("RESPONSE DEL DELETEHANDLER", response?.status, error)
-    
+    console.log("RESPONSE DEL DELETEHANDLER", response?.status, error);
+
     if (error) {
       showNotification(error, notificationType);
     }
@@ -219,6 +236,10 @@ const ProjectDetails = () => {
     : "Crear locación";
 
   const ProjectDetailsSection = ({ project }) => {
+    let user;
+    if (project) {
+      user = users.find((user) => user.id === project.userId);
+    }
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="space-y-6">
@@ -227,7 +248,11 @@ const ProjectDetails = () => {
               <>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Encargado</h2>
-                  <p>{project && project.userId}</p>
+                  <p>
+                    {project && user
+                      ? user.name + " " + user.lastname
+                      : "No tiene un encargado"}
+                  </p>
                 </div>
               </>
             )}
@@ -430,7 +455,6 @@ const ProjectDetails = () => {
               >
                 Crear desde plantilla
               </button>
-              
             )}
             <div className="bg-white shadow-md rounded-lg">
               <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
