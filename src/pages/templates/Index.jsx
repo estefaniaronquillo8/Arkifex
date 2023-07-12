@@ -252,29 +252,29 @@ const TemplateIndex = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-    <h2 className="text-4xl font-semibold mb-6">
+    <h2 className="mt-4 text-4xl font-semibold mb-6">
       Plantillas
     </h2>
 
     <div>
-      <nav className="navres">
+      <nav className="navtemp">
       <button
-     className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "templates" ? "active" : ""} `}
+     className={`btnnavtemp text-white px-7 py-6 rounded inline-block ${currentSection === "templates" ? "activeButton" : ""} `}
 
      onClick={() => setCurrentSection("templates")}
     >
       Nuevas Plantillas
     </button>
         <button
-         className={`btnnav text-white px-7 py-6 rounded inline-block ${currentSection === "projects" ? "active" : ""}`}
+         className={`btnnavtemp text-white px-7 py-6 rounded inline-block ${currentSection === "projects" ? "activeButton" : ""}`}
            onClick={() => setCurrentSection("projects")}
         >
           Proyectos
         </button>
         {showSubprojectsButton && (
             <button
-              className={`btnnav text-white px-7 py-6 rounded inline-block ${
-                currentSection === "psubprojects" ? "active" : ""
+              className={`btnnavtemp text-white px-7 py-6 rounded inline-block ${
+                currentSection === "psubprojects" ? "activeButton" : ""
               }`}
               onClick={() => setCurrentSection("psubprojects")}
             >

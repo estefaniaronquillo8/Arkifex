@@ -66,7 +66,7 @@ const Sidebar = () => {
   return (
     <div className="flex">
       <>
-        <section className="flex gap-6">
+        <section className="flex">
           {showSidebar && (
             <div
               className={`bg-gradient-to-tl from-[#032d50] to-[#031d31] sidebar-container ${
@@ -92,7 +92,7 @@ const Sidebar = () => {
 
               <Link
                 to={`/users/edit/${userInSession.id}`}
-                onClick={() => window.location.reload()}
+                //onClick={() => window.location.reload()}
                 className={`inline-block text-center text-white px-4 py-2 rounded mr-2 ${
                   open ? "" : "sidebar-closed-text"
                 }`}

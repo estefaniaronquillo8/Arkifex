@@ -111,8 +111,21 @@ th {
     background-color: rgb(16, 53, 104);
     border-radius: 10px;
 }
+
+.navtemp{
+  background-color: rgb(255, 143, 6);
+  border-radius: 10px;
+}
+
 .btnnav{
     background-color: rgb(16, 53, 104);   
+}
+.btnnavtemp{
+  background-color: rgb(255, 143, 6);
+}
+
+.activeButton {
+  background-color: rgb(184, 90, 8); /* Cambia "red" por el color que desees */
 }
 .btnpul{
     background-color: rgb(12, 104, 185);   

@@ -15,6 +15,7 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import Swal from "sweetalert2";
 
 const TemplateDetails = () => {
   const { id } = useParams();
@@ -180,15 +181,13 @@ const TemplateDetails = () => {
       showNotification(error, notificationType);
     }
   };
+  const [currentSection, setCurrentSection] = useState("details");
 
+//Detalles
+const ProjectDetailsSection = ({ project }) => {
   return (
-    <div className="container mx-auto px-4 py-6">
-      {project && (
-        <h2 className="text-4xl font-semibold mb-6">
-          Detalles de {project.name}
-        </h2>
-      )}
-      {project && (
+    <div className="bg-white shadow-md rounded-lg p-6">
+     {project && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-6">
             <div className="flex flex-wrap space-x-4">
@@ -213,19 +212,59 @@ const TemplateDetails = () => {
             </Link>
 
             <button
-              onClick={async () => await deleteHandler(project.id)}
-              className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Eliminar
-            </button>
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "¿Estás seguro de eliminar tu Plantilla?",
+                              text: "¡No podrás revertir esto!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Sí, eliminarlo",
+                              cancelButtonText: "Cancelar",
+                            });
+
+                            if (result.isConfirmed) {
+                              await deleteHandler(project.id);
+                              Swal.fire(
+                                "¡Eliminado!",
+                                "Tu Proyecto ha sido eliminado.",
+                                "success"
+                              );
+                            }
+                          }}
+                          className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
+                        >
+                          Eliminar
+                        </button>
             <button
               onClick={handleDuplicateProject}
               className="inline-block bg-green-500 text-white px-4 py-2 rounded"
             >
               Duplicar Proyecto
+            </button>   
+
+<div>
+            <button
+              onClick={handleBack}
+              className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              Volver
             </button>
 
-            <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+)};
+
+
+// Creacion Tareas
+const TaskCreationSection = ({ project }) => {
+  return (
+    <div>
+      <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
             <button
               onClick={handleCreateProjectPlanning}
               className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
@@ -284,9 +323,27 @@ const TemplateDetails = () => {
                           Editar
                         </Link>
                         <button
-                          onClick={async () =>
-                            await deleteHandlerPP(projectPlanning.id)
-                          }
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "¿Estás seguro de eliminar tu plantilla?",
+                              text: "¡No podrás revertir esto!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Sí, eliminarlo",
+                              cancelButtonText: "Cancelar",
+                            });
+
+                            if (result.isConfirmed) {
+                              await deleteHandler(projectPlanning.id);
+                              Swal.fire(
+                                "¡Eliminado!",
+                                "Tu plantilla ha sido eliminada.",
+                                "success"
+                              );
+                            }
+                          }}
                           className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                         >
                           Eliminar
@@ -296,8 +353,15 @@ const TemplateDetails = () => {
                   );
                 })}
             </div>
+    </div>
+  );
+};
 
-            {!project.parentId && (
+  //Subproyectos
+  const SubprojectsSection = ({ project }) => {
+    return (
+      <div>
+         {!project.parentId && (
               <>
                 <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
 
@@ -352,16 +416,60 @@ const TemplateDetails = () => {
                 </div>
               </>
             )}
+      </div>
+    );
+  };
 
-            <button
-              onClick={handleBack}
-              className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Volver
-            </button>
-          </div>
-        </div>
+  const [showSubprojectsButton, setShowSubprojectsButton] = useState(true);
+  return (
+    <div className="mt-4 container mx-auto px-4 py-6">
+      {project && (
+        <h2 className="text-4xl font-semibold mb-6">
+          Detalles de {project.name}
+        </h2>
       )}
+
+       <div>
+        <nav className="navtemp">
+          <button
+           className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
+            currentSection === "details" ? "activeButton" : ""}`}
+           onClick={() => setCurrentSection("details")}
+          >
+            Detalles Plantillas
+          </button>
+          <button
+            className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
+              currentSection === "creation" ? "activeButton" : ""
+            }`}
+            onClick={() => setCurrentSection("creation")}
+          >
+            Creacion de Tareas
+          </button>
+          {showSubprojectsButton && (
+            <button
+              className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
+                currentSection === "subprojects" ? "activeButton" : ""
+              }`}
+              onClick={() => setCurrentSection("subprojects")}
+            >
+              Sub-Proyectos
+            </button>
+          )}
+        </nav>
+        {currentSection === "details" && (
+          <ProjectDetailsSection project={project} />
+        )}
+        {currentSection === "creation" && (
+          <TaskCreationSection project={project} />
+        )}
+
+        {currentSection === "subprojects" && (
+          <SubprojectsSection project={project} />
+        )}
+      </div>
+
+     
     </div>
   );
 };

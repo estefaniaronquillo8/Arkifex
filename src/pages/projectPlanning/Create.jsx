@@ -140,12 +140,12 @@ const ProjectPlanningCreate = () => {
                   required: "El campo es requerido.",
                 })}
               >
-                <option value="">Selecciona el estado de la tarea</option>
-                <option value="no_comenzado">No Comenzado</option>
-                <option value="en_proceso">En Proceso</option>
-                <option value="en_espera">En Espera</option>
-                <option value="completado">Completado</option>
-                <option value="cancelado">Cancelado</option>
+                <option value="">Selecciona el estado del proyecto</option>
+                <option value="No Comenzado">No Comenzado</option>
+                <option value="En Proceso">En Proceso</option>
+                <option value="En Espera">En Espera</option>
+                <option value="Completado">Completado</option>
+                <option value="Cancelado">Cancelado</option>
               </select>
               {errors.status && (
                 <p className="text-red-800">{errors.status.message}</p>

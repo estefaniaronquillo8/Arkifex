@@ -39,7 +39,7 @@ const TemplateSub = () => {
       await duplicateSubproject(projectId, parentId);
 
     if (success) {
-      navigate(`/projects`);
+      navigate(`/projects/edit/${response.project.id}`);
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
@@ -174,7 +174,7 @@ const TemplateSub = () => {
                       }
                       className="inline-block bg-green-500 text-white px-4 py-2 rounded"
                     >
-                      Duplicar Proyecto
+                      Duplicar Sub-proyecto
                     </button>
                   </div>
                 );

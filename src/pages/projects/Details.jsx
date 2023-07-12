@@ -12,8 +12,10 @@ import {
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { getAllLocations } from "../../services/location.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import { getAllUsers } from "../../services/user.api.routes";
 import LocationDetails from "../location/Details";
 import "tailwindcss/tailwind.css";
+import Swal from "sweetalert2";
 
 const ProjectDetails = () => {
   const [currentSection, setCurrentSection] = useState("details");
@@ -26,6 +28,8 @@ const ProjectDetails = () => {
   const {
     project,
     setProject,
+    users,
+    setUsers,
     setSelectedProjectId,
     showNotification,
     roleInSession,
@@ -69,6 +73,19 @@ const ProjectDetails = () => {
       setNotificationType(notificationType);
     };
 
+    const fetchUsers = async () => {
+      const { response, success, error, notificationType } =
+        await getAllUsers();
+
+      if (response?.users) {
+        setUsers(response.users);
+      }
+
+      setError(error);
+      setSuccess(success);
+      setNotificationType(notificationType);
+    };
+
     const fetchProjectPlannings = async () => {
       const { response, success, error, notificationType } =
         await getAllProjectPlannings();
@@ -98,17 +115,18 @@ const ProjectDetails = () => {
     };
 
     if (project) {
+      fetchProjects();
+      fetchUsers();
       fetchProjectPlannings();
       fetchLocations();
-      fetchProjects();
     }
   }, [project]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (error) {
       showNotification(error, notificationType);
     }
-  }, [error, notificationType, showNotification]);
+  }, [error, notificationType, showNotification]); */
 
   const handleBack = () => {
     setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
@@ -120,23 +138,22 @@ const ProjectDetails = () => {
   };
 
   const deleteHandler = async (id) => {
-    console.log("IDDDDDDDDDDD", id)
+    console.log("IDDDDDDDDDDD", id);
     const { response, success, error, notificationType } = await handleDelete(
       id
     );
-    // Por ahora solo redirigiré cuando se elimine el proyecto
-    navigate("/projects");
-    console.log("RESPONSE DEL DELETEHANDLER", response?.status, error)
-    
-    if (error) {
-      showNotification(error, notificationType);
-    }
 
     if (response?.status === 200) {
+      navigate("/projects");
       setProject(response.project);
+      setError(error);
+      setNotificationType(notificationType);
+      return { success: true }; // Eliminación exitosa
+    } else {
+      setError(error);
+      setNotificationType(notificationType);
+      return { success: false, error }; // Eliminación no exitosa
     }
-    setError(error);
-    setNotificationType(notificationType);
   };
 
   const handleCreateProjectPlanning = () => {
@@ -164,16 +181,15 @@ const ProjectDetails = () => {
     const { success, error, notificationType } = await handleUpdate(
       project.id,
       updatedProject
-    ); // Hacer la llamada al servidor para actualizar el proyecto
+    );
 
     if (success) {
-      setProject(updatedProject); // Si la actualización fue exitosa, actualizar el estado del proyecto localmente
+      setProject(updatedProject);
+      setIsTemplateProject(!project.isTemplate); // Actualizar el estado de isTemplateProject
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
     }
-
-    //navigate(`/projects/details/${project.id}`);
   };
 
   let isTemplateText = "Hacer Plantilla";
@@ -184,14 +200,18 @@ const ProjectDetails = () => {
   const handleDuplicateProject = async () => {
     const { response, success, error, notificationType } =
       await duplicateProject(project.id);
-
+    console.log("RESPONDE DEL HANDLE", response, response.project.id);
     if (success) {
-      navigate(`/projects`);
+      navigate(`/projects/edit/${response.project.id}`);
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
     }
   };
+
+  const [isTemplateProject, setIsTemplateProject] = useState(
+    project?.isTemplate || false
+  );
 
   const handleEditLocation = () => {
     const locationForThisProject = locations.find(
@@ -219,6 +239,10 @@ const ProjectDetails = () => {
     : "Crear locación";
 
   const ProjectDetailsSection = ({ project }) => {
+    let user;
+    if (project) {
+      user = users.find((user) => user.id === project.userId);
+    }
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="space-y-6">
@@ -227,7 +251,11 @@ const ProjectDetails = () => {
               <>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Encargado</h2>
-                  <p>{project && project.userId}</p>
+                  <p>
+                    {project && user
+                      ? user.name + " " + user.lastname
+                      : "No tiene un encargado"}
+                  </p>
                 </div>
               </>
             )}
@@ -264,8 +292,37 @@ const ProjectDetails = () => {
               )}
 
               <button
-                onClick={async () => await deleteHandler(project.id)}
-                className="inline-block bg-red-500 text-white px-4 py-2 rounded mr-2"
+                onClick={async () => {
+                  const result = await Swal.fire({
+                    title: "¿Estás seguro de eliminar tu proyecto?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, eliminarlo",
+                    cancelButtonText: "Cancelar",
+                  });
+
+                  if (result.isConfirmed) {
+                    const deleteResult = await deleteHandler(project.id);
+
+                    if (deleteResult.success) {
+                      Swal.fire(
+                        "¡Eliminado!",
+                        "Tu proyecto ha sido eliminado.",
+                        "success"
+                      );
+                    } else {
+                      Swal.fire(
+                        "¡Error!",
+                        deleteResult.error, // Usar el error devuelto
+                        "error"
+                      );
+                    }
+                  }
+                }}
+                className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
               >
                 Eliminar
               </button>
@@ -276,12 +333,14 @@ const ProjectDetails = () => {
               >
                 {isTemplateText}
               </button>
-              <button
-                onClick={handleDuplicateProject}
-                className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-              >
-                Duplicar Proyecto
-              </button>
+              {isTemplateProject && (
+                <button
+                  onClick={handleDuplicateProject}
+                  className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                >
+                  Duplicar Plantilla
+                </button>
+              )}
             </>
           )}
 
@@ -383,20 +442,6 @@ const ProjectDetails = () => {
                         >
                           Detalles
                         </Link>
-                        {/* <Link
-                      to={`/projectPlannings/edit/${projectPlanning.id}`}
-                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                    >
-                      Editar
-                    </Link>
-                    <button
-                      onClick={async () =>
-                        await deleteHandlerPP(projectPlanning.id)
-                      }
-                      className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Eliminar
-                    </button> */}
                       </>
                     )}
                   </div>
@@ -430,7 +475,6 @@ const ProjectDetails = () => {
               >
                 Crear desde plantilla
               </button>
-              
             )}
             <div className="bg-white shadow-md rounded-lg">
               <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
