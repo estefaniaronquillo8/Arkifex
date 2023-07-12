@@ -140,6 +140,7 @@ export const GlobalProvider = ({ children }) => {
   const [detailReport, setDetailReport] = useState({
     projectPlanningId: 0,
             projectPlanningName: "",
+            
             actualTotalCost: 0,
             estimatedTotalCost: 0,
             countOfResources: 0,

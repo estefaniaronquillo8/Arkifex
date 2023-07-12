@@ -166,7 +166,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         EstimatedCostOfResource / ResourcesCount;
       const costDifference =
         UnitaryActualCostOfTask - UnitaryEstimatedTotalCostOfTask;
-      console.log(UnitaryActualCostOfTask);
+      //console.log(UnitaryActualCostOfTask);
 
       const newDetailResourceReport = await DetailReport.create({
         projectId: projectId,
@@ -174,6 +174,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         isProjectPlanning: "No",
         projectPlanningId: ProjectPlanningId,
         projectPlanningName: formattedName,
+        resourceName: ResourceName,
         resourceType: resourceType,
         actualUnitaryCost: UnitaryActualCostOfTask,
         estimatedUnitaryCost: UnitaryEstimatedTotalCostOfTask,
@@ -359,6 +360,7 @@ const getDetailResources = async (projectId) => {
         "isProjectPlanning",
         "projectPlanningId",
         "projectPlanningName",
+        "resourceName",
         "resourceType",
         "actualUnitaryCost",
         "estimatedUnitaryCost",
