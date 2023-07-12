@@ -122,11 +122,11 @@ const ProjectDetails = () => {
     }
   }, [project]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (error) {
       showNotification(error, notificationType);
     }
-  }, [error, notificationType, showNotification]);
+  }, [error, notificationType, showNotification]); */
 
   const handleBack = () => {
     setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
@@ -142,19 +142,18 @@ const ProjectDetails = () => {
     const { response, success, error, notificationType } = await handleDelete(
       id
     );
-    // Por ahora solo redirigiré cuando se elimine el proyecto
-    navigate("/projects");
-    console.log("RESPONSE DEL DELETEHANDLER", response?.status, error);
-
-    if (error) {
-      showNotification(error, notificationType);
-    }
 
     if (response?.status === 200) {
+      navigate("/projects");
       setProject(response.project);
+      setError(error);
+      setNotificationType(notificationType);
+      return { success: true }; // Eliminación exitosa
+    } else {
+      setError(error);
+      setNotificationType(notificationType);
+      return { success: false, error }; // Eliminación no exitosa
     }
-    setError(error);
-    setNotificationType(notificationType);
   };
 
   const handleCreateProjectPlanning = () => {
@@ -306,12 +305,21 @@ const ProjectDetails = () => {
                   });
 
                   if (result.isConfirmed) {
-                    await deleteHandler(project.id);
-                    Swal.fire(
-                      "¡Eliminado!",
-                      "Tu proyecto ha sido eliminado.",
-                      "success"
-                    );
+                    const deleteResult = await deleteHandler(project.id);
+
+                    if (deleteResult.success) {
+                      Swal.fire(
+                        "¡Eliminado!",
+                        "Tu proyecto ha sido eliminado.",
+                        "success"
+                      );
+                    } else {
+                      Swal.fire(
+                        "¡Error!",
+                        deleteResult.error, // Usar el error devuelto
+                        "error"
+                      );
+                    }
                   }
                 }}
                 className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"

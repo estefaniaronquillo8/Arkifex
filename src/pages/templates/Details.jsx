@@ -15,6 +15,7 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import Swal from "sweetalert2";
 
 const TemplateDetails = () => {
   const { id } = useParams();
@@ -213,7 +214,7 @@ const ProjectDetailsSection = ({ project }) => {
             <button
                           onClick={async () => {
                             const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar tu planificacion?",
+                              title: "¿Estás seguro de eliminar tu Plantilla?",
                               text: "¡No podrás revertir esto!",
                               icon: "warning",
                               showCancelButton: true,
@@ -224,10 +225,10 @@ const ProjectDetailsSection = ({ project }) => {
                             });
 
                             if (result.isConfirmed) {
-                              await deleteHandler(resourceAssignment.id);
+                              await deleteHandler(project.id);
                               Swal.fire(
                                 "¡Eliminado!",
-                                "Tu planificacion ha sido eliminado.",
+                                "Tu Proyecto ha sido eliminado.",
                                 "success"
                               );
                             }
