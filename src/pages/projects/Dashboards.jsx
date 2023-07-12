@@ -347,6 +347,9 @@ function ProjectDashboards() {
             Genera tu reporte
           </button>
         </div>
+        <div className="flex flex-col gap-4 mt-2">
+          <DashboardStateGrid />
+        </div>
 
         
       </div>
