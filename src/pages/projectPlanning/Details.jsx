@@ -10,6 +10,7 @@ import {
 import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
+import Swal from "sweetalert2";
 
 const ProjectPlanningDetails = () => {
   const { id } = useParams();
@@ -160,11 +161,31 @@ const ProjectPlanningDetails = () => {
             </Link>
 
             <button
-              onClick={async () => await deleteHandler(projectPlanning.id)}
-              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-            >
-              Eliminar
-            </button>
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "¿Estás seguro de eliminar tu planificacion?",
+                              text: "¡No podrás revertir esto!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Sí, eliminarlo",
+                              cancelButtonText: "Cancelar",
+                            });
+
+                            if (result.isConfirmed) {
+                              await deleteHandler(resourceAssignments.id);
+                              Swal.fire(
+                                "¡Eliminado!",
+                                "Tu planificacion ha sido eliminado.",
+                                "success"
+                              );
+                            }
+                          }}
+                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Eliminar
+                        </button>
 
             <h1 className="text-4xl font-semibold mb-6">
               Asignación de Recursos
@@ -213,10 +234,29 @@ const ProjectPlanningDetails = () => {
                         >
                           Editar
                         </Link>
+
                         <button
-                          onClick={async () =>
-                            await deleteHandlerRA(resourceAssignment.id)
-                          }
+                          onClick={async () => {
+                            const result = await Swal.fire({
+                              title: "¿Estás seguro de eliminar tu planificacion?",
+                              text: "¡No podrás revertir esto!",
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Sí, eliminarlo",
+                              cancelButtonText: "Cancelar",
+                            });
+
+                            if (result.isConfirmed) {
+                              await deleteHandler(resourceAssignment.id);
+                              Swal.fire(
+                                "¡Eliminado!",
+                                "Tu planificacion ha sido eliminado.",
+                                "success"
+                              );
+                            }
+                          }}
                           className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                         >
                           Eliminar

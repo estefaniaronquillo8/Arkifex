@@ -74,11 +74,12 @@ function ProjectEdit() {
       id,
       project
     );
+console.log("EVEENT", id)
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/projects");
+    navigate(`/projects/details/${id}`);
   };
 
   const handleChange = (event) => {

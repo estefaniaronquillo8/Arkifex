@@ -3,8 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/user.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
-import Swal from 'sweetalert2';
-
+import Swal from "sweetalert2";
 
 function UserEdit() {
   const { id } = useParams();

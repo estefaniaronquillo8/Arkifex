@@ -54,13 +54,13 @@ function ResourcesChart() {
   
 
     return (
-        <div className="h-[22rem] bg-white p-4 rounded-sm border-gray-200 flex flex-col flex-1">
+      <div className="w-[30rem] h-[22rem]  bg-gray-100 p-4 rounded-3xl border border-gray-200 flex flex-col">
             <strong className="text-gray-700 font-medium">Cambio en el presupuesto</strong>
             <div className="w-full mt-3 flex-1 text-xs">
-              
+            <ResponsiveContainer width="100%" height="100%"> 
             <LineChart 
-            width={800} 
-            height={400} 
+            width={500} 
+            height={300} 
             data={data}>
                 <CartesianGrid strokeDasharray="3 3 0 0" vertical={false} />
                         <XAxis dataKey="name" />
@@ -70,7 +70,7 @@ function ResourcesChart() {
           <Line type="monotone" dataKey="pv" stroke="#ff0000" strokeWidth={2} />
           <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={2} />
         </LineChart>
-                
+        </ResponsiveContainer>  
             </div>
         </div>
     );
