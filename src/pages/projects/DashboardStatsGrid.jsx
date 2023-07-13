@@ -16,28 +16,7 @@ import LineChart from "./LineChart";
 
 function DashboardStateGrid() {
   const { report, setReport, showNotification, project } = useGlobalContext();
-  //const {id} = useParams;
-  //const [data, setData] = useState();
-
-  /* useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getLastReport(id);
-        setReport(response.response.reportData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []); */
-
-  // useEffect(() => {
-  //   if (report !== null) {
-  //     console.log("DATOSGRAPH", report);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [report]);
+ 
 
   return (
     <>

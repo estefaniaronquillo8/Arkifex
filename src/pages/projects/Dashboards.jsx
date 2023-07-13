@@ -1,5 +1,5 @@
 // src/pages/projects.js
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAllProjects } from "../../services/project.api.routes";
@@ -11,216 +11,14 @@ import {
 } from "../../services/report.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
 import DashboardStateGrid from "./DashboardStatsGrid";
-import ResourcesChart from "./ResourcesChart";
-import BudgetChart from "./budgetChart.";
-
 import Navbar from "../../components/Navbar";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
-const generateProjectBudgetReport = (reportData, linesData) => {
-  const doc = new jsPDF();
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 30;
-  let y = margin;
-
-  // Set font size and style for the report title
-  doc.setFontSize(20);
-  doc.setFont("helvetica", "bold");
-
-  // Add the report title
-  doc.text("Project Budget Report", margin, y);
-  y += 20;
-
-  // Set font size and style for the section headers
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
-
-  // Project details section
-  doc.text("Project Details", margin, y);
-  y += 10;
-  doc.setFont("helvetica", "normal");
-  doc.text(`Project ID: ${reportData.id}`, margin, y);
-  y += 10;
-
-  // Budget details section
-  doc.text("Budget Details", margin, y);
-  y += 10;
-  doc.text(`Total Budget: $${reportData.actualBudget}`, margin, y);
-  y += 7;
-  doc.text(`Expenses: $${reportData.estimatedBudget}`, margin, y);
-  y += 7;
-  doc.text(
-    `Remaining Budget: $${
-      -reportData.estimatedBudget - reportData.actualBudget
-    }`,
-    margin,
-    y
-  );
-  y += 10;
-
-  // Line items section
-  doc.text("Line Items", margin, y);
-  y += 10;
-
-  // Filter linesData for elements with resource type "Personal"
-  const personalLinesData = linesData.filter(
-    (line) => line.resourceType === "Personal"
-  );
-
-  if (personalLinesData.length > 0) {
-    // Set font size and style for the "Personal Asignado" table
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "bold");
-
-    // Add the table title "Personal Asignado"
-    doc.text("Personal Asignado", margin, y);
-    y += 10;
-
-    // Table headers for "Personal Asignado"
-    const personalTableHeaders = [
-      'Project Planning Name',
-      'Nombre',
-      'Actual Unitary Cost',
-      'Estimated Unitary Cost',
-      'Actual Total Cost',
-      'Estimated Total Cost',
-      'Count of Resources',
-      'Total Cost Variance',
-      'Unitary Cost Variance',
-    ];
-
-    // Table data for "Personal Asignado"
-    const personalTableData = personalLinesData.map((line) => [
-      line.projectPlanningName,
-      line.resourceName,
-      line.actualUnitaryCost,
-      line.estimatedUnitaryCost,
-      line.actualTotalCost,
-      line.estimatedTotalCost,
-      line.countOfResources,
-      line.totalCostVariance,
-      line.unitaryCostVariance,
-    ]);
-
-    // Set font size and style for the "Personal Asignado" table body
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-
-    // Calculate the totals for each column
-    const personalTotals = personalTableHeaders.map((header, columnIndex) => {
-      if (columnIndex === 0) return "Total"; // Placeholder for the first column
-      return personalTableData.reduce(
-        (total, row) => total + Number(row[columnIndex]),
-        0
-      );
-    });
-
-    // Add the "Personal Asignado" table with totals
-    doc.autoTable({
-      startY: y,
-      head: [personalTableHeaders],
-      body: personalTableData,
-      margin: { top: margin },
-      foot: [[...personalTotals]],
-      didDrawPage: function (data) {
-        doc.setFontSize(12);
-        doc.setFont("helvetica", "bold");
-        doc.text(
-          `Page ${data.pageNumber}`,
-          data.settings.margin.left,
-          pageHeight - 10
-        );
-      },
-    });
-
-    // Adjust the y position after adding the "Personal Asignado" table
-    y = doc.autoTable.previous.finalY + margin;
-  }
-
-  // Regular line items section
-  // Set font size and style for the regular table
-  doc.setFontSize(12);
-  doc.setFont("helvetica", "bold");
-
-  // Add the regular table title
-  doc.text("Other Line Items", margin, y);
-  y += 10;
-
-  // Table headers for regular line items
-  const regularTableHeaders = [
-    "Project Planning Name",
-    "Resource Type",
-    "Actual Unitary Cost",
-    "Estimated Unitary Cost",
-    "Actual Total Cost",
-    "Estimated Total Cost",
-    "Count of Resources",
-    "Total Cost Variance",
-    "Unitary Cost Variance",
-  ];
-
-  // Table data for regular line items
-  const regularTableData = linesData
-    .filter((line) => line.resourceType !== "Personal")
-    .map((line) => [
-      line.projectPlanningName,
-      line.resourceType,
-      line.actualUnitaryCost,
-      line.estimatedUnitaryCost,
-      line.actualTotalCost,
-      line.estimatedTotalCost,
-      line.countOfResources,
-      line.totalCostVariance,
-      line.unitaryCostVariance,
-    ]);
-
-  // Set font size and style for the regular table body
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-
-  // Calculate the totals for each column
-  const regularTotals = regularTableHeaders.map((header, columnIndex) => {
-    if (columnIndex === 0) return "Total"; // Placeholder for the first column
-    return regularTableData.reduce(
-      (total, row) => total + Number(row[columnIndex]),
-      0
-    );
-  });
-
-  // Add the regular table with totals
-  doc.autoTable({
-    startY: y,
-    head: [regularTableHeaders],
-    body: regularTableData,
-    margin: { top: margin },
-    foot: [[...regularTotals]],
-    didDrawPage: function (data) {
-      doc.setFontSize(12);
-      doc.setFont("helvetica", "bold");
-      doc.text(
-        `Page ${data.pageNumber}`,
-        data.settings.margin.left,
-        pageHeight - 10
-      );
-    },
-  });
-
-  // Adjust the y position after adding the regular table
-  y = doc.autoTable.previous.finalY + margin;
-
-  // Check if the remaining content can fit within the page height
-  if (y + 20 >= pageHeight - margin) {
-    doc.addPage(); // Add a new page if the content exceeds the page height
-    y = margin;
-  }
-
-  doc.save("project_budget_report.pdf");
-};
+import html2canvas from "html2canvas";
 
 function ProjectDashboards() {
   const { id } = useParams();
+  const graphPageRef = useRef(null);
   const navigate = useNavigate();
   const {
     projects,
@@ -334,24 +132,430 @@ function ProjectDashboards() {
     fetchData();
   }, []);
 
-  const handleDownload = () => {
-    generateProjectBudgetReport(report, detailReports);
-  };
+  useEffect(() => {
+    const generateProjectBudgetReport = (reportData, linesData) => {
+      const graphPageContainer = graphPageRef.current;
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 25;
+      let y = margin;
 
+      // Set font size and style for the report title
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+
+      // Calculate the width of the title
+      const title = "Reporte Detallado del Proyecto";
+      const titleWidth = doc.getTextWidth(title);
+
+      // Calculate the x-position to center the title
+      const titleX = (pageWidth - titleWidth) / 2;
+
+      // Add the report title
+      doc.text(title, titleX, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+      const dateTime = new Date(reportData.date); // Replace this with your datetime value
+      const reportDate = dateTime.toLocaleDateString();
+
+      // Calculate the width of the title
+      const date = `Fecha: ${reportDate}` 
+      const dateWidth = doc.getTextWidth(date);
+
+      // Calculate the x-position to center the title
+      const dateX = (pageWidth - dateWidth) / 2;
+
+      // Add the report title
+      doc.text(date, dateX, y);
+      y += 20;
+
+      // Set font size and style for the section headers
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "bold");
+
+      // Project details section
+      doc.text(`Proyecto  ${reportData.projectId}`, margin, y);
+      y += 10;
+      doc.setFont("helvetica", "bold");
+      // doc.text(`Project ID: ${reportData.id}`, margin+5, y);
+      // y += 10;
+
+      // Budget details section
+      doc.text("Resumen del presupuesto", margin, y);
+      y += 10;
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+            const descriptionGeneral =
+            `El proyecto actualmente tiene un presupuesto estimado de $${reportData.estimatedBudget} USD, que se calcula mediante el valor de mercado de los recursos y personal utilizado por cada tarea en el proyecto. Por otro lado el presupeusto actual, que se calcula mediante el calculo de costos por tarea se encuentra en los $${reportData.actualBudget} ` ;
+
+            // Dividir la descripción en palabras
+            const wordsGeneral = descriptionGeneral.split(" ");
+            const maxWidthGeneral = pageWidth - 2 * margin; // Ancho máximo del texto
+
+            let line = "";
+            let lines = [];
+
+            // Construir las líneas del texto con saltos de línea automáticos
+            for (let i = 0; i < wordsGeneral.length; i++) {
+              const word = wordsGeneral[i];
+              const newLine = line === "" ? word : line + " " + word;
+
+              if (doc.getTextWidth(newLine) <= maxWidthGeneral) {
+                line = newLine;
+              } else {
+                lines.push(line);
+                line = word;
+              }
+
+              if (i === wordsGeneral.length - 1) {
+                lines.push(line);
+              }
+            }
+
+            // Agregar las líneas del texto al PDF
+            for (let i = 0; i < lines.length; i++) {
+              doc.text(lines[i], margin, y);
+              y += 7;
+            }
+            y += 10;   
+
+      const reportDataLabel1 = "Presupuesto Actual:";
+      const reportDataValue1 = `$${reportData.actualBudget}`;
+
+      const reportDataLabel2 = "Presupuesto Estimado:";
+      const reportDataValue2 = `$${reportData.estimatedBudget}`;
+
+      const reportDataLabel3 = "Presupuesto Restante:";
+      const reportDataValue3 = `$${
+        reportData.estimatedBudget - reportData.actualBudget
+      }`;
+
+      const labelWidth1 =
+        doc.getStringUnitWidth(reportDataLabel1) * doc.internal.getFontSize();
+      const valueWidth1 =
+        doc.getStringUnitWidth(reportDataValue1) * doc.internal.getFontSize();
+
+      const labelWidth2 =
+        doc.getStringUnitWidth(reportDataLabel2) * doc.internal.getFontSize();
+      const valueWidth2 =
+        doc.getStringUnitWidth(reportDataValue2) * doc.internal.getFontSize();
+
+      const labelWidth3 =
+        doc.getStringUnitWidth(reportDataLabel3) * doc.internal.getFontSize();
+      const valueWidth3 =
+        doc.getStringUnitWidth(reportDataValue3) * doc.internal.getFontSize();
+
+      const maxWidth = Math.max(
+        labelWidth1,
+        valueWidth1,
+        labelWidth2,
+        valueWidth2,
+        labelWidth3,
+        valueWidth3
+      );
+
+      doc.text(reportDataLabel1, margin + 15, y);
+      doc.text(reportDataValue1, margin + maxWidth, y);
+      y += 7;
+
+      doc.text(reportDataLabel2, margin + 15, y);
+      doc.text(reportDataValue2, margin + maxWidth, y);
+      y += 7;
+
+      doc.line(margin + 15, y, 2*margin-5 + maxWidth, y);
+
+      y += 10;
+
+      doc.text(reportDataLabel3, margin + 15, y);
+      doc.text(reportDataValue3, margin + maxWidth, y);
+      y += 15;
+
+      // Line items section
+      doc.setFont("helvetica", "bold");
+      doc.text("Detalle de Presupuesto por Tareas", margin, y);
+      y += 10;
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+            const description =
+              "A continuación se muestra información detallada sobre diferentes tipos de recursos y persona asignado por cada tarea en el proyecto, incluyendo su costo unitario, costo total, cantidad y diferencias entre los valores reales y estimados. Proporciona una visión general de los recursos utilizados y sus características financieras en el proyecto.";
+
+            // Dividir la descripción en palabras
+            const words = description.split(" ");
+            const maxWidthD = pageWidth - 2 * margin; // Ancho máximo del texto
+
+            line = "";
+            lines = [];
+
+            // Construir las líneas del texto con saltos de línea automáticos
+            for (let i = 0; i < words.length; i++) {
+              const word = words[i];
+              const newLine = line === "" ? word : line + " " + word;
+
+              if (doc.getTextWidth(newLine) <= maxWidthD) {
+                line = newLine;
+              } else {
+                lines.push(line);
+                line = word;
+              }
+
+              if (i === words.length - 1) {
+                lines.push(line);
+              }
+            }
+
+            // Agregar las líneas del texto al PDF
+            for (let i = 0; i < lines.length; i++) {
+              doc.text(lines[i], margin, y);
+              y += 7;
+            }
+            y += 10;   
+
+      // Group the linesData by project planning name
+      const lineItemsByPlanning = linesData.reduce((acc, line) => {
+        if (!acc[line.projectPlanningName]) {
+          acc[line.projectPlanningName] = [];
+        }
+        acc[line.projectPlanningName].push(line);
+        return acc;
+      }, {});
+
+      // Loop through each project planning group
+      Object.entries(lineItemsByPlanning).forEach(
+        ([planningName, lineItems]) => {
+          // Set font size and style for the table title
+          doc.setFontSize(13);
+          doc.setFont("helvetica", "bold");
+
+          // Add the table title with the project planning name
+          doc.text(`Tarea: ${planningName}`, margin + 10, y);
+          //doc.text(planningName, margin, y);
+          y += 10;
+
+          // Filter the line items for the current project planning name
+          const personalLinesData = lineItems.filter(
+            (line) => line.resourceType === "Personal"
+          );
+
+          if (personalLinesData.length > 0) {
+            // Set font size and style for the "Personal Asignado" table
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+
+            // Add the table title "Personal Asignado"
+            doc.text("Personal Asignado", margin + 15, y);
+            y += 10;
+
+            
+            // Table headers for "Personal Asignado"
+            const personalTableHeaders = [
+              "Nombre",
+              "Costo Actual por hora",
+              "Costo Estimado por hora",
+              "Costo Total",
+              "Costo Total Estimado",
+              "Variacion con Total Estimado",
+              "Variacion con Costo Unitario Estimado",
+            ];
+
+            // Table data for "Personal Asignado"
+            const personalTableData = personalLinesData.map((line) => [
+              line.resourceName,
+              line.actualUnitaryCost,
+              line.estimatedUnitaryCost,
+              line.actualTotalCost,
+              line.estimatedTotalCost,
+              line.totalCostVariance,
+              line.unitaryCostVariance,
+            ]);
+
+            // Set font size and style for the "Personal Asignado" table body
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+
+            // Calculate the totals for each column
+            const personalTotals = personalTableHeaders.map(
+              (header, columnIndex) => {
+                if (columnIndex === 0) return "Total"; // Placeholder for the first column
+                return personalTableData.reduce(
+                  (total, row) => total + Number(row[columnIndex]),
+                  0
+                );
+              }
+            );
+
+            // Add the "Personal Asignado" table with totals
+            doc.autoTable({
+              startY: y,
+              head: [personalTableHeaders],
+              body: personalTableData,
+              margin: { top: margin },
+              foot: [[...personalTotals]],
+              didDrawPage: function (data) {
+                doc.setFontSize(12);
+                doc.setFont("helvetica", "bold");
+                doc.text(
+                  `Page ${data.pageNumber}`,
+                  data.settings.margin.left,
+                  pageHeight - 10
+                );
+              },
+            });
+
+            // Adjust the y position after adding the "Personal Asignado" table
+            y = doc.autoTable.previous.finalY + margin;
+          }
+          // Regular line items section
+          // Set font size and style for the regular table
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+
+          // Add the regular table title
+          doc.text("Recursos Asignados", margin + 15, y);
+          y += 10;
+
+          // Table headers for regular line items
+          const regularTableHeaders = [
+            "Tipo de Recurso",
+            "Nombre de Recurso",
+            "Costo Unitario",
+            "Costo Unitario Estimado",
+            "Count of Resources",
+            "Costo Total",
+            "Costo Total Estimado",
+            "Diferencia con Total Estimado",
+            "Diferencia con Costo Unitario Estimado",
+          ];
+
+          // Table data for regular line items
+          const regularTableData = lineItems
+            .filter((line) => line.resourceType !== "Personal")
+            .map((line) => [
+              line.resourceType,
+              line.resourceName,
+              line.actualUnitaryCost,
+              line.estimatedUnitaryCost,
+              line.countOfResources,
+              line.actualTotalCost,
+              line.estimatedTotalCost,
+              line.totalCostVariance,
+              line.unitaryCostVariance,
+            ]);
+
+          // Set font size and style for the regular table body
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+
+          // Calculate the totals for each column
+          const regularTotals = regularTableHeaders.map(
+            (header, columnIndex) => {
+              if (columnIndex === 0) return "Total"; // Placeholder for the first column
+              return regularTableData.reduce(
+                (total, row) => total + Number(row[columnIndex]),
+                0
+              );
+            }
+          );
+
+          // Add the regular table with totals
+          doc.autoTable({
+            startY: y,
+            head: [regularTableHeaders],
+            body: regularTableData,
+            margin: { top: margin },
+            foot: [[...regularTotals]],
+            didDrawPage: function (data) {
+              doc.setFontSize(12);
+              doc.setFont("helvetica", "bold");
+              doc.text(
+                `Page ${data.pageNumber}`,
+                data.settings.margin.left,
+                pageHeight - 10
+              );
+            },
+          });
+
+          // Adjust the y position after adding the regular table
+          y = doc.autoTable.previous.finalY + margin;
+
+          // Check if the remaining content can fit within the page height
+          if (y + 20 >= pageHeight - margin) {
+            doc.addPage(); // Add a new page if the content exceeds the page height
+            y = margin;
+          }
+        }
+      );
+
+      y = margin;
+
+      html2canvas(graphPageRef.current).then((canvas) => {
+        const imgData = canvas.toDataURL("image/jpeg");
+
+        // Calculate the aspect ratio of the PDF page based on the canvas dimensions
+        const imgWidth = pageHeight - 2 * margin;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        const xOffset = margin;
+        const yOffset = (pageWidth - imgHeight) / 2;
+
+        // Add the image to the PDF
+        doc.addPage([pageWidth, pageHeight], "landscape");
+        doc.setFontSize(20);
+        const titleWidth =
+          (doc.getStringUnitWidth("Dasboard Proyecto") *
+            doc.internal.getFontSize()) /
+          doc.internal.scaleFactor;
+        const titleX = (pageHeight - titleWidth) / 2;
+        const titleY = margin;
+        doc.text("Dasboard Proyecto", titleX, titleY);
+        doc.addImage(imgData, "JPEG", xOffset, yOffset, imgWidth, imgHeight);
+
+        // Save the PDF
+        doc.save("project_budget_report.pdf");
+      });
+
+      //doc.save('project_budget_report.pdf');
+    };
+
+    const handleDownload = () => {
+      generateProjectBudgetReport(report, detailReports);
+    };
+
+    const button = document.getElementById("generate-report-button");
+    button.addEventListener("click", handleDownload);
+
+    // Cleanup function
+    return () => {
+      // Remove event listener
+      button.removeEventListener("click", handleDownload);
+    };
+  }, []);
+
+  // const handleDownload = () => {
+  //   generateProjectBudgetReport(report, detailReports);
+  // };
   return (
     <div className="min-h-full bg-[#eaf0f0] flex justify-center">
       <div className="container mx-auto px-4 py-6 mt-5">
         <Navbar />
         <div className="mt-6 flex justify-center">
-          <button onClick={handleDownload} className="btn-custom btn-primary">
+          <button
+            id="generate-report-button"
+            className="btn-custom btn-primary"
+          >
             Genera tu reporte
           </button>
         </div>
-        <div className="flex flex-col gap-4 mt-2">
+        <div ref={graphPageRef} className="flex flex-col gap-4 mt-2">
           <DashboardStateGrid />
         </div>
-
-        
       </div>
     </div>
   );

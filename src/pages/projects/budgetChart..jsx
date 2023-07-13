@@ -15,9 +15,9 @@ function BudgetChart() {
   const [value, setValue] = useState(50);
 
   const data = [
-    { name: 'En Riesgo (66.6% +)', value: 33.33, color: '#00ff00' },//'#ff0000' 
-    { name: 'Advertencia (33.3%-66.6%)', value: 33.33, color: '#FFFF00' },//'#00ff00'
-    { name: 'Manejable (0%-33.3%)', value: 33.33, color: '#ff0000' },//'#0000ff'
+    { name: 'Manejable (0%-33.3%)', value: 33.33, color: '#00ff00' },//'#ff0000' 
+    { name: 'Advertencia (33.3%-66.6%)', value: 33.33, color: '#FDA400' },//'#00ff00'
+    { name: 'En Riesgo (66.6% +)', value: 33.33, color: '#ff0000' },//'#0000ff'
   ];
 
     const RADIAN = Math.PI / 180;

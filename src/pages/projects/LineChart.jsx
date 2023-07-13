@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {getAllReports,getLastReport, createReport} from  "../../services/report.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 function ResourcesChart() {
@@ -28,28 +27,7 @@ function ResourcesChart() {
   }, [reports]);
 
 
-  //const [data, setData] = useState();
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await getAllReports(1);
-  //       setReports(response.response.reportData);
-  //       handleData();
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (reports !== null) {
-  //     console.log("DATOSLINEAS", data);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [reports]);
+  
 
   
 
