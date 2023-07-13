@@ -3,9 +3,6 @@ import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Resp
 import {getAllReports,getLastReport, createReport} from  "../../services/report.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
-
-
-
 function PlanningsChart() {
     const { report} = useGlobalContext();
   const [data,setData] = useState([]);

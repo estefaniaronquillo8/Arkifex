@@ -138,20 +138,22 @@ function ProjectDashboards() {
       // Set font size and style for the report title
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
-
+      doc.setTextColor(8, 4, 87); // Define el color del texto en rojo RGB
+      
       // Calculate the width of the title
       const title = "Reporte Detallado del Proyecto";
       const titleWidth = doc.getTextWidth(title);
-
+      
       // Calculate the x-position to center the title
       const titleX = (pageWidth - titleWidth) / 2;
-
+      
       // Add the report title
       doc.text(title, titleX, y);
-      y += 10;
-
+      y += 15;
+      
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
+      doc.setTextColor(0, 0, 0); // Define el color del texto en rojo RGB
 
       const dateTime = new Date(reportData.date); // Replace this with your datetime value
       const reportDate = dateTime.toLocaleDateString();
@@ -165,7 +167,21 @@ function ProjectDashboards() {
 
       // Add the report title
       doc.text(date, dateX, y);
-      y += 20;
+      y += 10;
+
+      // Add the user who generated the report
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+      const user = `Generado por: ${userInSession.name} ${userInSession.lastname}`;
+      const userWidth = doc.getTextWidth(user);
+
+      // Calculate the x-position to center the user info
+      const userX = (pageWidth - userWidth) / 2;
+
+      // Add the user info to the report
+      doc.text(user, userX, y);
+      y += 15;
 
       // Set font size and style for the section headers
       doc.setFontSize(14);
@@ -229,14 +245,6 @@ function ProjectDashboards() {
         reportData.estimatedBudget - reportData.actualBudget
       }`;
 
-      // Verifica si reportDataValue3 es negativo
-      let reportDataValue3Description;
-      if (reportData.estimatedBudget - reportData.actualBudget < 0) {
-        reportDataValue3Description = `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor negativo siendo ${reportDataValue3}, por lo que esté valor se sobresale de lo que se pensó desde un inicio que iba a valer el proyecto en su totalidad. Siendo una pérdida.`;
-      } else {
-        reportDataValue3Description = `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor positivo siendo ${reportDataValue3}, por lo que este valor es un ahorro en comparación a lo que se creía que se iba a pagar del proyecto en su totalidad. Siendo una ganancia`;
-      }
-
       const labelWidth1 =
         doc.getStringUnitWidth(reportDataLabel1) * doc.internal.getFontSize();
       const valueWidth1 =
@@ -274,12 +282,30 @@ function ProjectDashboards() {
       y += 10;
 
       doc.text(reportDataLabel3, margin + 15, y);
+
+      // Verifica si reportDataValue3 es negativo
+      if (reportData.estimatedBudget - reportData.actualBudget < 0) {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 0, 0); // Define el color del texto en rojo RGB
+      } else {
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 128, 0); // Define el color del texto en verde RGB
+      }
+
       doc.text(reportDataValue3, margin + maxWidth, y);
+      doc.setTextColor(0, 0, 0); // Vuelve a establecer el color del texto a negro para el resto del documento
+      doc.setFont("helvetica", "normal");
+
       y += 15;
 
       // Descripción de reportDataValue3
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
+
+      const reportDataValue3Description =
+        reportData.estimatedBudget - reportData.actualBudget < 0
+          ? `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor negativo siendo ${reportDataValue3}, por lo que esté valor se sobresale de lo que se pensó desde un inicio que iba a valer el proyecto en su totalidad. Siendo una pérdida.`
+          : `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor positivo siendo ${reportDataValue3}, por lo que este valor es un ahorro en comparación a lo que se creía que se iba a pagar del proyecto en su totalidad. Siendo una ganancia`;
 
       // Dividir la descripción en palabras
       const wordsReportDataValue3Description =
