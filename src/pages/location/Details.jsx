@@ -193,23 +193,23 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
           }
         );
 
-        // Inicializar el servicio de autocompletado
-        const autocomplete = new window.google.maps.places.Autocomplete(
-          document.getElementById("location-search-input")
-        );
+        if (mode === "edit" || mode === "create") {
+          // Inicializar el servicio de autocompletado
+          const autocomplete = new window.google.maps.places.Autocomplete(
+            document.getElementById("location-search-input")
+          );
 
-        // Cuando el usuario selecciona una dirección desde el dropdown, se extrae la información de la dirección
-        autocomplete.addListener("place_changed", () => {
-          const place = autocomplete.getPlace();
+          // Cuando el usuario selecciona una dirección desde el dropdown, se extrae la información de la dirección
+          autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
 
-          // Si el lugar tiene una geometría, entonces presenta sus detalles en el mapa
-          if (place.geometry) {
-            map.setCenter(place.geometry.location);
-            map.setZoom(18); // Haz zoom a la ubicación seleccionada
-            /* setCenter(place.geometry.location.toJSON()); // Actualiza el estado del centro
-            map.setZoom(18); */ // Haz zoom a la ubicación seleccionada
-          }
-        });
+            // Si el lugar tiene una geometría, entonces presenta sus detalles en el mapa
+            if (place.geometry) {
+              map.setCenter(place.geometry.location);
+              map.setZoom(18); // Haz zoom a la ubicación seleccionada
+            }
+          });
+        }
       }
 
       if (location?.polygon) {
@@ -238,17 +238,18 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
 
   return isLoaded && center && location ? (
     <>
-      <input
-        className="mt-4 block w-full py-2 px-3 rounded-md border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-        id="location-search-input"
-        type="text"
-      />
+      {mode !== "show" && (
+        <input
+          className="mt-4 block w-full py-2 px-3 rounded-md border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          id="location-search-input"
+          type="text"
+        />
+      )}
       <br />
       <GoogleMap
         mapContainerStyle={{ width: "100%", height: "400px" }}
         options={mapOptions}
         onLoad={onLoad}
-       
       />
     </>
   ) : (

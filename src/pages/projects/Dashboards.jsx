@@ -243,6 +243,8 @@ function ProjectDashboards() {
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
+    console.log(report?.id)
+    if(report?.actualBudget === 0) navigate("/projects");
     if (!routesProtection()) navigate("/login");
   }, []);
 
@@ -292,14 +294,6 @@ function ProjectDashboards() {
     };
     fetchData();
   }, []);
-
-  // useEffect(() => {
-  //   if (report !== null) {
-  //     console.log("DATOSReporte", id);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [report]);
 
   useEffect(() => {
     const fetchData = async () => {

@@ -55,7 +55,24 @@ function ResourceAssignmentEdit() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { success, error, notificationType } = await handleUpdate(id, resourceAssignment);
+
+    // Obtenemos la fecha actual en formato YYYY-MM-DD en la zona horaria local
+    let currentDate = new Date();
+    let localDate = new Date(
+      currentDate.getTime() - currentDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .slice(0, 10);
+
+    const resourceAssignmentWithDate = {
+      ...resourceAssignment,
+      associatedDate: localDate, // Actualizamos la fecha asociada
+    };
+
+    const { success, error, notificationType } = await handleUpdate(
+      id,
+      resourceAssignmentWithDate
+    );
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
@@ -95,7 +112,7 @@ function ResourceAssignmentEdit() {
                 >
                   {resources && resources.length > 0 ? (
                     resources.map((resource) =>
-                    resource.id == resourceAssignment.resourceId ? (
+                      resource.id == resourceAssignment.resourceId ? (
                         <option key={resource.id} value={resource.id} selected>
                           {resource.name}
                         </option>
@@ -138,7 +155,7 @@ function ResourceAssignmentEdit() {
                   type="number"
                   name="estimatedCost"
                   value={resourceAssignment.estimatedCost}
-                  onChange={handleChange}
+                  readOnly
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
@@ -158,7 +175,7 @@ function ResourceAssignmentEdit() {
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
               </div>
-              <div>
+              {/* <div>
                 <label
                   htmlFor="associatedDate"
                   className="block text-sm font-medium text-gray-700"
@@ -173,7 +190,7 @@ function ResourceAssignmentEdit() {
                   onInput={handleChange}
                   className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
                 />
-              </div>
+              </div> */}
             </div>
             <button
               type="submit"

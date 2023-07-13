@@ -201,8 +201,6 @@ const LocationCreate = () => {
         setLocationData={setLocationData}
         address={address}
       />
-      {/*   </div>
-      </div> */}
     </div>
   );
 };

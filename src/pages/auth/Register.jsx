@@ -53,7 +53,7 @@ const Register = () => {
         </h1>
         <div className="w-full flex flex-col max-w-[500px] ">
           <div className="w-full flex flex-col mb-2">
-            <h3 className="text-2xl font- mb-2">Inicia Sesion</h3>
+            <h3 className="text-2xl font- mb-2">Regístrate</h3>
             <p className="text-base mb-2">
               Bienvenid@ Ingresa tus datos aqui!!
             </p>

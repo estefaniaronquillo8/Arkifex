@@ -86,11 +86,14 @@ const ResourceAssignmentCreate = () => {
 
   const createHandler = async (data) => {
     data.projectPlanningId = selectedProjectId;
-    console.log("data paso", data);
+    
+    let currentDate = new Date();
+    data.associatedDate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString().slice(0,10); // Asigna la fecha actual local en formato YYYY-MM-DD
+    
     if (data.type === "Personal") {
       data.quantity = 1;
     }
-    
+
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -108,6 +111,7 @@ const ResourceAssignmentCreate = () => {
       navigate(`/projectPlannings/details/${data.projectPlanningId}`);
     }
   };
+
   const options = resources.map((resource) => ({
     value: resource.id,
     label: resource.name,
@@ -283,28 +287,6 @@ const ResourceAssignmentCreate = () => {
             />
             {errors.actualCost && (
               <p className="text-red-800">{errors.actualCost.message}</p>
-            )}
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="associatedDate"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              Fecha Asociada
-            </label>
-            <input
-              type="date"
-              id="associatedDate"
-              min={0}
-              step="0.01"
-              placeholder="associatedDate"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              {...register("associatedDate", {
-                required: "El campo es requerido.",
-              })}
-            />
-            {errors.associatedDate && (
-              <p className="text-red-800">{errors.associatedDate.message}</p>
             )}
           </div>
           <div className="flex flex-col items-center justify-center">

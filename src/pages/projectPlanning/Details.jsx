@@ -95,6 +95,7 @@ const ProjectPlanningDetails = () => {
   };
 
   const deleteHandler = async (id) => {
+    console.log("IIIIIIDDDDDDDDDD", id);
     const { response, success, error, notificationType } = await handleDelete(
       id
     );
@@ -119,7 +120,8 @@ const ProjectPlanningDetails = () => {
 
     if (response?.status === 200) {
       setResourceAssignment(response.resourceAssignment);
-      navigate("/projects");
+      //navigate("/projects");
+      window.location.reload();
     }
 
     if (success) {
@@ -183,7 +185,7 @@ const ProjectPlanningDetails = () => {
                             });
 
                             if (result.isConfirmed) {
-                              await deleteHandler(resourceAssignments.id);
+                              await deleteHandler(projectPlanning.id);
                               Swal.fire(
                                 "¡Eliminado!",
                                 "Tu planificacion ha sido eliminado.",
@@ -212,7 +214,7 @@ const ProjectPlanningDetails = () => {
                 <div className="col-span-1">Cantidad</div>
                 <div className="col-span-1">Costo Estimado</div>
                 <div className="col-span-1">Costo Actual</div>
-                <div className="col-span-1">Fecha Asociada</div>
+                <div className="col-span-1">Fecha de Ingreso</div>
                 <div className="col-span-2">Acciones</div>
               </div>
               {resourceAssignments &&
@@ -258,7 +260,7 @@ const ProjectPlanningDetails = () => {
                             });
 
                             if (result.isConfirmed) {
-                              await deleteHandler(resourceAssignment.id);
+                              await deleteHandlerRA(resourceAssignment.id);
                               Swal.fire(
                                 "¡Eliminado!",
                                 "Tu planificacion ha sido eliminado.",

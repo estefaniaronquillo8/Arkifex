@@ -51,6 +51,7 @@ const ResourceCreate = () => {
       data
     );
     if (success) {
+      window.location.reload()
       showNotification(success, notificationType);
     }
 
@@ -207,7 +208,6 @@ const ResourceCreate = () => {
               <button
                 type="submit"
                 className="btn-custom btn-primary"
-                onClick={() => window.location.reload()}
               >
                 Crear Material
               </button>
@@ -216,7 +216,6 @@ const ResourceCreate = () => {
               <button
                type="submit" 
                className="btn-custom btn-primary"
-               onClick={() => window.location.reload()}
                >
                 Crear Personal
               </button>

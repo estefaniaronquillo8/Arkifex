@@ -183,179 +183,142 @@ const TemplateDetails = () => {
   };
   const [currentSection, setCurrentSection] = useState("details");
 
-//Detalles
-const ProjectDetailsSection = ({ project }) => {
-  return (
-    <div className="bg-white shadow-md rounded-lg p-6">
-     {project && (
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <div className="space-y-6">
-            <div className="flex flex-wrap space-x-4">
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Nombre</h2>
-                <p>{project.name}</p>
+  //Detalles
+  const ProjectDetailsSection = ({ project }) => {
+    return (
+      <div className="bg-white shadow-md rounded-lg p-6">
+        {project && (
+          <div className="bg-white shadow-md rounded-lg p-6">
+            <div className="space-y-6">
+              <div className="flex flex-wrap space-x-4">
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Nombre</h2>
+                  <p>{project.name}</p>
+                </div>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Descripción</h2>
+                  <p>{project.description}</p>
+                </div>
+                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                  <h2 className="font-bold text-lg mb-2">Status5</h2>
+                  <p>{project.status}</p>
+                </div>
               </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Descripción</h2>
-                <p>{project.description}</p>
+              <Link
+                to={`/templates/edit/${project.id}`}
+                className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+              >
+                Editar
+              </Link>
+
+              <button
+                onClick={async () => {
+                  const result = await Swal.fire({
+                    title: "¿Estás seguro de eliminar su plantilla?",
+                    text: "¡No podrás revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Sí, eliminarlo",
+                    cancelButtonText: "Cancelar",
+                  });
+
+                  if (result.isConfirmed) {
+                    await deleteHandler(project.id);
+                    Swal.fire(
+                      "¡Eliminado!",
+                      "Tu plantilla ha sido eliminada.",
+                      "success"
+                    );
+                  }
+                }}
+                className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
+              >
+                Eliminar
+              </button>
+              <button
+                onClick={handleDuplicateProject}
+                className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+              >
+                Duplicar Proyecto
+              </button>
+
+              <div>
+                <button
+                  onClick={handleBack}
+                  className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Volver
+                </button>
               </div>
-              <div className="flex-1 bg-white rounded-lg shadow p-4">
-                <h2 className="font-bold text-lg mb-2">Status5</h2>
-                <p>{project.status}</p>
-              </div>
-            </div>
-            <Link
-              to={`/templates/edit/${project.id}`}
-              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Editar
-            </Link>
-
-            <button
-                          onClick={async () => {
-                            const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar su plantilla?",
-                              text: "¡No podrás revertir esto!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Sí, eliminarlo",
-                              cancelButtonText: "Cancelar",
-                            });
-
-                            if (result.isConfirmed) {
-                              await deleteHandler(project.id);
-                              Swal.fire(
-                                "¡Eliminado!",
-                                "Tu plantilla ha sido eliminada.",
-                                "success"
-                              );
-                            }
-                          }}
-                          className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
-                        >
-                          Eliminar
-                        </button>
-            <button
-              onClick={handleDuplicateProject}
-              className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Duplicar Proyecto
-            </button>   
-
-<div>
-            <button
-              onClick={handleBack}
-              className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Volver
-            </button>
-
             </div>
           </div>
-        </div>
-      )}
-    </div>
-)};
+        )}
+      </div>
+    );
+  };
 
+  // Creacion Tareas
+  const TaskCreationSection = ({ project }) => {
+    return (
+      <div>
+        <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
+        <button
+          onClick={handleCreateProjectPlanning}
+          className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+        >
+          Crear Nueva Planificación
+        </button>
 
-// Creacion Tareas
-const TaskCreationSection = ({ project }) => {
-  return (
-    <div>
-      <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
-            <button
-              onClick={handleCreateProjectPlanning}
-              className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-            >
-              Crear Nueva Planificación
-            </button>
-
-            <div className="bg-white shadow-md rounded-lg">
-              <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                <div className="col-span-1 pl-3">Nombre</div>
-                <div className="col-span-1">Descripción</div>
-                <div className="col-span-1">Status</div>
-                <div className="col-span-1">Fecha de Inicio</div>
-                <div className="col-span-1">Fecha de Fin</div>
-                <div className="col-span-2">Acciones</div>
-              </div>
-              {projectPlannings &&
-                projectPlannings.map((projectPlanning) => {
-                  // Buscar el recurso correspondiente a esta asignación
-                  /* const resource = resources.find(
+        <div className="bg-white shadow-md rounded-lg">
+          <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+            <div className="col-span-1 pl-3">Nombre</div>
+            <div className="col-span-1">Descripción</div>
+            <div className="col-span-1">Status</div>
+            <div className="col-span-1">Fecha de Inicio</div>
+            <div className="col-span-1">Fecha de Fin</div>
+            <div className="col-span-2">Acciones</div>
+          </div>
+          {projectPlannings &&
+            projectPlannings.map((projectPlanning) => {
+              // Buscar el recurso correspondiente a esta asignación
+              /* const resource = resources.find(
                     (resource) => resource.id === resourceAssignment.resourceId
                   ); */
 
-                  return (
-                    <div
-                      key={projectPlanning.id}
-                      className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
-                    >
-                      {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
-                      {/* <div className="col-span-1">
+              return (
+                <div
+                  key={projectPlanning.id}
+                  className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
+                >
+                  {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
+                  {/* <div className="col-span-1">
                         {resource ? resource.name : "Desconocido"}
                       </div> */}
-                      <div className="col-span-1">{projectPlanning.name}</div>
-                      <div className="col-span-1">
-                        {projectPlanning.description}
-                      </div>
-                      <div className="col-span-1">{projectPlanning.status}</div>
-                      <div className="col-span-1">
-                        {projectPlanning.startDate}
-                      </div>
-                      <div className="col-span-1">
-                        {projectPlanning.endDate}
-                      </div>
+                  <div className="col-span-1">{projectPlanning.name}</div>
+                  <div className="col-span-1">
+                    {projectPlanning.description}
+                  </div>
+                  <div className="col-span-1">{projectPlanning.status}</div>
+                  <div className="col-span-1">{projectPlanning.startDate}</div>
+                  <div className="col-span-1">{projectPlanning.endDate}</div>
 
-                      <div className="col-span-2">
-                        <Link
-                          to={`/projectPlannings/details/${projectPlanning.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Detalles
-                        </Link>
-                        {/* <Link
-                          to={`/projectPlannings/edit/${projectPlanning.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Editar
-                        </Link> */}
-                        {/* <button
-                          onClick={async () => {
-                            const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar tu plantilla?",
-                              text: "¡No podrás revertir esto!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Sí, eliminarlo",
-                              cancelButtonText: "Cancelar",
-                            });
-
-                            if (result.isConfirmed) {
-                              await deleteHandler(projectPlanning.id);
-                              Swal.fire(
-                                "¡Eliminado!",
-                                "Tu plantilla ha sido eliminada.",
-                                "success"
-                              );
-                            }
-                          }}
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar
-                        </button> */}
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-    </div>
-  );
-};
+                  <div className="col-span-2">
+                    <Link
+                      to={`/projectPlannings/details/${projectPlanning.id}`}
+                      className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                    >
+                      Detalles
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    );
+  };
 
   //Subproyectos
   // const SubprojectsSection = ({ project }) => {
@@ -429,12 +392,13 @@ const TaskCreationSection = ({ project }) => {
         </h2>
       )}
 
-       <div>
+      <div>
         <nav className="navtemp">
           <button
-           className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
-            currentSection === "details" ? "activeButton" : ""}`}
-           onClick={() => setCurrentSection("details")}
+            className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
+              currentSection === "details" ? "activeButton" : ""
+            }`}
+            onClick={() => setCurrentSection("details")}
           >
             Detalles Plantillas
           </button>
@@ -468,8 +432,6 @@ const TaskCreationSection = ({ project }) => {
           <SubprojectsSection project={project} />
         )} */}
       </div>
-
-     
     </div>
   );
 };

@@ -372,7 +372,7 @@ const ProjectDetails = () => {
 
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                <LocationDetails locationId={locationForThisProject.id} />
+                <LocationDetails locationId={locationForThisProject.id} mode="show" />
               </div>
             </div>
           )}

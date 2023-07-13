@@ -106,7 +106,7 @@ function LocationEdit() {
                 {...register("projectId")}
                 className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
               />
-            </div>
+            </div>*/}
             <div>
               <label
                 htmlFor="address"
@@ -118,9 +118,10 @@ function LocationEdit() {
                 id="address"
                 type="text"
                 {...register("address")}
+                readOnly
                 className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
               />
-            </div> */}
+            </div> 
             <div>
               <label
                 htmlFor="calculatedArea"

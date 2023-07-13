@@ -62,7 +62,7 @@ function ResourceEdit() {
     setSuccess(success);
     setNotificationType(notificationType);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate("/resources");
+    if(success) navigate("/resources");
   };
 
   const handleChange = (event) => {

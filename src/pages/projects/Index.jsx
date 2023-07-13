@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import {
-  getAllProjects,
-  handleDelete,
-} from "../../services/project.api.routes";
+import { getAllProjects } from "../../services/project.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +8,6 @@ import { BsFillPlusCircleFill } from "react-icons/bs";
 import { getAllUsers } from "../../services/user.api.routes";
 import Swal from "sweetalert2";
 import { createReport, getLastReport } from "../../services/report.api.routes";
-
 
 const ProjectIndex = () => {
   const {
@@ -80,41 +76,33 @@ const ProjectIndex = () => {
     setNotificationType(null);
   }, [userInSession]);
 
-  const handleCreateProject = () => {
-    setSelectedProjectId(null);
-    navigate("/projects/create");
-  };
-
   const handleClick = () => {
     Swal.fire({
-      title: '¿Qué deseas crear?',
+      title: "¿Qué deseas crear?",
       showCancelButton: true,
-      confirmButtonText: 'Proyecto desde 0',
-      cancelButtonText: 'Desde plantilla',
-      confirmButtonColor: '#405BF1', // Color de fondo del botón de confirmación (rojo)
-      cancelButtonColor: '#7C63BA', // Color de
+      confirmButtonText: "Proyecto desde 0",
+      cancelButtonText: "Desde plantilla",
+      confirmButtonColor: "#405BF1", // Color de fondo del botón de confirmación (rojo)
+      cancelButtonColor: "#7C63BA", // Color de
     }).then((result) => {
       if (result.value === true) {
         // Redirigir a la página "Desde 0"
-        navigate('/projects/create');
+        navigate("/projects/create");
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // Redirigir a la página "Desde plantilla"
-        navigate('/templates');
+        navigate("/templates");
       }
     });
-    
-
   };
 
   const [isHovered, setIsHovered] = useState(false);
 
   const handleCreateReport = async (projectid) => {
-    
     const { response, success, error, notificationType } = await createReport(
       projectid
     );
 
-    console.log("ProjectReport", response.report);
+    console.log("ProjectReport", response);
 
     if (success) {
       showNotification(success, notificationType);
@@ -125,26 +113,14 @@ const ProjectIndex = () => {
     }
 
     //setSelectedProjectId(projectid);
-     window.location.reload();
-   
-  };
-
-  const deleteHandler = async (id) => {
-    const { response, success, error, notificationType } = await handleDelete(
-      id
-    );
-    if (response?.status === 200) {
-      setProjects((prevProjects) =>
-        prevProjects.filter((project) => project.id !== id)
-      );
-    }
-    setError(error);
-    setSuccess(success);
-    setNotificationType(notificationType);
+    window.location.reload();
   };
 
   const filterProjects = () => {
-    if (roleInSession && (roleInSession.name === "superAdmin" || roleInSession.name === "admin")) {
+    if (
+      roleInSession &&
+      (roleInSession.name === "superAdmin" || roleInSession.name === "admin")
+    ) {
       // Mostrar todos los proyectos para los usuarios con roles de "SuperAdmin" y "Admin"
       return projects.filter(
         (project) =>
@@ -164,9 +140,8 @@ const ProjectIndex = () => {
       return [];
     }
   };
-  
+
   const filteredProjects = filterProjects();
-  
 
   return (
     <div className="container mx-auto px-4 py-6 mt-5">
@@ -215,14 +190,13 @@ const ProjectIndex = () => {
               >
                 <h2 className="text-xl font-bold mb-2 text-white">{name}</h2>
                 <h5 className=" font-bold mb-2 text-white">
-                  Encargado: {user ? `${user.name} ${user.lastname}` : "Unknown"}
+                  Encargado:{" "}
+                  {user ? `${user.name} ${user.lastname}` : "Unknown"}
                 </h5>
                 <h5 className=" font-bold mb-2 text-white">
                   Inicio: {startDate}
                 </h5>
-                <h3 className="font-bold mb-2 text-white">
-                  Fin: {endDate}
-                </h3>
+                <h3 className="font-bold mb-2 text-white">Fin: {endDate}</h3>
                 <div>
                   <Link
                     to={`/projects/details/${id}`}
@@ -233,7 +207,7 @@ const ProjectIndex = () => {
                   <Link
                     to={`/projects/dashboards/${id}`}
                     className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
-                    onClick={()=> handleCreateReport(id)}
+                    onClick={() => handleCreateReport(id)}
                   >
                     Dashboards
                   </Link>

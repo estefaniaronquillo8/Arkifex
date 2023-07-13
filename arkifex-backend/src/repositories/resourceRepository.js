@@ -3,7 +3,7 @@ const { Resource, sequelize } = require("../models");
 const createResource = async (resourceData) => {
   const transaction = await sequelize.transaction();
   try {
-    const response = await findResourceByName(resourceData.name);
+    const response = await findResourceByNameAndDescription(resourceData.name, resourceData.description);
     if (response?.resource) {
       return {
         status: 409,
@@ -55,12 +55,12 @@ const getAllResources = async () => {
 const updateResource = async (id, resourceData) => {
   const transaction = await sequelize.transaction();
   try {
-    if (resourceData.name) {
-      const response = await findResourceByName(resourceData.name);
+    if (resourceData.name && resourceData.description) {
+      const response = await findResourceByNameAndDescription(resourceData.name, resourceData.description);
       if (response.status === 200 && response.resource.id !== parseInt(id)) {
         return {
           status: 409,
-          message: "Name already exists",
+          message: "Resource already exists",
           notificationType: "info",
         };
       }
@@ -104,8 +104,8 @@ const deleteResource = async (id) => {
   }
 };
 
-const findResourceByName = async (name) => {
-  const resource = await Resource.findOne({ where: { name } });
+const findResourceByNameAndDescription = async (name, description) => {
+  const resource = await Resource.findOne({ where: { name, description } });
   if (!resource) {
     return { status: 404 };
   }
@@ -135,6 +135,6 @@ module.exports = {
   getAllResources,
   updateResource,
   deleteResource,
-  findResourceByName,
+  findResourceByNameAndDescription,
   findById,
 };
