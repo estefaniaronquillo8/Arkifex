@@ -22,6 +22,7 @@ function ProjectDashboards() {
   const navigate = useNavigate();
   const {
     projects,
+    project,
     setProjects,
     users,
     setUsers,
@@ -188,7 +189,7 @@ function ProjectDashboards() {
       doc.setFont("helvetica", "bold");
 
       // Project details section
-      doc.text(`Proyecto  ${reportData.projectId}`, margin, y);
+      doc.text(`Proyecto  ${report.projectName}`, margin, y);
       y += 10;
       doc.setFont("helvetica", "bold");
       // doc.text(`Project ID: ${reportData.id}`, margin+5, y);

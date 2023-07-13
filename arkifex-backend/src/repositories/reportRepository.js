@@ -122,6 +122,7 @@ const createReport = async (projectId) => {
     const report = await Report.create(
       {
         projectId: projectId,
+        projectName: project.name,
         userId: project.userId,
         actualBudget: actualBudget,
         estimatedBudget: estimatedBudget,

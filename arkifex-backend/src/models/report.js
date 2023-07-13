@@ -18,6 +18,10 @@ const Report = sequelize.define("Report", {
       key: "id",
     },
   },
+  projectName: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   userId: {
     type: DataTypes.INTEGER,
     allowNull: true,
