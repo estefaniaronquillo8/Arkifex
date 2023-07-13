@@ -30,7 +30,7 @@ const createReport = async (projectId) => {
     let tasksEstimatedCost = 0;
     let tasksActualCost = 0;
     let lateTasks = 0;
-    let maxLateDate = new Date('1999-01-01');
+    let maxLateDate = new Date(project.endDate);
 
     const date = new Date();
 
