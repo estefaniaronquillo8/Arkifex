@@ -30,6 +30,7 @@ const createReport = async (projectId) => {
     let tasksEstimatedCost = 0;
     let tasksActualCost = 0;
     let lateTasks = 0;
+    let maxLateDate = new Date('1999-01-01');
 
     const date = new Date();
 
@@ -45,7 +46,12 @@ const createReport = async (projectId) => {
       //console.log('DATEEEEEEEEEEEEEEEEEEEEEE', new Date(planning.endDate), date,new Date(planning.endDate) <= date);
       if (new Date(planning.endDate) <= date && planning.status !== "Completado"){
         lateTasks++;
+        if (new Date(planning.endDate) >= maxLateDate){
+          maxLateDate = new Date(planning.endDate);
+        }
       }
+
+      
       const resourceAssignments = (
         await ResourceAssignment.findAll({
           where: { projectPlanningId: planning.id },
@@ -55,17 +61,11 @@ const createReport = async (projectId) => {
         tasksActualCost += x.actualCost;
         return true;
       });
-      //console.log(resoureAssignments)
-      // for(const resourceAssignment of resourceAssignments){
-      //   tasksEstimatedCost+=resourceAssignment.estimatedCost;
-      //   tasksActualCost+=resourceAssignment.actualCost;
-      // }
-      // console.log(tasksActualCost);
-      //console.log(tasksEstimatedCost);
+
       tasks++;
-    }); // const [budgetData, metadataBudgetData] = await sequelize.query(
-    //   "SELECT PPS.projectId, SUM(RAS.actualCost) as ActualBudget, SUM(RAS.estimatedCost) as EstimatedBudget, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as CostVariance, DATEDIFF(MAX(PPS.endDate), CURDATE()) as dateVariance "+
-    //    "FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id WHERE PPS.projectId = "+projectId+" GROUP BY PPS.projectId");
+    });
+
+    
 
     const results = await ResourceAssignment.findAll({
       attributes: [
@@ -101,12 +101,22 @@ const createReport = async (projectId) => {
     let estimatedBudget = 0;
     let costVariance = 0;
     let dateVariance = 0;
+    
+
+    if(maxLateDate === new Date('1999-01-01')){
+      dateVariance =0;
+    } else {
+      const differenceInMilliseconds = maxLateDate - new Date();
+    const differenceInDays = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+      dateVariance = differenceInDays;
+      
+    };
 
     results.map((result) => {
       actualBudget = result.getDataValue("ActualBudget");
       estimatedBudget = result.getDataValue("EstimatedBudget");
       costVariance = result.getDataValue("CostVariance");
-      dateVariance = result.getDataValue("dateVariance");
+      //dateVariance = result.getDataValue("dateVariance");
     });
 
     const report = await Report.create(
