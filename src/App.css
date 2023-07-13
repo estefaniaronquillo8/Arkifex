@@ -131,6 +131,15 @@ th {
     background-color: rgb(12, 104, 185);   
 }
 
+.dot {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 80%;
+  margin-right: 15px;
+}
+
+
 .sidebar-closed-text {
   opacity: 0;
   transform: translateX(-20%);

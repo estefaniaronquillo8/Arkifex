@@ -38,7 +38,7 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyCmIHtN6kcNKAzzF_Fxv1E3U0Fjq8tm66Y`
       );
-      
+
       const { results } = response.data;
       return results[0].formatted_address;
     } catch (error) {
@@ -105,7 +105,8 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
             });
           }
         }
-        if (mode !== "show" && setLocationData) setLocationData(response.location); // Update location data in parent
+        if (mode !== "show" && setLocationData)
+          setLocationData(response.location); // Update location data in parent
       };
 
       fetchLocation();
@@ -237,11 +238,17 @@ const LocationDetails = ({ locationId, mode, setLocationData, address }) => {
 
   return isLoaded && center && location ? (
     <>
-      <input id="location-search-input" type="text" />
+      <input
+        className="mt-4 block w-full py-2 px-3 rounded-md border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+        id="location-search-input"
+        type="text"
+      />
+      <br />
       <GoogleMap
-        mapContainerStyle={mapContainerStyle}
+        mapContainerStyle={{ width: "100%", height: "400px" }}
         options={mapOptions}
         onLoad={onLoad}
+       
       />
     </>
   ) : (

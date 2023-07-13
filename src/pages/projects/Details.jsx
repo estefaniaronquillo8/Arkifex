@@ -137,6 +137,14 @@ const ProjectDetails = () => {
     }
   };
 
+  const handleBackButton = () => {
+    setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
+    if (currentSection === "creation") {
+      setCurrentSection("details"); // Cambiar la sección actual a "Detalles Generales"
+    }
+  };
+  
+
   const deleteHandler = async (id) => {
     console.log("IDDDDDDDDDDD", id);
     const { response, success, error, notificationType } = await handleDelete(
@@ -287,45 +295,9 @@ const ProjectDetails = () => {
                   to={`/projects/edit/${project.id}`}
                   className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                 >
-                  Editar 1
+                  Editar
                 </Link>
               )}
-
-              <button
-                onClick={async () => {
-                  const result = await Swal.fire({
-                    title: "¿Estás seguro de eliminar tu proyecto?",
-                    text: "¡No podrás revertir esto!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Sí, eliminarlo",
-                    cancelButtonText: "Cancelar",
-                  });
-
-                  if (result.isConfirmed) {
-                    const deleteResult = await deleteHandler(project.id);
-
-                    if (deleteResult.success) {
-                      Swal.fire(
-                        "¡Eliminado!",
-                        "Tu proyecto ha sido eliminado.",
-                        "success"
-                      );
-                    } else {
-                      Swal.fire(
-                        "¡Error!",
-                        deleteResult.error, // Usar el error devuelto
-                        "error"
-                      );
-                    }
-                  }
-                }}
-                className="inline-block bg-red-500 text-white px-4 py-2 mr-2 rounded"
-              >
-                Eliminar
-              </button>
 
               <button
                 onClick={handleIsTemplateUpdate}
@@ -336,16 +308,44 @@ const ProjectDetails = () => {
               {isTemplateProject && (
                 <button
                   onClick={handleDuplicateProject}
-                  className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                  className="inline-block bg-green-500 text-white px-4 py-2  rounded"
                 >
-                  Duplicar Plantilla
+                  Duplicar Proyecto
                 </button>
               )}
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <button
+                  onClick={async () => {
+                    const result = await Swal.fire({
+                      title: "¿Estás seguro de eliminar tu proyecto?",
+                      text: "¡No podrás revertir esto!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Sí, eliminarlo",
+                      cancelButtonText: "Cancelar",
+                    });
+
+                    if (result.isConfirmed) {
+                      await deleteHandler(project.id);
+                      Swal.fire(
+                        "¡Eliminado!",
+                        "Tu proyecto ha sido eliminado.",
+                        "success"
+                      );
+                    }
+                  }}
+                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
+              </div>
             </>
           )}
 
           {locationForThisProject && (
-            <div className="flex space-x-4">
+            <div className="flex space-x-8">
               <div>
                 <h1 className="text-4xl font-semibold mb-6">
                   Localización del Proyecto
@@ -354,35 +354,39 @@ const ProjectDetails = () => {
                   <h2 className="font-bold text-lg mb-2">Dirección</h2>
                   <p>{locationForThisProject.address}</p>
                 </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                {/* <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Latitud</h2>
                   <p>{locationForThisProject.lat}</p>
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Longitud</h2>
                   <p>{locationForThisProject.lng}</p>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-4">
+                </div> */}
+                <div className="mt-4 flex-1 bg-white rounded-lg shadow p-4">
                   <h2 className="font-bold text-lg mb-2">Area</h2>
                   <p>{locationForThisProject.area}</p>
                 </div>
+
+               
               </div>
+
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Mapa</h2>
                 <LocationDetails locationId={locationForThisProject.id} />
               </div>
             </div>
           )}
-          {roleInSession && roleInSession.name !== "client" && (
-            <div>
-              <button
-                onClick={handleLocationClick}
-                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-              >
-                {locationButtonText}
-              </button>
-            </div>
-          )}
+
+{roleInSession && roleInSession.name !== "client" && (
+                  <div className="mt-4 flex-1 bg-white  p-4">
+                    <button
+                      onClick={handleLocationClick}
+                      className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+                    >
+                      {locationButtonText}
+                    </button>
+                  </div>
+                )}
 
           <button
             onClick={handleBack}
@@ -396,6 +400,37 @@ const ProjectDetails = () => {
   };
 
   const TaskCreationSection = ({ project }) => {
+    const [statusFilter, setStatusFilter] = useState("");
+
+    const handleStatusFilter = (event) => {
+      setStatusFilter(event.target.value);
+    };
+
+    const getStatusColor = (status) => {
+      switch (status) {
+        case "no_comenzado":
+          return "#D41F1F";
+        case "en_proceso":
+          return "#F0C500 ";
+        case "en_espera":
+          return "#FA6F0E";
+        case "completado":
+          return "#A8DA1A";
+        case "cancelado":
+          return "#777777";
+        default:
+          return "black";
+      }
+    };
+
+    const filterByStatus = (projectPlanning) => {
+      if (statusFilter === "") {
+        return true;
+      } else {
+        return projectPlanning.status === statusFilter;
+      }
+    };
+
     return (
       <div>
         <h1 className="text-4xl font-semibold mb-6">Creación de Tareas</h1>
@@ -406,49 +441,80 @@ const ProjectDetails = () => {
           >
             Crear Nueva Tarea
           </button>
+          
         )}
-        <div className="bg-white shadow-md rounded-lg">
-          <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-            <div className="col-span-1 pl-3">Nombre</div>
-            <div className="col-span-1">Descripción</div>
-            <div className="col-span-1">Status</div>
-            <div className="col-span-1">Fecha de Inicio</div>
-            <div className="col-span-1">Fecha de Fin</div>
-            {roleInSession && roleInSession.name !== "client" && (
-              <th className="px-4 py-2">Acciones</th>
-            )}
-          </div>
-          {projectPlannings &&
-            projectPlannings.map((projectPlanning) => {
-              return (
-                <div
-                  key={projectPlanning.id}
-                  className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
-                >
-                  <div className="col-span-1">{projectPlanning.name}</div>
-                  <div className="col-span-1">
-                    {projectPlanning.description}
-                  </div>
-                  <div className="col-span-1">{projectPlanning.status}</div>
-                  <div className="col-span-1">{projectPlanning.startDate}</div>
-                  <div className="col-span-1">{projectPlanning.endDate}</div>
-
-                  <div className="col-span-2">
-                    {roleInSession && roleInSession.name !== "client" && (
-                      <>
-                        <Link
-                          to={`/projectPlannings/details/${projectPlanning.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Detalles
-                        </Link>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+         {/* <button
+            onClick={handleBackButton}
+            className="inline-flex-1  mx-80 py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Volver
+          </button> */}
+        <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+          <table className="min-w-full">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>
+                  Status
+                  <select
+                    className="mx-2 rounded-md"
+                    onChange={handleStatusFilter}
+                  >
+                    <option value="">Todos</option>
+                    <option value="no_comenzado">No Comenzado</option>
+                    <option value="en_proceso">En Proceso</option>
+                    <option value="en_espera">En Espera</option>
+                    <option value="completado">Completado</option>
+                    <option value="cancelado">Cancelado</option>
+                  </select>
+                </th>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Fin</th>
+                {roleInSession && roleInSession.name !== "client" && (
+                  <th>Acciones</th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {projectPlannings &&
+                projectPlannings
+                  .filter(filterByStatus)
+                  .map((projectPlanning) => {
+                    return (
+                      <tr key={projectPlanning.id}>
+                        <td>{projectPlanning.name}</td>
+                        <td>{projectPlanning.description}</td>
+                        <td>
+                          <span
+                            className="dot"
+                            style={{
+                              backgroundColor: getStatusColor(
+                                projectPlanning.status
+                              ),
+                            }}
+                          ></span>
+                          {projectPlanning.status}
+                        </td>
+                        <td>{projectPlanning.startDate}</td>
+                        <td>{projectPlanning.endDate}</td>
+                        <td>
+                          {roleInSession && roleInSession.name !== "client" && (
+                            <Link
+                              to={`/projectPlannings/details/${projectPlanning.id}`}
+                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                              Detalles
+                            </Link>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+            </tbody>
+          </table>
         </div>
+       
       </div>
     );
   };
@@ -522,7 +588,7 @@ const ProjectDetails = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">
+      <h2 className="mt-4 text-4xl font-semibold mb-6">
         Detalles del {project && project.name}
       </h2>
 

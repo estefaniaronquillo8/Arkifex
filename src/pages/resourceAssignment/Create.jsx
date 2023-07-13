@@ -28,13 +28,17 @@ const ResourceAssignmentCreate = () => {
     formState: { errors },
   } = useForm({
     resourceId: 0,
+
     projectPlanningId: 0,
+
     quantity: 0,
+
     estimatedCost: 0,
+
     actualCost: 0,
+
     associatedDate: 0,
   });
-
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
   }, []);
@@ -82,6 +86,11 @@ const ResourceAssignmentCreate = () => {
 
   const createHandler = async (data) => {
     data.projectPlanningId = selectedProjectId;
+    console.log("data paso", data);
+    if (data.type === "Personal") {
+      data.quantity = 1;
+    }
+    
     const { response, success, error, notificationType } = await handleCreate(
       data
     );
@@ -101,7 +110,7 @@ const ResourceAssignmentCreate = () => {
   };
   const options = resources.map((resource) => ({
     value: resource.id,
-    label: resource.name
+    label: resource.name,
   }));
 
   const handleChange = (selectedOption) => {
@@ -112,60 +121,97 @@ const ResourceAssignmentCreate = () => {
       setValue("estimatedCost", selectedResource.marketPrice);
     }
   };
+  
+  const [tipoSeleccionado, setTipoSeleccionado] = useState("");
+
+  const handleTipoSeleccionado = (tipo) => {
+    setTipoSeleccionado(tipo);
+    setShowQuantity(tipo !== "Personal");
+  
+  };
+
+  const [showQuantity, setShowQuantity] = useState(true);
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]">
-          <form
-            onSubmit={handleSubmit(async (data) => await createHandler(data))}
-          >
-            <h1 className="mb-6 text-2xl font-bold text-center">
-              Creación de Resource Assignment
-            </h1>
-            <div className="mb-4">
-              <label
-                htmlFor="resourceId"
-                className="block text-gray-700 text-sm font-bold mb-2"
+        <form
+          onSubmit={handleSubmit(async (data) => await createHandler(data))}
+        >
+          <h1 className="mb-6 text-2xl font-bold text-center">
+            Creación de Resource Assignment
+          </h1>
+          <div className="mb-4">
+            <div>
+              <button
+                className="bg-purple-400 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
+                onClick={() => handleTipoSeleccionado("Personal")}
               >
-                Recurso
-              </label>
-              <Controller
-                name="resourceId"
-                control={control}
-                rules={{ required: "El campo es requerido." }}
-                render={({ field }) => (
-                  <select
-                    {...field}
-                    id="resourceId"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    onChange={(e) => {
-                      field.onChange(e); // Para mantener el comportamiento original
-                      const selectedResource = resources.find(
-                        (resource) => resource.id === Number(e.target.value)
-                      );
-                      if (selectedResource) {
-                        setValue("estimatedCost", selectedResource.marketPrice);
-                      }
-                    }}
-                  >
-                    <option value="">Selecciona un recurso</option>
-                    {resources && resources.length > 0 ? (
-                      resources.map((resource) => (
+                Tipo Personal
+              </button>
+              <button
+                className="bg-pink-400 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
+                onClick={() => handleTipoSeleccionado("Material")}
+              >
+                Tipo Material
+              </button>
+            </div>
+            <label
+              htmlFor="resourceId"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Recurso
+            </label>
+            <Controller
+              name="resourceId"
+              control={control}
+              rules={{ required: "El campo es requerido." }}
+              render={({ field }) => (
+                <select
+                  {...field}
+                  id="resourceId"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  onChange={(e) => {
+                    // Mantienes el comportamiento original
+                    
+                    field.onChange(e);
+                    const selectedResource = resources.find(
+                      (resource) => resource.id === Number(e.target.value)
+                    );
+                    if (selectedResource) {
+                      setValue("estimatedCost", selectedResource.marketPrice);
+                    }
+                  }}
+                >
+                  <option value="">Selecciona un recurso</option>
+
+                  {resources && resources.length > 0 ? (
+                    resources
+                      .filter((resource) => {
+                        // Filtras las opciones según el tipo seleccionado
+                        if (tipoSeleccionado === "Personal") {
+                          return resource.type === "Personal";
+                        } else if (tipoSeleccionado === "Material") {
+                          return resource.type === "Material";
+                        }
+                        return true; // Muestra todas las opciones si no se ha seleccionado un tipo específico
+                      })
+                      .map((resource) => (
                         <option key={resource.id} value={resource.id}>
                           {resource.name}
                         </option>
                       ))
-                    ) : (
-                      <option disabled>Cargando recursos...</option>
-                    )}
-                  </select>
-                )}
-              />
-              {errors.resourceId && (
-                <p className="text-red-800">{errors.resourceId.message}</p>
+                  ) : (
+                    <option disabled>Cargando recursos...</option>
+                  )}
+                </select>
               )}
-            </div>
+            />
+            {errors.resourceId && (
+              <p className="text-red-800">{errors.resourceId.message}</p>
+            )}
+          </div>
+          {showQuantity && (
             <div className="mb-4">
               <label
                 htmlFor="quantity"
@@ -185,89 +231,92 @@ const ResourceAssignmentCreate = () => {
                     message: "La cantidad debe tener al menos 1 caracter.",
                   },
                 })}
+                defaultValue={1}
               />
               {errors.quantity && (
                 <p className="text-red-800">{errors.quantity.message}</p>
               )}
             </div>
-            <div className="mb-4">
-              <label
-                htmlFor="estimatedCost"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Costo Estimado
-              </label>
-              <input
-                type="number"
-                id="estimatedCost"
-                min={0}
-                step="0.01"
-                placeholder="Costo Estimado"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("estimatedCost", {
-                  required: "El campo es requerido.",
-                })}
-                readOnly  
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="actualCost"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Costo Actual
-              </label>
-              <input
-                type="number"
-                id="actualCost"
-                min={0}
-                step="0.01"
-                placeholder="actualCost"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("actualCost", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 1,
-                    message: "El costo actual debe ser mayor o igual a 1.",
-                  },
-                })}
-              />
-              {errors.actualCost && (
-                <p className="text-red-800">{errors.actualCost.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="associatedDate"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Fecha Asociada
-              </label>
-              <input
-                type="date"
-                id="associatedDate"
-                min={0}
-                step="0.01"
-                placeholder="associatedDate"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("associatedDate", {
-                  required: "El campo es requerido.",
-                })}
-              />
-              {errors.associatedDate && (
-                <p className="text-red-800">{errors.associatedDate.message}</p>
-              )}
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
-              >
-                Asignar Recurso
-              </button>
-            </div>
-          </form>
-        </div>
+          )}
+
+          <div className="mb-4">
+            <label
+              htmlFor="estimatedCost"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Costo Estimado
+            </label>
+            <input
+              type="number"
+              id="estimatedCost"
+              min={0}
+              step="0.01"
+              placeholder="Costo Estimado"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              {...register("estimatedCost", {
+                required: "El campo es requerido.",
+              })}
+              readOnly
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="actualCost"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Costo Actual
+            </label>
+            <input
+              type="number"
+              id="actualCost"
+              min={0}
+              step="0.01"
+              placeholder="actualCost"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              {...register("actualCost", {
+                required: "El campo es requerido.",
+                minLength: {
+                  value: 1,
+                  message: "El costo actual debe ser mayor o igual a 1.",
+                },
+              })}
+            />
+            {errors.actualCost && (
+              <p className="text-red-800">{errors.actualCost.message}</p>
+            )}
+          </div>
+          <div className="mb-4">
+            <label
+              htmlFor="associatedDate"
+              className="block text-gray-700 text-sm font-bold mb-2"
+            >
+              Fecha Asociada
+            </label>
+            <input
+              type="date"
+              id="associatedDate"
+              min={0}
+              step="0.01"
+              placeholder="associatedDate"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              {...register("associatedDate", {
+                required: "El campo es requerido.",
+              })}
+            />
+            {errors.associatedDate && (
+              <p className="text-red-800">{errors.associatedDate.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <button
+              type="submit"
+
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
+            >
+              Asignar Recurso
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

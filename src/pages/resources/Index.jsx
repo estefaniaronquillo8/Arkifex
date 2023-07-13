@@ -22,10 +22,10 @@ const ResourceIndex = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTable, setSelectedTable] = useState("materiales"); // Estado para almacenar la tabla seleccionada
-  const itemsPerPage = 20; // Número de elementos por página de materiales
+  const itemsPerPage = 15; // Número de elementos por página de materiales
   // personal items
   const [currentPersonalPage, setCurrentPersonalPage] = useState(1);
-  const itemsPersonalPage = 10;
+  const itemsPersonalPage = 15;
   //
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -303,20 +303,23 @@ const ResourceIndex = () => {
               </table>
             </div>
             <div className="flex justify-between mt-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-              >
-                Anterior
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handleNextPage}
-                disabled={currentResources.length < itemsPerPage}
-              >
-                Siguiente
-              </button>
+              {currentPage !== 1 && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handlePreviousPage}
+                >
+                  Anterior
+                </button>
+              )}
+              {currentResourcesp.length >= itemsPerPage && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handleNextPage}
+                  //disabled={currentResources.length < itemsPerPage}
+                >
+                  Siguiente
+                </button>
+              )}
             </div>
           </>
         )}
@@ -355,6 +358,7 @@ const ResourceIndex = () => {
                 <tr>
                   <th className="px-4 py-2">Nombre</th>
                   <th className="px-4 py-2">Descripción</th>
+                  <th className="px-4 py-2">Rol</th>
                   <th className="px-4 py-2">Pago/hora</th>
                   {roleInSession && roleInSession.name !== "client" && (
                     <th className="px-4 py-2">Acciones</th>
@@ -366,6 +370,7 @@ const ResourceIndex = () => {
                   <tr key={resource.id}>
                     <td className="border px-4 py-2">{resource.name}</td>
                     <td className="border px-4 py-2">{resource.description}</td>
+                    <td className="border px-4 py-2">{resource.role}</td>
                     <td className="border px-4 py-2">{resource.marketPrice}</td>
                     {roleInSession && roleInSession.name !== "client" && (
                       <td className="border px-4 py-2">
@@ -412,20 +417,22 @@ const ResourceIndex = () => {
             </table>
 
             <div className="flex justify-between mt-4">
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handlePerPreviousPage}
-                disabled={currentPersonalPage === 1}
-              >
-                Anterior
-              </button>
-              <button
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-                onClick={handlePerNextPage}
-                disabled={currentResourcesp.length < itemsPersonalPage}
-              >
-                Siguiente
-              </button>
+              {currentPersonalPage !== 1 && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handlePreviousPage}
+                >
+                  Anterior
+                </button>
+              )}
+              {currentResourcesp.length >= itemsPersonalPage && (
+                <button
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                  onClick={handlePerNextPage}
+                >
+                  Siguiente
+                </button>
+              )}
             </div>
           </div>
 

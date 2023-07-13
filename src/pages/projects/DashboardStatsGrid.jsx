@@ -55,8 +55,9 @@ function DashboardStateGrid() {
                 {report ? (
                   <ul>
                     <strong className="text-lg text-green-500 font-semibold">
-                      <ul className="text-lg font-semibold">Estimado</ul>
-                      {report.estimatedBudget}
+                      <ul className="text-lg font-semibold">
+                        Estimado: {report.estimatedBudget}
+                      </ul>
                     </strong>
                     <span
                       className={`text-xl ${
@@ -65,8 +66,9 @@ function DashboardStateGrid() {
                           : "text-gray-700"
                       } font-semibold`}
                     >
-                      <ul className="text-lg font-semibold">Actual</ul>
-                      {report.actualBudget}
+                      <ul className="text-lg font-semibold">
+                        Actual: {report.actualBudget}
+                      </ul>
                     </span>
                   </ul>
                 ) : (
@@ -76,7 +78,6 @@ function DashboardStateGrid() {
             </div>
           </div>
         </BoxWrapper>
-
         <BoxWrapper>
           <div className="rounded-full h-12 w-12 flex items-center justify-center bg-yellow-500">
             <SiCashapp className="text-2xl text-white" />
@@ -84,34 +85,28 @@ function DashboardStateGrid() {
           <div className="pl-4">
             <span className="text-xl text-blue-500 font-bold">Restante</span>
             <div className="flex items-center">
-              <strong
-                className={`text-xl font-semibold ${
-                  report && report.budgetVariance < 0
-                    ? "text-red-500"
-                    : "text-gray-700"
-                }`}
-              >
-                {report ? (
-                  <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Presupuesto Restante</ul>
-                        {report.budgetVariance}
-                      </strong>
-                    </ul>
-                ) : (
-                  <p>No data available.</p>
-                )}
-              </strong>
+              {report ? (
+                <strong
+                  className={`text-xl font-semibold ${
+                    report.budgetVariance < 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  Presupuesto Restante: {Math.abs(-report.budgetVariance)}
+                </strong>
+              ) : (
+                <p>No data available.</p>
+              )}
             </div>
           </div>
         </BoxWrapper>
-
         <BoxWrapper>
           <div className="rounded-full h-12 w-12 flex items-center justify-center bg-orange-500">
             <FaTasks className="text-2xl text-white" />
           </div>
           <div className="pl-4 ">
-            <span className="text-sm text-gray-500 font-light">
+            <span className="text-lg text-blue-500 font-bold">
               Tareas en proyecto
             </span>
             <div className="flex items-center">
@@ -120,14 +115,12 @@ function DashboardStateGrid() {
                   <ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Total</ul>
-                        {report.numberOfTasks}
+                        <ul>Total: {report.numberOfTasks}</ul>
                       </strong>
                     </ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Completadas</ul>
-                        {report.taskCompleted}
+                        <ul>Completadas: {report.taskCompleted}</ul>
                       </strong>
                     </ul>
                   </ul>
@@ -144,7 +137,7 @@ function DashboardStateGrid() {
             <BsFillCalendar2WeekFill className="text-2xl text-white" />
           </div>
           <div className="pl-4 ">
-            <span className="text-sm text-gray-500 font-light">
+            <span className="text-lg text-blue-500 font-bold">
               Tareas en proyecto
             </span>
             <div className="flex items-center">
@@ -153,14 +146,12 @@ function DashboardStateGrid() {
                   <ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Terminadas</ul>
-                        {report.taskCompleted}
+                        <ul>Terminadas: {report.taskCompleted}</ul>
                       </strong>
                     </ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Dias atrasados</ul>
-                        {report.timeVariance}
+                        <ul>Dias atrasados: {report.timeVariance}</ul>
                       </strong>
                     </ul>
                   </ul>
@@ -190,7 +181,7 @@ function BoxWrapper({ children }) {
   return (
     <div
       className="bg-gray-100 rounded-xl p-4 flex-1 border border-gray-300 flex items-center"
-      style={{ boxShadow: '0 8px 4px rgba(0, 0.2, 1, 0.5)' }}
+      style={{ boxShadow: "0 8px 4px rgba(0, 0.2, 1, 0.5)" }}
     >
       {children}
     </div>

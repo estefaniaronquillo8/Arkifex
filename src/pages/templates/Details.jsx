@@ -214,7 +214,7 @@ const ProjectDetailsSection = ({ project }) => {
             <button
                           onClick={async () => {
                             const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar tu Plantilla?",
+                              title: "¿Estás seguro de eliminar su plantilla?",
                               text: "¡No podrás revertir esto!",
                               icon: "warning",
                               showCancelButton: true,
@@ -228,7 +228,7 @@ const ProjectDetailsSection = ({ project }) => {
                               await deleteHandler(project.id);
                               Swal.fire(
                                 "¡Eliminado!",
-                                "Tu Proyecto ha sido eliminado.",
+                                "Tu plantilla ha sido eliminada.",
                                 "success"
                               );
                             }
@@ -316,13 +316,13 @@ const TaskCreationSection = ({ project }) => {
                         >
                           Detalles
                         </Link>
-                        <Link
+                        {/* <Link
                           to={`/projectPlannings/edit/${projectPlanning.id}`}
                           className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
                         >
                           Editar
-                        </Link>
-                        <button
+                        </Link> */}
+                        {/* <button
                           onClick={async () => {
                             const result = await Swal.fire({
                               title: "¿Estás seguro de eliminar tu plantilla?",
@@ -347,7 +347,7 @@ const TaskCreationSection = ({ project }) => {
                           className="inline-block bg-red-500 text-white px-4 py-2 rounded"
                         >
                           Eliminar
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   );
@@ -358,67 +358,67 @@ const TaskCreationSection = ({ project }) => {
 };
 
   //Subproyectos
-  const SubprojectsSection = ({ project }) => {
-    return (
-      <div>
-         {!project.parentId && (
-              <>
-                <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
+  // const SubprojectsSection = ({ project }) => {
+  //   return (
+  //     <div>
+  //        {!project.parentId && (
+  //             <>
+  //               <h1 className="text-4xl font-semibold mb-6">Sub-Proyectos</h1>
 
-                <button
-                  onClick={handleCreateSubproject}
-                  className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-                >
-                  Crear Nuevo Subproyecto
-                </button>
+  //               <button
+  //                 onClick={handleCreateSubproject}
+  //                 className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+  //               >
+  //                 Crear Nuevo Subproyecto
+  //               </button>
 
-                {/* <Link
-                  to="/projects/create"
-                  className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
-                >
-                  Crear Sub-Proyecto
-                </Link> */}
-                <div className="bg-white shadow-md rounded-lg">
-                  <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                    <div className="col-span-1 ml-5">Nombre</div>
-                    <div className="col-span-1">Descripción</div>
-                    <div className="col-span-1">Status</div>
-                    <div className="col-span-1">Fecha de Inicio</div>
-                    <div className="col-span-1">Fecha de Fin</div>
-                    <div className="col-span-2">Acciones</div>
-                  </div>
-                  {projects &&
-                    projects.map((project) => {
-                      return (
-                        <div
-                          key={project.id}
-                          className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
-                        >
-                          <div className="col-span-1 ml-5">{project.name}</div>
-                          <div className="col-span-1">
-                            {project.description}
-                          </div>
-                          <div className="col-span-1">{project.status}</div>
-                          <div className="col-span-1">{project.startDate}</div>
-                          <div className="col-span-1">{project.endDate}</div>
+  //               {/* <Link
+  //                 to="/projects/create"
+  //                 className="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block"
+  //               >
+  //                 Crear Sub-Proyecto
+  //               </Link> */}
+  //               <div className="bg-white shadow-md rounded-lg">
+  //                 <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
+  //                   <div className="col-span-1 ml-5">Nombre</div>
+  //                   <div className="col-span-1">Descripción</div>
+  //                   <div className="col-span-1">Status</div>
+  //                   <div className="col-span-1">Fecha de Inicio</div>
+  //                   <div className="col-span-1">Fecha de Fin</div>
+  //                   <div className="col-span-2">Acciones</div>
+  //                 </div>
+  //                 {projects &&
+  //                   projects.map((project) => {
+  //                     return (
+  //                       <div
+  //                         key={project.id}
+  //                         className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
+  //                       >
+  //                         <div className="col-span-1 ml-5">{project.name}</div>
+  //                         <div className="col-span-1">
+  //                           {project.description}
+  //                         </div>
+  //                         <div className="col-span-1">{project.status}</div>
+  //                         <div className="col-span-1">{project.startDate}</div>
+  //                         <div className="col-span-1">{project.endDate}</div>
 
-                          <div className="col-span-2">
-                            <Link
-                              to={`/projects/details/${project.id}`}
-                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                            >
-                              Detalles
-                            </Link>
-                          </div>
-                        </div>
-                      );
-                    })}
-                </div>
-              </>
-            )}
-      </div>
-    );
-  };
+  //                         <div className="col-span-2">
+  //                           <Link
+  //                             to={`/projects/details/${project.id}`}
+  //                             className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+  //                           >
+  //                             Detalles
+  //                           </Link>
+  //                         </div>
+  //                       </div>
+  //                     );
+  //                   })}
+  //               </div>
+  //             </>
+  //           )}
+  //     </div>
+  //   );
+  // };
 
   const [showSubprojectsButton, setShowSubprojectsButton] = useState(true);
   return (
@@ -446,7 +446,7 @@ const TaskCreationSection = ({ project }) => {
           >
             Creacion de Tareas
           </button>
-          {showSubprojectsButton && (
+          {/* {showSubprojectsButton && (
             <button
               className={`btnnavtemp text-lg font-bold text-white px-7 py-6 rounded inline-block ${
                 currentSection === "subprojects" ? "activeButton" : ""
@@ -455,7 +455,7 @@ const TaskCreationSection = ({ project }) => {
             >
               Sub-Proyectos
             </button>
-          )}
+          )} */}
         </nav>
         {currentSection === "details" && (
           <ProjectDetailsSection project={project} />
@@ -464,9 +464,9 @@ const TaskCreationSection = ({ project }) => {
           <TaskCreationSection project={project} />
         )}
 
-        {currentSection === "subprojects" && (
+        {/* {currentSection === "subprojects" && (
           <SubprojectsSection project={project} />
-        )}
+        )} */}
       </div>
 
      

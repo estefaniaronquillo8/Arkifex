@@ -89,7 +89,7 @@ function LocationEdit() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Edit location</h2>
+      <h2 className="mt-4 text-4xl font-semibold mb-6">Editar Localizacion</h2>
       <div className="bg-white shadow-md rounded-lg p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8 gap-y-4">
@@ -124,7 +124,7 @@ function LocationEdit() {
             <div>
               <label
                 htmlFor="calculatedArea"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-xl font-medium text-gray-700"
               >
                 Área del polígono:
               </label>
@@ -134,13 +134,13 @@ function LocationEdit() {
                 step="any"
                 value={calculatedArea}
                 readOnly
-                className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                className="mt-4 block w-full py-2 px-3 rounded-md border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
             <div>
               <label
                 htmlFor="area"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-xl font-medium text-gray-800"
               >
                 Area del proyecto:
               </label>
@@ -149,7 +149,7 @@ function LocationEdit() {
                 type="number"
                 step="any"
                 {...register("area")}
-                className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
+                className="mt-4 block w-full py-2 px-3 rounded-md border border-gray-300 bg-white text-gray-800 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
 
@@ -200,7 +200,7 @@ function LocationEdit() {
             type="submit"
             className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Save
+            Guardar Ubicacion
           </button>
         </form>
         <LocationDetails
