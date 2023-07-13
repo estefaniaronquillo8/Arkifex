@@ -139,18 +139,18 @@ function ProjectDashboards() {
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(8, 4, 87); // Define el color del texto en rojo RGB
-      
+
       // Calculate the width of the title
       const title = "Reporte Detallado del Proyecto";
       const titleWidth = doc.getTextWidth(title);
-      
+
       // Calculate the x-position to center the title
       const titleX = (pageWidth - titleWidth) / 2;
-      
+
       // Add the report title
       doc.text(title, titleX, y);
       y += 15;
-      
+
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(0, 0, 0); // Define el color del texto en rojo RGB
@@ -473,9 +473,35 @@ function ProjectDashboards() {
 
             // Adjust the y position after adding the "Personal Asignado" table
             y = doc.autoTable.previous.finalY + margin;
+
+            const personalTotalsDescription = `
+              - Costo Total:                           ${personalTotals[3]}
+              - Costo Total Estimado:                  ${personalTotals[4]}
+              - Variación con Total Estimado:          ${personalTotals[5]}
+              - Variación con Costo Unitario Estimado: ${personalTotals[6]}`;
+
+            y += 10;
+            doc.setFontSize(12);
+            doc.setFont("helvetica", "bold");
+            doc.text(
+              "Resumen de resultados de personal: ",
+              margin + 25,
+              doc.autoTable.previous.finalY + margin + 10
+            );
+            y += 5;
+
+            doc.setFontSize(10);
+            doc.text(
+              personalTotalsDescription,
+              margin + 30,
+              doc.autoTable.previous.finalY + margin + 10
+            );
+
+            y += 20;
           }
           // Regular line items section
           // Set font size and style for the regular table
+          y += 20;
           doc.setFontSize(12);
           doc.setFont("helvetica", "bold");
 
@@ -526,6 +552,9 @@ function ProjectDashboards() {
             }
           );
 
+          // Add a description of the totals
+          
+
           // Add the regular table with totals
           doc.autoTable({
             startY: y,
@@ -546,6 +575,40 @@ function ProjectDashboards() {
 
           // Adjust the y position after adding the regular table
           y = doc.autoTable.previous.finalY + margin;
+
+          const regularTotalsDescription = `
+            - Costo Total:                            ${regularTotals[5]}
+            - Costo Total Estimado:                   ${regularTotals[6]}
+            - Diferencia con Total Estimado:          ${regularTotals[7]}
+            - Diferencia con Costo Unitario Estimado: ${regularTotals[8]}`;
+
+          y += 10;
+          doc.setFontSize(12);
+          doc.setFont("helvetica", "bold");
+          doc.text(
+            "Resumen de resultados de materiales: ",
+            margin + 25,
+            doc.autoTable.previous.finalY + margin + 10
+          );
+          y += 10;
+
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "normal");
+
+          // Add the description after the table
+          doc.text(
+            regularTotalsDescription,
+            margin + 15,
+            doc.autoTable.previous.finalY + margin + 10
+          );
+
+          y+=25;
+
+
+          
+
+          // Set font size and style for the description
+          
 
           // Check if the remaining content can fit within the page height
           if (y + 20 >= pageHeight - margin) {
