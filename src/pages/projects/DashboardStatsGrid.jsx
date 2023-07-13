@@ -125,12 +125,12 @@ function DashboardStateGrid() {
                   <ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Terminadas: {report.taskCompleted}</ul>
+                        <ul>Tareas Atrasadas: {report.latePlanningRatio*100}%</ul>
                       </strong>
                     </ul>
                     <ul>
                       <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Dias atrasados: {report.timeVariance}</ul>
+                        <ul>Dias atrasados de la ultima tarea: {report.timeVariance}</ul>
                       </strong>
                     </ul>
                   </ul>
