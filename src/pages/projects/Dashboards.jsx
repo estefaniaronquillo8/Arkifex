@@ -536,7 +536,7 @@ function ProjectDashboards() {
       // Remove event listener
       button.removeEventListener("click", handleDownload);
     };
-  }, []);
+  }, [report,detailReports]);
 
   // const handleDownload = () => {
   //   generateProjectBudgetReport(report, detailReports);
