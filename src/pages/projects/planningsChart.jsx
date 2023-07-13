@@ -38,7 +38,8 @@ function PlanningsChart() {
 
   useEffect(() => {
     handleData();
-  }, [report]);
+  }, [data]);
+  //}, [report]);
 
 
   //const [data, setData] = useState();
