@@ -41,8 +41,8 @@ function ProjectDashboards() {
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
-    console.log(report?.id)
-    if(report?.actualBudget === 0) navigate("/projects");
+    //console.log(report?.id)
+    //if(report?.actualBudget === 0) navigate("/projects");
     if (!routesProtection()) navigate("/login");
   }, []);
 
@@ -157,7 +157,7 @@ function ProjectDashboards() {
       const reportDate = dateTime.toLocaleDateString();
 
       // Calculate the width of the title
-      const date = `Fecha: ${reportDate}` 
+      const date = `Fecha: ${reportDate}`;
       const dateWidth = doc.getTextWidth(date);
 
       // Calculate the x-position to center the title
@@ -185,39 +185,38 @@ function ProjectDashboards() {
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
 
-            const descriptionGeneral =
-            `El proyecto actualmente tiene un presupuesto estimado de $${reportData.estimatedBudget} USD, que se calcula mediante el valor de mercado de los recursos y personal utilizado por cada tarea en el proyecto. Por otro lado el presupeusto actual, que se calcula mediante el calculo de costos por tarea se encuentra en los $${reportData.actualBudget} ` ;
+      const descriptionGeneral = `El proyecto actualmente tiene un presupuesto estimado de $${reportData.estimatedBudget} USD, que se calcula mediante el valor de mercado de los recursos y personal utilizado por cada tarea en el proyecto. Por otro lado el presupeusto actual, que se calcula mediante el calculo de costos por tarea se encuentra en los $${reportData.actualBudget} `;
 
-            // Dividir la descripción en palabras
-            const wordsGeneral = descriptionGeneral.split(" ");
-            const maxWidthGeneral = pageWidth - 2 * margin; // Ancho máximo del texto
+      // Dividir la descripción en palabras
+      const wordsGeneral = descriptionGeneral.split(" ");
+      const maxWidthGeneral = pageWidth - 2 * margin; // Ancho máximo del texto
 
-            let line = "";
-            let lines = [];
+      let line = "";
+      let lines = [];
 
-            // Construir las líneas del texto con saltos de línea automáticos
-            for (let i = 0; i < wordsGeneral.length; i++) {
-              const word = wordsGeneral[i];
-              const newLine = line === "" ? word : line + " " + word;
+      // Construir las líneas del texto con saltos de línea automáticos
+      for (let i = 0; i < wordsGeneral.length; i++) {
+        const word = wordsGeneral[i];
+        const newLine = line === "" ? word : line + " " + word;
 
-              if (doc.getTextWidth(newLine) <= maxWidthGeneral) {
-                line = newLine;
-              } else {
-                lines.push(line);
-                line = word;
-              }
+        if (doc.getTextWidth(newLine) <= maxWidthGeneral) {
+          line = newLine;
+        } else {
+          lines.push(line);
+          line = word;
+        }
 
-              if (i === wordsGeneral.length - 1) {
-                lines.push(line);
-              }
-            }
+        if (i === wordsGeneral.length - 1) {
+          lines.push(line);
+        }
+      }
 
-            // Agregar las líneas del texto al PDF
-            for (let i = 0; i < lines.length; i++) {
-              doc.text(lines[i], margin, y);
-              y += 7;
-            }
-            y += 10;   
+      // Agregar las líneas del texto al PDF
+      for (let i = 0; i < lines.length; i++) {
+        doc.text(lines[i], margin, y);
+        y += 7;
+      }
+      y += 10;
 
       const reportDataLabel1 = "Presupuesto Actual:";
       const reportDataValue1 = `$${reportData.actualBudget}`;
@@ -229,6 +228,14 @@ function ProjectDashboards() {
       const reportDataValue3 = `$${
         reportData.estimatedBudget - reportData.actualBudget
       }`;
+
+      // Verifica si reportDataValue3 es negativo
+      let reportDataValue3Description;
+      if (reportData.estimatedBudget - reportData.actualBudget < 0) {
+        reportDataValue3Description = `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor negativo siendo ${reportDataValue3}, por lo que esté valor se sobresale de lo que se pensó desde un inicio que iba a valer el proyecto en su totalidad. Siendo una pérdida.`;
+      } else {
+        reportDataValue3Description = `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor positivo siendo ${reportDataValue3}, por lo que este valor es un ahorro en comparación a lo que se creía que se iba a pagar del proyecto en su totalidad. Siendo una ganancia`;
+      }
 
       const labelWidth1 =
         doc.getStringUnitWidth(reportDataLabel1) * doc.internal.getFontSize();
@@ -262,7 +269,7 @@ function ProjectDashboards() {
       doc.text(reportDataValue2, margin + maxWidth, y);
       y += 7;
 
-      doc.line(margin + 15, y, 2*margin-5 + maxWidth, y);
+      doc.line(margin + 15, y, 2 * margin - 5 + maxWidth, y);
 
       y += 10;
 
@@ -270,47 +277,83 @@ function ProjectDashboards() {
       doc.text(reportDataValue3, margin + maxWidth, y);
       y += 15;
 
+      // Descripción de reportDataValue3
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+
+      // Dividir la descripción en palabras
+      const wordsReportDataValue3Description =
+        reportDataValue3Description.split(" ");
+      const maxWidthReportDataValue3Description = pageWidth - 2 * margin; // Ancho máximo del texto
+
+      line = "";
+      lines = [];
+
+      // Construir las líneas del texto con saltos de línea automáticos
+      for (let i = 0; i < wordsReportDataValue3Description.length; i++) {
+        const word = wordsReportDataValue3Description[i];
+        const newLine = line === "" ? word : line + " " + word;
+
+        if (doc.getTextWidth(newLine) <= maxWidthReportDataValue3Description) {
+          line = newLine;
+        } else {
+          lines.push(line);
+          line = word;
+        }
+
+        if (i === wordsReportDataValue3Description.length - 1) {
+          lines.push(line);
+        }
+      }
+
+      // Agregar las líneas del texto al PDF
+      for (let i = 0; i < lines.length; i++) {
+        doc.text(lines[i], margin, y);
+        y += 7;
+      }
+      y += 10;
+
       // Line items section
       doc.setFont("helvetica", "bold");
       doc.text("Detalle de Presupuesto por Tareas", margin, y);
       y += 10;
-      
+
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
 
-            const description =
-              "A continuación se muestra información detallada sobre diferentes tipos de recursos y persona asignado por cada tarea en el proyecto, incluyendo su costo unitario, costo total, cantidad y diferencias entre los valores reales y estimados. Proporciona una visión general de los recursos utilizados y sus características financieras en el proyecto.";
+      const description =
+        "A continuación se muestra información detallada sobre diferentes tipos de recursos y persona asignado por cada tarea en el proyecto, incluyendo su costo unitario, costo total, cantidad y diferencias entre los valores reales y estimados. Proporciona una visión general de los recursos utilizados y sus características financieras en el proyecto.";
 
-            // Dividir la descripción en palabras
-            const words = description.split(" ");
-            const maxWidthD = pageWidth - 2 * margin; // Ancho máximo del texto
+      // Dividir la descripción en palabras
+      const words = description.split(" ");
+      const maxWidthD = pageWidth - 2 * margin; // Ancho máximo del texto
 
-            line = "";
-            lines = [];
+      line = "";
+      lines = [];
 
-            // Construir las líneas del texto con saltos de línea automáticos
-            for (let i = 0; i < words.length; i++) {
-              const word = words[i];
-              const newLine = line === "" ? word : line + " " + word;
+      // Construir las líneas del texto con saltos de línea automáticos
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const newLine = line === "" ? word : line + " " + word;
 
-              if (doc.getTextWidth(newLine) <= maxWidthD) {
-                line = newLine;
-              } else {
-                lines.push(line);
-                line = word;
-              }
+        if (doc.getTextWidth(newLine) <= maxWidthD) {
+          line = newLine;
+        } else {
+          lines.push(line);
+          line = word;
+        }
 
-              if (i === words.length - 1) {
-                lines.push(line);
-              }
-            }
+        if (i === words.length - 1) {
+          lines.push(line);
+        }
+      }
 
-            // Agregar las líneas del texto al PDF
-            for (let i = 0; i < lines.length; i++) {
-              doc.text(lines[i], margin, y);
-              y += 7;
-            }
-            y += 10;   
+      // Agregar las líneas del texto al PDF
+      for (let i = 0; i < lines.length; i++) {
+        doc.text(lines[i], margin, y);
+        y += 7;
+      }
+      y += 10;
 
       // Group the linesData by project planning name
       const lineItemsByPlanning = linesData.reduce((acc, line) => {
@@ -347,7 +390,6 @@ function ProjectDashboards() {
             doc.text("Personal Asignado", margin + 15, y);
             y += 10;
 
-            
             // Table headers for "Personal Asignado"
             const personalTableHeaders = [
               "Nombre",
@@ -530,7 +572,7 @@ function ProjectDashboards() {
       // Remove event listener
       button.removeEventListener("click", handleDownload);
     };
-  }, []);
+  }, [report, detailReports]);
 
   // const handleDownload = () => {
   //   generateProjectBudgetReport(report, detailReports);

@@ -37,13 +37,13 @@ const createReport = async (projectId) => {
 
     
     projectplannings.map(async (planning) => {
-      if (planning.status === "completado") {
+      if (planning.status === "Completado") {
         taskfinshed++;
       }
 
       
       //console.log('DATEEEEEEEEEEEEEEEEEEEEEE', new Date(planning.endDate), date,new Date(planning.endDate) <= date);
-      if (new Date(planning.endDate) <= date && planning.status !== "completado"){
+      if (new Date(planning.endDate) <= date && planning.status !== "Completado"){
         lateTasks++;
       }
       const resourceAssignments = (

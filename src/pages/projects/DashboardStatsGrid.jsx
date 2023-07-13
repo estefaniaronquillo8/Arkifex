@@ -67,12 +67,12 @@ function DashboardStateGrid() {
               {report ? (
                 <strong
                   className={`text-xl font-semibold ${
-                    report.budgetVariance < 0
+                    report.budgetVariance > 0
                       ? "text-green-500"
                       : "text-red-500"
                   }`}
                 >
-                  Presupuesto Restante: {Math.abs(-report.budgetVariance)}
+                  Presupuesto Restante: {report.budgetVariance}
                 </strong>
               ) : (
                 <p>No data available.</p>

@@ -19,7 +19,7 @@ function PlanningsChart() {
       amt: 2100,
     };
     setData([newData]);
-    console.log('VALUES',newData);
+    console.log('VALUES planningChart',newData);
   //   getData(NewData);
   };
 
@@ -38,8 +38,8 @@ function PlanningsChart() {
 
   useEffect(() => {
     handleData();
-  }, [data]);
-  //}, [report]);
+  //}, [data]);
+  }, [report]);
 
 
   //const [data, setData] = useState();
