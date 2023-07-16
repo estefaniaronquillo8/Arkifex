@@ -20,128 +20,122 @@ function DashboardStateGrid() {
 
   return (
     <>
-      <div className="flex gap-4 w-full">
-        <BoxWrapper>
-          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-green-500">
-            <SiBitcoincash className="text-2xl text-white" />
-          </div>
-
-          <div className="pl-4 ">
-            <span className="text-xl text-blue-500 font-bold">Presupuesto</span>
-
-            <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">
-                {report ? (
-                  <ul>
-                    <strong className="text-lg text-green-500 font-semibold">
-                      <ul className="text-lg font-semibold">
-                        Estimado: {report.estimatedBudget}
-                      </ul>
-                    </strong>
-                    <span
-                      className={`text-xl ${
-                        report.actualBudget > report.estimatedBudget
-                          ? "text-red-500"
-                          : "text-gray-700"
-                      } font-semibold`}
-                    >
-                      <ul className="text-lg font-semibold">
-                        Actual: {report.actualBudget}
-                      </ul>
-                    </span>
-                  </ul>
-                ) : (
-                  <p>No data available.</p>
-                )}
+      <div className="flex flex-wrap gap-4 w-full">
+  <BoxWrapper className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4">
+    <div className="rounded-full h-12 w-12 flex items-center justify-center bg-green-500">
+      <SiBitcoincash className="text-2xl text-white" />
+    </div>
+    <div className="pl-4">
+      <span className="text-xl text-blue-500 font-bold">Presupuesto</span>
+      <div className="flex items-center">
+        <strong className="text-xl text-gray-700 font-semibold">
+          {report ? (
+            <ul>
+              <strong className="text-lg text-green-500 font-semibold">
+                <ul className="text-lg font-semibold">
+                  Estimado: {report.estimatedBudget}
+                </ul>
               </strong>
-            </div>
-          </div>
-        </BoxWrapper>
-        <BoxWrapper>
-          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-yellow-500">
-            <SiCashapp className="text-2xl text-white" />
-          </div>
-          <div className="pl-4">
-            <span className="text-xl text-blue-500 font-bold">Restante</span>
-            <div className="flex items-center">
-              {report ? (
-                <strong
-                  className={`text-xl font-semibold ${
-                    report.budgetVariance > 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  Presupuesto Restante: {report.budgetVariance}
-                </strong>
-              ) : (
-                <p>No data available.</p>
-              )}
-            </div>
-          </div>
-        </BoxWrapper>
-        <BoxWrapper>
-          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-orange-500">
-            <FaTasks className="text-2xl text-white" />
-          </div>
-          <div className="pl-4 ">
-            <span className="text-lg text-blue-500 font-bold">
-              Tareas en proyecto
-            </span>
-            <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">
-                {report ? (
-                  <ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Total: {report.numberOfTasks}</ul>
-                      </strong>
-                    </ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Completadas: {report.taskCompleted}</ul>
-                      </strong>
-                    </ul>
-                  </ul>
-                ) : (
-                  <p>No data available.</p>
-                )}
-              </strong>
-            </div>
-          </div>
-        </BoxWrapper>
-
-        <BoxWrapper>
-          <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
-            <BsFillCalendar2WeekFill className="text-2xl text-white" />
-          </div>
-          <div className="pl-4 ">
-            <span className="text-lg text-blue-500 font-bold">
-              Tareas en proyecto
-            </span>
-            <div className="flex items-center">
-              <strong className="text-xl text-gray-700 font-semibold">
-                {report ? (
-                  <ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Tareas Atrasadas: {report.latePlanningRatio*100}%</ul>
-                      </strong>
-                    </ul>
-                    <ul>
-                      <strong className="text-xl text-gray-700 font-semibold">
-                        <ul>Dias atrasados de la ultima tarea: {report.timeVariance}</ul>
-                      </strong>
-                    </ul>
-                  </ul>
-                ) : (
-                  <p>No data available.</p>
-                )}
-              </strong>
-            </div>
-          </div>
-        </BoxWrapper>
+              <span
+                className={`text-xl ${
+                  report.actualBudget > report.estimatedBudget
+                    ? "text-red-500"
+                    : "text-gray-700"
+                } font-semibold`}
+              >
+                <ul className="text-lg font-semibold">
+                  Actual: {report.actualBudget}
+                </ul>
+              </span>
+            </ul>
+          ) : (
+            <p>No data available.</p>
+          )}
+        </strong>
       </div>
+    </div>
+  </BoxWrapper>
+  <BoxWrapper className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4">
+    <div className="rounded-full h-12 w-12 flex items-center justify-center bg-yellow-500">
+      <SiCashapp className="text-2xl text-white" />
+    </div>
+    <div className="pl-4">
+      <span className="text-xl text-blue-500 font-bold">Restante</span>
+      <div className="flex items-center">
+        {report ? (
+          <strong
+            className={`text-xl font-semibold ${
+              report.budgetVariance > 0 ? "text-green-500" : "text-red-500"
+            }`}
+          >
+            Presupuesto Restante: {report.budgetVariance}
+          </strong>
+        ) : (
+          <p>No data available.</p>
+        )}
+      </div>
+    </div>
+  </BoxWrapper>
+  <BoxWrapper className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4">
+    <div className="rounded-full h-12 w-12 flex items-center justify-center bg-orange-500">
+      <FaTasks className="text-2xl text-white" />
+    </div>
+    <div className="pl-4">
+      <span className="text-lg text-blue-500 font-bold">Tareas en proyecto</span>
+      <div className="flex items-center">
+        <strong className="text-xl text-gray-700 font-semibold">
+          {report ? (
+            <ul>
+              <ul>
+                <strong className="text-xl text-gray-700 font-semibold">
+                  <ul>Total: {report.numberOfTasks}</ul>
+                </strong>
+              </ul>
+              <ul>
+                <strong className="text-xl text-gray-700 font-semibold">
+                  <ul>Completadas: {report.taskCompleted}</ul>
+                </strong>
+              </ul>
+            </ul>
+          ) : (
+            <p>No data available.</p>
+          )}
+        </strong>
+      </div>
+    </div>
+  </BoxWrapper>
+  <BoxWrapper className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4">
+    <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
+      <BsFillCalendar2WeekFill className="text-2xl text-white" />
+    </div>
+    <div className="pl-4">
+      <span className="text-lg text-blue-500 font-bold">Tareas en proyecto</span>
+      <div className="flex items-center">
+        <strong className="text-xl text-gray-700 font-semibold">
+          {report ? (
+            <ul>
+              <ul>
+                <strong className="text-xl text-gray-700 font-semibold">
+                  <ul>Tareas Atrasadas: {report.latePlanningRatio * 100}%</ul>
+                </strong>
+              </ul>
+              <ul>
+                <strong className="text-xl text-gray-700 font-semibold">
+                  <ul>
+                    Dias atrasados de la ultima tarea: {report.timeVariance}
+                  </ul>
+                </strong>
+              </ul>
+            </ul>
+          ) : (
+            <p>No data available.</p>
+          )}
+        </strong>
+      </div>
+    </div>
+  </BoxWrapper>
+</div>
+
 
       <div className="mt-2 flex gap-4 w-full">
         <LineChart />

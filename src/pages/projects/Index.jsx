@@ -184,7 +184,7 @@ const ProjectIndex = () => {
                 key={id}
                 className="bg-white shadow-md rounded-lg p-4"
                 style={{
-                  backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
+                 backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
                   backgroundPosition: "center",
                 }}
               >

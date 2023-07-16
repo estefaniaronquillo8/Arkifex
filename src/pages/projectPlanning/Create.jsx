@@ -55,12 +55,13 @@ const ProjectPlanningCreate = () => {
     if (error) {
       showNotification(error, notificationType);
     }
+    //le cambie por templates/details
 
     setSelectedProjectId(null);
     if (response?.status === 200) {
       const projectResponse = await getProjectById(data.projectId);
       if (projectResponse?.response?.project?.isTemplate) {
-        navigate(`/templates/details/${data.projectId}`);
+        navigate(`/projects/details/${data.projectId}`);
       } else {
         navigate(`/projects/details/${data.projectId}`);
       }
@@ -194,7 +195,7 @@ const ProjectPlanningCreate = () => {
                 type="submit"
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
               >
-                Crear planificación
+                Crear Tarea
               </button>
             </div>
           </form>

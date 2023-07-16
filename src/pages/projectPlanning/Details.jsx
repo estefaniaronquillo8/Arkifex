@@ -10,18 +10,15 @@ import {
 import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
-import Swal from "sweetalert2";
 
 const ProjectPlanningDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [resourceAssignments, setResourceAssignments] = useState([]);
-  //const [projectPlannings, setProjectPlannings] = useState([]);
+  const [projectPlannings, setProjectPlannings] = useState([]);
   const {
     projectPlanning,
     setProjectPlanning,
-    resourceAssignment,
-    setResourceAssignment,
     resources,
     setResources,
     selectedProjectId,
@@ -31,6 +28,9 @@ const ProjectPlanningDetails = () => {
   const [error, setError] = useState();
   const [success, setSuccess] = useState();
   const [notificationType, setNotificationType] = useState();
+  const [filterType, setFilterType] = useState("Todos");
+
+  const [showRoleColumn, setShowRoleColumn] = useState(true);
 
   useEffect(() => {
     if (!routesProtection()) navigate("/login");
@@ -52,16 +52,21 @@ const ProjectPlanningDetails = () => {
   }, [id]);
 
   useEffect(() => {
-
     const fetchResourceAssignments = async () => {
       const { response, success, error, notificationType } =
         await getAllResourceAssignments();
       if (response?.resourceAssignments) {
-        // Filtrar asignaciones de recursos por projectPlanningId
+        // Filtrar asignaciones de recursos por projectPlanningId y tipo seleccionado
         const relatedResourceAssignments = response.resourceAssignments.filter(
-          (assignment) => assignment.projectPlanningId === projectPlanning.id
+          (assignment) =>
+            assignment.projectPlanningId === projectPlanning.id &&
+            (filterType === "Todos" ||
+              resources.find(
+                (resource) => resource.id === assignment.resourceId
+              )?.type === filterType)
         );
         setResourceAssignments(relatedResourceAssignments);
+        setShowRoleColumn(filterType !== "Material");
       }
       setError(error);
       setNotificationType(notificationType);
@@ -71,7 +76,7 @@ const ProjectPlanningDetails = () => {
       // Llamar a estas funciones solo si el proyecto ya ha sido establecido
       fetchResourceAssignments();
     }
-  }, [projectPlanning]);
+  }, [projectPlanning, filterType]);
 
   useEffect(() => {
     if (error) {
@@ -95,7 +100,6 @@ const ProjectPlanningDetails = () => {
   };
 
   const deleteHandler = async (id) => {
-    console.log("IIIIIIDDDDDDDDDD", id);
     const { response, success, error, notificationType } = await handleDelete(
       id
     );
@@ -115,16 +119,8 @@ const ProjectPlanningDetails = () => {
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
 
-    console.log("CONSOLE LOG EN EL DELETE DEL RA", success, error, response)
-    console.log("CONSOLE LOG EN EL DELETE DEL RA 2222", response?.status)
-
-    if (response?.status === 200) {
-      setResourceAssignment(response.resourceAssignment);
-      //navigate("/projects");
-      window.location.reload();
-    }
-
     if (success) {
+      navigate("/projects");
     }
     setSuccess(success);
     setError(error);
@@ -133,12 +129,15 @@ const ProjectPlanningDetails = () => {
 
   const handleCreateResourceAssignment = () => {
     setSelectedProjectId(projectPlanning.id);
-    navigate("/resourceAssignments/create");
+    navigate(`/resourceAssignments/create?type=${filterType}`);
+    setShowRoleColumn(filterType !== "Material");
   };
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h2 className="text-4xl font-semibold mb-6">Detalle de Planificación de Proyecto</h2>
+      <h2 className="text-4xl font-semibold mb-6">
+        Detalle de Planificación de Proyecto
+      </h2>
       {projectPlanning && (
         <div className="bg-white shadow-md rounded-lg p-6">
           <div className="space-y-6">
@@ -172,31 +171,11 @@ const ProjectPlanningDetails = () => {
             </Link>
 
             <button
-                          onClick={async () => {
-                            const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar tu planificacion?",
-                              text: "¡No podrás revertir esto!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Sí, eliminarlo",
-                              cancelButtonText: "Cancelar",
-                            });
-
-                            if (result.isConfirmed) {
-                              await deleteHandler(projectPlanning.id);
-                              Swal.fire(
-                                "¡Eliminado!",
-                                "Tu planificacion ha sido eliminado.",
-                                "success"
-                              );
-                            }
-                          }}
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar
-                        </button>
+              onClick={async () => await deleteHandler(projectPlanning.id)}
+              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Eliminar
+            </button>
 
             <h1 className="text-4xl font-semibold mb-6">
               Asignación de Recursos
@@ -207,75 +186,74 @@ const ProjectPlanningDetails = () => {
             >
               Asignar nuevo recurso
             </button>
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              className="block border border-gray-300 rounded p-2 focus:outline-none focus:border-blue-500"
+            >
+              <option value="Todos">Todos</option>
+              <option value="Material">Material</option>
+              <option value="Personal">Personal</option>
+            </select>
+            <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="font-semibold">
+                    <th className="pl-3">Recurso</th>
+                    <th className="pl-3">Descripcion</th>
+                    {showRoleColumn && <th>Rol</th>}
+                    <th>Cantidad</th>
+                    <th>Costo Estimado</th>
+                    <th>Costo Actual</th>
+                    <th>Fecha Asociada</th>
+                    <th colSpan="2">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resourceAssignments &&
+                    resourceAssignments.map((resourceAssignment) => {
+                      // Buscar el recurso correspondiente a esta asignación
+                      const resource = resources.find(
+                        (resource) =>
+                          resource.id === resourceAssignment.resourceId
+                      );
 
-            <div className="bg-white shadow-md rounded-lg">
-              <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                <div className="col-span-1 pl-3">Recurso</div>
-                <div className="col-span-1">Cantidad</div>
-                <div className="col-span-1">Costo Estimado</div>
-                <div className="col-span-1">Costo Actual</div>
-                <div className="col-span-1">Fecha de Ingreso</div>
-                <div className="col-span-2">Acciones</div>
-              </div>
-              {resourceAssignments &&
-                resourceAssignments.map((resourceAssignment) => {
-                  // Buscar el recurso correspondiente a esta asignación
-                  const resource = resources.find(
-                    (resource) => resource.id === resourceAssignment.resourceId
-                  );
-
-                  return (
-                    <div
-                      key={resourceAssignment.id}
-                      className="grid grid-cols-7 gap-4 py-2 pl-3 border-b border-gray-200"
-                    >
-                      {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
-                      <div className="col-span-1">
-                        {resource ? resource.name : "Desconocido"}
-                      </div>
-                      <div className="col-span-1">{resourceAssignment.quantity}</div>
-                      <div className="col-span-1">{resourceAssignment.estimatedCost}</div>
-                      <div className="col-span-1">{resourceAssignment.actualCost}</div>
-                      <div className="col-span-1">{resourceAssignment.associatedDate}</div>
-
-                      <div className="col-span-2">
-                        <Link
-                          to={`/resourceAssignments/edit/${resourceAssignment.id}`}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                      return (
+                        <tr
+                          key={resourceAssignment.id}
+                          className="border-b border-gray-200"
                         >
-                          Editar
-                        </Link>
-
-                        <button
-                          onClick={async () => {
-                            const result = await Swal.fire({
-                              title: "¿Estás seguro de eliminar tu planificacion?",
-                              text: "¡No podrás revertir esto!",
-                              icon: "warning",
-                              showCancelButton: true,
-                              confirmButtonColor: "#3085d6",
-                              cancelButtonColor: "#d33",
-                              confirmButtonText: "Sí, eliminarlo",
-                              cancelButtonText: "Cancelar",
-                            });
-
-                            if (result.isConfirmed) {
-                              await deleteHandlerRA(resourceAssignment.id);
-                              Swal.fire(
-                                "¡Eliminado!",
-                                "Tu planificacion ha sido eliminado.",
-                                "success"
-                              );
-                            }
-                          }}
-                          className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                          {/* Mostrar el nombre del recurso, o 'Desconocido' si no se encuentra */}
+                          <td className="pl-3">
+                            {resource ? resource.name : "Desconocido"}
+                          </td>
+                          <td>{resource.description}</td>
+                          {showRoleColumn && <td>{resource?.role}</td>}
+                          <td>{resourceAssignment.quantity}</td>
+                          <td>{resourceAssignment.estimatedCost}</td>
+                          <td>{resourceAssignment.actualCost}</td>
+                          <td>{resourceAssignment.associatedDate}</td>
+                          <td colSpan="2">
+                            <Link
+                              to={`/resourceAssignments/edit/${resourceAssignment.id}`}
+                              className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                              Editar
+                            </Link>
+                            <button
+                              onClick={async () =>
+                                await deleteHandlerRA(resourceAssignment.id)
+                              }
+                              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
             </div>
 
             <button
@@ -289,8 +267,6 @@ const ProjectPlanningDetails = () => {
       )}
     </div>
   );
-
-
 };
 
 export default ProjectPlanningDetails;

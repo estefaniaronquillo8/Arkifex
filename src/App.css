@@ -131,6 +131,10 @@ th {
     background-color: rgb(12, 104, 185);   
 }
 
+.active{
+  background-color: rgb(12, 104, 185);   
+}
+
 .dot {
   display: inline-block;
   width: 15px;
@@ -148,4 +152,56 @@ th {
 
 .UserIndex {
   font-family: 'Montserrat', sans-serif;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0; /* Inicio de la animación con opacidad cero */
+    transform: translateY(-20px); /* Inicio de la animación con desplazamiento hacia arriba */
+  }
+  100% {
+    opacity: 1; /* Fin de la animación con opacidad completa */
+    transform: translateY(0); /* Fin de la animación sin desplazamiento */
+  }
+}
+
+.problems {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  text-align: center;
+  color: #FF0000;
+  font-size: 30px;
+  animation: fadeIn 1s ease-in-out; /* Agrega la animación con una duración de 1 segundo y efecto ease-in-out */
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal.closed {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.modal > .modal-content {
+  background-color: #fff;
+  padding: 20px;
+  max-width: 500px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

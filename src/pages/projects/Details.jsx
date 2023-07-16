@@ -251,6 +251,13 @@ const ProjectDetails = () => {
     if (project) {
       user = users.find((user) => user.id === project.userId);
     }
+
+
+    // const handleCreateReport = async (projectid) => {
+    //   const { response, success, error, notificationType } = await createReport(
+    //     projectid
+    //   );
+      
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="space-y-6">
@@ -408,15 +415,15 @@ const ProjectDetails = () => {
 
     const getStatusColor = (status) => {
       switch (status) {
-        case "no_comenzado":
+        case "No comenzado":
           return "#D41F1F";
-        case "en_proceso":
+        case "En Proceso":
           return "#F0C500 ";
-        case "en_espera":
+        case "En Espera":
           return "#FA6F0E";
-        case "completado":
+        case "Completado":
           return "#A8DA1A";
-        case "cancelado":
+        case "Cancelado":
           return "#777777";
         default:
           return "black";
@@ -462,11 +469,11 @@ const ProjectDetails = () => {
                     onChange={handleStatusFilter}
                   >
                     <option value="">Todos</option>
-                    <option value="no_comenzado">No Comenzado</option>
-                    <option value="en_proceso">En Proceso</option>
-                    <option value="en_espera">En Espera</option>
-                    <option value="completado">Completado</option>
-                    <option value="cancelado">Cancelado</option>
+                    <option value="No Comenzado">No Comenzado</option>
+                    <option value="En Proceso">En Proceso</option>
+                    <option value="En Espera">En Espera</option>
+                    <option value="Completado">Completado</option>
+                    <option value="Cancelado">Cancelado</option>
                   </select>
                 </th>
                 <th>Fecha de Inicio</th>
@@ -542,44 +549,59 @@ const ProjectDetails = () => {
                 Crear desde plantilla
               </button>
             )}
+            
+            
             <div className="bg-white shadow-md rounded-lg">
-              <div className="grid grid-cols-7 gap-4 font-semibold mb-2 py-3 border-b border-gray-200">
-                <div className="col-span-1 ml-5">Nombre</div>
-                <div className="col-span-1">Descripción</div>
-                <div className="col-span-1">Status</div>
-                <div className="col-span-1">Fecha de Inicio</div>
-                <div className="col-span-1">Fecha de Fin</div>
-                <div className="col-span-2">Accionesss</div>
-              </div>
-              {projects &&
-                projects.map((project) => {
-                  return (
-                    <div
-                      key={project.id}
-                      className="grid grid-cols-7 gap-4 py-2 border-b border-gray-200"
-                    >
-                      <div className="col-span-1 ml-5">{project.name}</div>
-                      <div className="col-span-1"> {project.description}</div>
-                      <div className="col-span-1">{project.status}</div>
-                      <div className="col-span-1">{project.startDate}</div>
-                      <div className="col-span-1">{project.endDate}</div>
-
-                      <div className="col-span-2">
-                        <Link
-                          to={`/projects/details/${project.id}`}
-                          onClick={() => {
-                            setShowSubprojectsButton(false);
-                            setCurrentSection("details");
-                          }}
-                          className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                        >
-                          Detalles1
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Fecha de Inicio</th>
+                  <th scope="col">Fecha de Fin</th>
+                  <th scope="col" colSpan="2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projects &&
+                  projects.map((project) => {
+                    return (
+                      <tr key={project.id}>
+                        <td>{project.name}</td>
+                        <td>{project.description}</td>
+                        <td>{project.status}</td>
+                        <td>{project.startDate}</td>
+                        <td>{project.endDate}</td>
+                        <td>
+                          <Link
+                            to={`/projects/details/${project.id}`}
+                            onClick={() => {
+                              setShowSubprojectsButton(false);
+                              setCurrentSection("details");
+                            }}
+                            className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+                          >
+                            Detalles1
+                          </Link>
+                          <Link
+                    to={`/projects/dashboards/${id}`}
+                    className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                    onClick={() => handleCreateReport(id)}
+                  >
+                    Dashboards
+                  </Link>
+                        </td>
+                       
+                        
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+          
+          
           </>
         )}
       </div>

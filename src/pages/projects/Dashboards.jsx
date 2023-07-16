@@ -15,6 +15,8 @@ import Navbar from "../../components/Navbar";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import html2canvas from "html2canvas";
+import logo from "/src/assets/logo.png";
+import Swal from "sweetalert2";
 
 function ProjectDashboards() {
   const { id } = useParams();
@@ -131,16 +133,46 @@ function ProjectDashboards() {
     const generateProjectBudgetReport = (reportData, linesData) => {
       const graphPageContainer = graphPageRef.current;
       const doc = new jsPDF();
+      const logoWidth = 40; // Ancho del logo en puntos (ajusta según tus necesidades)
+      const logoHeight = 20; // Alto del logo en puntos (ajusta según tus necesidades)
+      const margin = 25;
+      const marginl = 10;
+      const marginq = 1; // Mover la declaración de la variable 'margin' antes de su uso
+      //const logoX = doc.internal.pageSize.getWidth() - logoWidth - marginq;
+      const logoX = marginq; // Posic // Posición horizontal del logo
+      const logoY = marginq; // Posición vertical del logo
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
-      const margin = 25;
       let y = margin;
+
+      doc.setDrawColor(0, 0, 0); // Establecer el color de la línea a negro (RGB)
+      doc.setLineWidth(0.8); // Establecer el ancho de la línea a 0.5 puntos
+      doc.line(marginl, marginl, pageWidth - marginl, marginl); // Línea horizontal en el margen superior
+
+      // Agregar línea de margen inferior
+      doc.line(
+        marginl,
+        pageHeight - marginl,
+        pageWidth - marginl,
+        pageHeight - marginl
+      ); // Línea horizontal en el margen inferior
+
+      // Agregar línea de margen izquierdo
+      doc.line(marginl, marginl, marginl, pageHeight - marginl); // Línea vertical en el margen izquierdo
+
+      // Agregar línea de margen derecho
+      doc.line(
+        pageWidth - marginl,
+        marginl,
+        pageWidth - marginl,
+        pageHeight - marginl
+      ); // Línea vertical en el margen derecho Dibujar línea horizontal en el margen inferior
 
       // Set font size and style for the report title
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(8, 4, 87); // Define el color del texto en rojo RGB
-
+     doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
       // Calculate the width of the title
       const title = "Reporte Detallado del Proyecto";
       const titleWidth = doc.getTextWidth(title);
@@ -675,6 +707,30 @@ function ProjectDashboards() {
           <button
             id="generate-report-button"
             className="btn-custom btn-primary"
+            onClick={() => {
+              let timerInterval;
+              Swal.fire({
+                title: "Estamos generando tu reporte...",
+                html: "Se cierra <b></b> milliseconds.",
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: () => {
+                  Swal.showLoading();
+                  const b = Swal.getHtmlContainer().querySelector("b");
+                  timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft();
+                  }, 100);
+                },
+                willClose: () => {
+                  clearInterval(timerInterval);
+                },
+              }).then((result) => {
+                /* Read more about handling dismissals below */
+                if (result.dismiss === Swal.DismissReason.timer) {
+                  console.log("I was closed by the timer");
+                }
+              });
+            }}
           >
             Genera tu reporte
           </button>

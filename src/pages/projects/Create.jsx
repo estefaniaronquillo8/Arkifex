@@ -93,6 +93,12 @@ const createHandler = async (data) => {
     isSubprojectText = "Subproyecto";
   }
 
+  const handleBack = () => {
+   
+      navigate(`/projects/`);
+    
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -258,6 +264,13 @@ const createHandler = async (data) => {
               </button>
             </div>
           </form>
+          
+<button
+            onClick={handleBack}
+            className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Volver
+          </button>
         </div>
       </div>
     </div>
