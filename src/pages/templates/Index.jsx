@@ -84,22 +84,27 @@ const TemplateIndex = () => {
   };
 
   const handleCreateReport = async (projectid) => {
-    const { response, success, error, notificationType } = await createReport(
-      projectid
-    );
-
-    console.log("ProjectReport", response);
-
-    if (success) {
-      showNotification(success, notificationType);
+    try{
+      const { response, success, error, notificationType } = await createReport(
+        projectid
+      );
+  
+      console.log("ProjectReport", response);
+  
+      if (success) {
+        showNotification(success, notificationType);
+      }
+  
+      if (error) {
+        showNotification(error, notificationType);
+      }
+  
+      //setSelectedProjectId(projectid);
+      window.location.reload();
+    }catch{
+      console.log("Sin datos suficientes");
     }
-
-    if (error) {
-      showNotification(error, notificationType);
-    }
-
-    //setSelectedProjectId(projectid);
-    window.location.reload();
+    
   };
 
   const TemplatesSection = ({ project }) => {

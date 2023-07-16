@@ -16,10 +16,10 @@ function PlanningsChart() {
         amt: 2100,
       };
       setData([newData]);
-      console.log('VALUES planningChart', newData);
+      //console.log('VALUES planningChart', newData);
     } else {
       setData([]);
-      console.log('No hay datos disponibles');
+      //console.log('No hay datos disponibles');
     }
   };
 

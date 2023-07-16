@@ -17,7 +17,7 @@ function ResourcesChart() {
         amt: 2100,
       }
     });
-    console.log('VALUES', NewData);
+    //console.log('VALUES', NewData);
     getData(NewData);
 
   }

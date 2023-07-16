@@ -111,13 +111,13 @@ function TemplateDashboards() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (report !== null) {
-      console.log("PROJECTIDSSSS", detailReports);
-    } else {
-      console.log("EXISTE");
-    }
-  }, [detailReports]);
+  // useEffect(() => {
+  //   if (report !== null) {
+  //     console.log("PROJECTIDSSSS", detailReports);
+  //   } else {
+  //     console.log("EXISTE");
+  //   }
+  // }, [detailReports]);
 
   useEffect(() => {
     const fetchData = async () => {

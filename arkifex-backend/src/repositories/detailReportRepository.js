@@ -187,7 +187,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         //timeVariance: dateVariance,
         date: new Date(),
       });
-      console.log("NEW DETAIL REPORT", newDetailResourceReport);
+      //console.log("NEW DETAIL REPORT", newDetailResourceReport);
     });
     //await transaction.commit();
     //console.log (tasksActualCost);
