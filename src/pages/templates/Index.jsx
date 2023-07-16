@@ -6,6 +6,7 @@ import { getAllUsers } from "../../services/user.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
+import { createReport } from "../../services/report.api.routes";
 
 
 
@@ -82,6 +83,25 @@ const TemplateIndex = () => {
     }
   };
 
+  const handleCreateReport = async (projectid) => {
+    const { response, success, error, notificationType } = await createReport(
+      projectid
+    );
+
+    console.log("ProjectReport", response);
+
+    if (success) {
+      showNotification(success, notificationType);
+    }
+
+    if (error) {
+      showNotification(error, notificationType);
+    }
+
+    //setSelectedProjectId(projectid);
+    window.location.reload();
+  };
+
   const TemplatesSection = ({ project }) => {
     return (
           <div>
@@ -135,6 +155,13 @@ const TemplateIndex = () => {
                     >
                       Detalles
                     </Link>
+                    <Link
+                    to={`/templates/dashboard/${project.id}`}
+                    className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                    onClick={() => handleCreateReport(project.id)}
+                  >
+                    Dashboards
+                  </Link>
                   </td>
                 </tr>
               );

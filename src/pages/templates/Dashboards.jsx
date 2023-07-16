@@ -1,5 +1,5 @@
 // src/pages/projects.js
-import React, { useEffect, useState, useRef } from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAllProjects } from "../../services/project.api.routes";
@@ -18,7 +18,8 @@ import html2canvas from "html2canvas";
 import logo from "/src/assets/logo.png";
 import Swal from "sweetalert2";
 
-function ProjectDashboards() {
+
+function TemplateDashboards() {
   const { id } = useParams();
   const graphPageRef = useRef(null);
   const navigate = useNavigate();
@@ -744,4 +745,4 @@ function ProjectDashboards() {
   );
 }
 
-export default ProjectDashboards;
+export default TemplateDashboards;

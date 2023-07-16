@@ -18,7 +18,7 @@ import { LocationCreate, LocationIndex, LocationEdit, LocationDetails } from "./
 // ResourceAssignment
 import { ResourceAssignmentCreate, ResourceAssignmentIndex, ResourceAssignmentEdit } from "./pages/resourceAssignment/ResourceAssignments";
 // Templates
-import { TemplateCreate, TemplateIndex, TemplateEdit, TemplateDetails, TemplatesSubprojects } from "./pages/templates/Templates";
+import { TemplateCreate, TemplateIndex, TemplateEdit, TemplateDetails, TemplatesSubprojects, TemplateDashboards } from "./pages/templates/Templates";
 
 function App() {
   const [showSidebar, setShowSidebar] = useState(false);
@@ -64,6 +64,7 @@ function App() {
             <Route path="/templates/details/:id" element={<TemplateDetails />} />
             <Route path="/templates/edit/:id" element={<TemplateEdit />} />
             <Route path="/templates/subprojects" element={<TemplatesSubprojects />} />
+            <Route path="/templates/dashboard/:id" element={<TemplateDashboards />} />
 
             <Route path="/locations" element={<LocationIndex />} />
             <Route path="/locations/create" element={<LocationCreate />} />

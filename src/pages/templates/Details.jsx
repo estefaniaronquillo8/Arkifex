@@ -15,6 +15,7 @@ import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
 import { getAllProjectPlannings } from "../../services/projectPlanning.api.routes";
 import { duplicateProject } from "../../services/template.api.routes";
+import { createReport } from "../../services/report.api.routes";
 import Swal from "sweetalert2";
 
 const TemplateDetails = () => {
@@ -183,6 +184,8 @@ const TemplateDetails = () => {
   };
   const [currentSection, setCurrentSection] = useState("details");
 
+  
+
   //Detalles
   const ProjectDetailsSection = ({ project }) => {
     return (
@@ -311,6 +314,7 @@ const TemplateDetails = () => {
                     >
                       Detalles
                     </Link>
+                    
                   </div>
                 </div>
               );

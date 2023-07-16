@@ -94,7 +94,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         timeVariance: dateVariance,
         date: new Date(),
       });
-      console.log("NEW DETAIL REPORT", newDetailReport)
+      
     });
 
     const ResourceResults = await ResourceAssignment.findAll({
@@ -116,7 +116,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
           "EstimatedCostOfResource",
         ],
         [
-          sequelize.literal("COUNT(ResourceAssignment.resourceId)"),
+          sequelize.literal("ResourceAssignment.quantity"),
           "ResourcesCount",
         ],
         [
@@ -142,6 +142,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         "ProjectPlanning.name",
         "Resource.name",
         "Resource.type",
+        "quantity"
       ],
       //raw: true, // To retrieve raw data instead of Sequelize model instances
     });
@@ -186,6 +187,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         //timeVariance: dateVariance,
         date: new Date(),
       });
+      console.log("NEW DETAIL REPORT", newDetailResourceReport);
     });
     //await transaction.commit();
     //console.log (tasksActualCost);
@@ -239,7 +241,7 @@ const getBudgetByProjectPlanningReport = async (projectId) => {
         "totalCostVariance",
         "timeVariance",
       ],
-      where: { isProjectPlanning: "Si", reportId: reportId },
+      where: { isProjectPlanning: "Si", reportId: report.id },
       group: ["projectPlanningId"],
     });
 
@@ -353,7 +355,7 @@ const getDetailResources = async (projectId) => {
     //   "SELECT RES.type, SUM(RAS.actualCost) as ActualCostOfResource, SUM(RAS.estimatedCost) as EstimatedCostOfResource, SUM(RAS.actualCost)-SUM(RAS.estimatedCost) as ResourceCostVariance  FROM ResourceAssignments RAS INNER JOIN ProjectPlannings PPS ON RAS.id = PPS.id LEFT JOIN Resources RES ON RAS.resourceId = RES.id WHERE projectId = "+projectId+" GROUP BY RES.type"
     // );
 
-    const lateTasks = await DetailReport.findAll({
+    const detailResources = await DetailReport.findAll({
       attributes: [
         "projectId",
         "reportId",
@@ -376,7 +378,7 @@ const getDetailResources = async (projectId) => {
 
     return {
       status: 200,
-      report: lateTasks,
+      report: detailResources,
 
       // projectplannings: budgetByTask,
       // resourcebudget:budgetByResources
