@@ -198,12 +198,13 @@ const ProjectIndex = () => {
                 </h5>
                 <h3 className="font-bold mb-2 text-white">Fin: {endDate}</h3>
                 <div>
-                  <Link
-                    to={`/projects/details/${id}`}
-                    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                  >
-                    Detalles
-                  </Link>
+                <Link
+    to={`/projects/details/${id}`}
+    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+  
+  >
+    Detalles
+  </Link>
                   <Link
                     to={`/projects/dashboards/${id}`}
                     className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"

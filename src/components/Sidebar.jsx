@@ -34,6 +34,7 @@ const Sidebar = () => {
   const handleLogoutClick = () => {
     clearAuthData();
     handleLogout(navigate);
+    
   };
 
   const isActive = (link) => {

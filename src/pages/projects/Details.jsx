@@ -143,7 +143,9 @@ const ProjectDetails = () => {
       setCurrentSection("details"); // Cambiar la sección actual a "Detalles Generales"
     }
   };
-  
+  /// para mostrar boton 
+  const [showDuplicateButton, setShowDuplicateButton] = useState(false);
+
 
   const deleteHandler = async (id) => {
     console.log("IDDDDDDDDDDD", id);
@@ -190,15 +192,16 @@ const ProjectDetails = () => {
       project.id,
       updatedProject
     );
-
+  
     if (success) {
       setProject(updatedProject);
-      setIsTemplateProject(!project.isTemplate); // Actualizar el estado de isTemplateProject
+      //setIsTemplateProject(updatedProject.isTemplate); // Actualizar el estado de isTemplateProject
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
     }
   };
+
 
   let isTemplateText = "Hacer Plantilla";
   if (project && project.isTemplate) {
@@ -253,6 +256,11 @@ const ProjectDetails = () => {
     }
 
 
+    /// new method 
+    useEffect(() => {
+      setShowDuplicateButton(isTemplateText === "Dejar de ser plantilla" && isTemplateProject);
+    }, [isTemplateText, isTemplateProject]);
+    //
     // const handleCreateReport = async (projectid) => {
     //   const { response, success, error, notificationType } = await createReport(
     //     projectid
@@ -312,14 +320,16 @@ const ProjectDetails = () => {
               >
                 {isTemplateText}
               </button>
-              {isTemplateProject && (
-                <button
-                  onClick={handleDuplicateProject}
-                  className="inline-block bg-green-500 text-white px-4 py-2  rounded"
-                >
-                  Duplicar Proyecto
-                </button>
-              )}
+         
+              {isTemplateText === "Dejar de ser plantilla" && isTemplateProject && (
+  <button
+    onClick={handleDuplicateProject}
+    className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+  >
+    Duplicar Proyecto
+  </button>
+)}
+              
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
                   onClick={async () => {

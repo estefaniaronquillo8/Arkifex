@@ -120,11 +120,15 @@ function DashboardStateGrid() {
                 </strong>
               </ul>
               <ul>
-                <strong className="text-xl text-gray-700 font-semibold">
-                  <ul>
-                    Dias atrasados de la ultima tarea: {report.timeVariance}
-                  </ul>
-                </strong>
+              <strong className="text-xl font-semibold" style={{ color: report.timeVariance >= 0 ? '#68BA3F' : 'red' }}>
+          <ul>
+            {report.timeVariance > 0 ? (
+              <span>Días hasta la finalización del proyecto: {report.timeVariance}</span>
+            ) : (
+              <span>Días atrasados del proyecto: {report.timeVariance}</span>
+            )}
+          </ul>
+        </strong>
               </ul>
             </ul>
           ) : (
