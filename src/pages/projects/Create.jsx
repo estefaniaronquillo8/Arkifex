@@ -5,7 +5,7 @@ import { getAllUsers } from "../../services/user.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useState, useEffect } from "react";
 import { routesProtection } from "../../assets/routesProtection";
-import { parseISO, isBefore } from 'date-fns';
+import { parseISO, isBefore } from "date-fns";
 
 const ProjectCreate = () => {
   const navigate = useNavigate();
@@ -52,41 +52,45 @@ const ProjectCreate = () => {
     loadUsers();
   }, []);
 
-const createHandler = async (data) => {
-  if (selectedProjectId) {
-    data.parentId = selectedProjectId;
-    data.userId = null;
-  }
-
-  const startDate = parseISO(data.startDate);
-  const endDate = parseISO(data.endDate);
-
-  // Si la fecha de inicio es posterior a la de finalización, mostramos un error y retornamos
-  if (isBefore(endDate, startDate)) {
-    showNotification('La fecha de finalización no puede ser anterior a la de inicio.', 'error');
-    return;
-  }
-
-  const { response, success, error, notificationType } = await handleCreate(data);
-
-  if (success) {
-    showNotification(success, notificationType);
-  }
-
-  if (error) {
-    showNotification(error, notificationType);
-  }
-
-  setSelectedProjectId(null);
-  if (response?.status === 200) {
+  const createHandler = async (data) => {
     if (selectedProjectId) {
-      navigate(`/projects/details/${data.parentId}`);
-    } else {
-      navigate("/projects");
+      data.parentId = selectedProjectId;
+      data.userId = null;
     }
-  }
-};
 
+    const startDate = parseISO(data.startDate);
+    const endDate = parseISO(data.endDate);
+
+    // Si la fecha de inicio es posterior a la de finalización, mostramos un error y retornamos
+    if (isBefore(endDate, startDate)) {
+      showNotification(
+        "La fecha de finalización no puede ser anterior a la de inicio.",
+        "error"
+      );
+      return;
+    }
+
+    const { response, success, error, notificationType } = await handleCreate(
+      data
+    );
+
+    if (success) {
+      showNotification(success, notificationType);
+    }
+
+    if (error) {
+      showNotification(error, notificationType);
+    }
+
+    setSelectedProjectId(null);
+    if (response?.status === 200) {
+      if (selectedProjectId) {
+        navigate(`/projects/details/${data.parentId}`);
+      } else {
+        navigate("/projects");
+      }
+    }
+  };
 
   let isSubprojectText = "Proyecto";
   if (selectedProjectId) {
@@ -94,9 +98,7 @@ const createHandler = async (data) => {
   }
 
   const handleBack = () => {
-   
-      navigate(`/projects/`);
-    
+    navigate(`/projects/`);
   };
 
   return (
@@ -264,8 +266,8 @@ const createHandler = async (data) => {
               </button>
             </div>
           </form>
-          
-<button
+
+          <button
             onClick={handleBack}
             className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >

@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import {
   getAllReports,
   getLastReport,
   createReport,
 } from "../../services/report.api.routes";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 function BudgetChart() {
   const { report, setReport, showNotification, project } = useGlobalContext();
   const [value, setValue] = useState(50);
 
   const data = [
-    { name: 'Manejable (0%-33.3%)', value: 33.33, color: '#00ff00' },
-    { name: 'Advertencia (33.3%-66.6%)', value: 33.33, color: '#FDA400' },
-    { name: 'En Riesgo (66.6% +)', value: 33.33, color: '#ff0000' },
+    { name: "Manejable (0%-33.3%)", value: 33.33, color: "#00ff00" },
+    { name: "Advertencia (33.3%-66.6%)", value: 33.33, color: "#FDA400" },
+    { name: "En Riesgo (66.6% +)", value: 33.33, color: "#ff0000" },
   ];
 
   const RADIAN = Math.PI / 180;
@@ -51,28 +51,27 @@ function BudgetChart() {
     ];
   };
 
-
   if (!report) {
     Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Tu Dashboard se encuentra un poco vacío, asigna recursos y crea nuevas tareas. ¡SUERTE!',
-  
+      icon: "error",
+      title: "Oops...",
+      text: "Tu Dashboard se encuentra un poco vacío, asigna recursos y crea nuevas tareas. ¡SUERTE!",
     });
-  
+
     return (
       <div>
-        <h1 className=' mt-auto problems'>Parace que tu DASHBOARD se encuentra un poco vacío, 
-        Asigna recursos y Crea Tareas a tu proyecto existente. ¡Suerte!</h1>
-    
-      
+        <h1 className=" mt-auto problems">
+          Parace que tu DASHBOARD se encuentra un poco vacío, Asigna recursos y
+          Crea Tareas a tu proyecto existente. ¡Suerte!
+        </h1>
       </div>
-    
     );
   }
   return (
     <div className="w-[20rem] h-[22rem]  bg-gray-100 p-4 rounded-3xl border border-gray-200 flex flex-col">
-      <strong className="text-gray-700 font-medium">Porcentaje de Tareas atrasadas</strong>
+      <strong className="text-gray-700 font-medium">
+        Porcentaje de Tareas atrasadas
+      </strong>
       <div className="w-full mt-3 flex-1 text-xs">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={500}>
@@ -93,7 +92,15 @@ function BudgetChart() {
                 <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            {needle(report.latePlanningRatio * 100, data, cx, cy, iR, oR, '#0000ff')}
+            {needle(
+              report.latePlanningRatio * 100,
+              data,
+              cx,
+              cy,
+              iR,
+              oR,
+              "#0000ff"
+            )}
           </PieChart>
         </ResponsiveContainer>
       </div>

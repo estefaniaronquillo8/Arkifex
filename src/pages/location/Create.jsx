@@ -36,7 +36,7 @@ const LocationCreate = () => {
       if (data?.polygon) setValue("polygon", JSON.stringify(data.polygon));
       if (data?.address) setValue("address", data.address);
       //if (data?.area) setValue("area", data.area);
-      if (data?.area) setValue("displayArea", data.area);      
+      if (data?.area) setValue("displayArea", data.area);
     },
     [setValue]
   );
@@ -46,7 +46,6 @@ const LocationCreate = () => {
   }, []);
 
   const createHandler = async (data) => {
-
     data.projectId = selectedProjectId;
     const { response, success, error, notificationType } = await handleCreate(
       data
@@ -135,7 +134,9 @@ const LocationCreate = () => {
               })}
               className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
             />
-            {errors.area && <p className="text-red-800">{errors.area.message}</p>}
+            {errors.area && (
+              <p className="text-red-800">{errors.area.message}</p>
+            )}
           </div>
         </div>
         <div>

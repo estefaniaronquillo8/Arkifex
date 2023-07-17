@@ -105,8 +105,8 @@ const ProjectPlanningDetails = () => {
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
     navigate(`/projects/details/${projectPlanning.projectId}`);
-    
-    console.log("RESPONSE STATUS", response?.status)
+
+    console.log("RESPONSE STATUS", response?.status);
     if (response?.status === 200) {
       setProjectPlanning(response.projectPlanning);
     }
@@ -119,9 +119,9 @@ const ProjectPlanningDetails = () => {
       id
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
-    console.log("SUCCESS RA", success)
-    console.log("ERROR RA", error)
-    console.log("RESPONSE RA", response)
+    console.log("SUCCESS RA", success);
+    console.log("ERROR RA", error);
+    console.log("RESPONSE RA", response);
     if (response?.status === 200) {
       window.location.reload();
     }

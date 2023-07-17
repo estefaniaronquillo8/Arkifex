@@ -121,7 +121,7 @@ function LocationEdit() {
                 readOnly
                 className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
               />
-            </div> 
+            </div>
             <div>
               <label
                 htmlFor="calculatedArea"
