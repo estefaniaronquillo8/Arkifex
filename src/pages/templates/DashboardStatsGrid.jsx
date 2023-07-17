@@ -91,40 +91,7 @@ function DashboardStateGrid() {
       </div>
     </div>
   </BoxWrapper>
-  <BoxWrapper className="w-full sm:w-1/2 md:w-1/2 lg:w-1/4">
-    <div className="rounded-full h-12 w-12 flex items-center justify-center bg-sky-500">
-      <BsFillCalendar2WeekFill className="text-2xl text-white" />
-    </div>
-    <div className="pl-4">
-      <span className="text-lg text-blue-500 font-bold">Tareas en proyecto</span>
-      <div className="flex items-center">
-        <strong className="text-xl text-gray-700 font-semibold">
-          {report ? (
-            <ul>
-              <ul>
-                <strong className="text-xl text-gray-700 font-semibold">
-                  <ul>Tareas Atrasadas: {report.latePlanningRatio * 100}%</ul>
-                </strong>
-              </ul>
-              <ul>
-              <strong className="text-xl font-semibold" style={{ color: report.timeVariance >= 0 ? '#68BA3F' : 'red' }}>
-          <ul>
-            {report.timeVariance > 0 ? (
-              <span>Días hasta la finalización del proyecto: {report.timeVariance}</span>
-            ) : (
-              <span>Días atrasados del proyecto: {report.timeVariance}</span>
-            )}
-          </ul>
-        </strong>
-              </ul>
-            </ul>
-          ) : (
-            <p>No data available.</p>
-          )}
-        </strong>
-      </div>
-    </div>
-  </BoxWrapper>
+ 
 </div>
 
 
