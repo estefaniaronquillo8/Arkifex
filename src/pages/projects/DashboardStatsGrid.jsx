@@ -125,7 +125,7 @@ function DashboardStateGrid() {
             {report.timeVariance > 0 ? (
               <span>Días hasta la finalización del proyecto: {report.timeVariance}</span>
             ) : (
-              <span>Días atrasados del proyecto: {report.timeVariance}</span>
+              <span>Días atrasados del proyecto: {-report.timeVariance}</span>
             )}
           </ul>
         </strong>
