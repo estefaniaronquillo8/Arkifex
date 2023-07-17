@@ -76,6 +76,7 @@ export const GlobalProvider = ({ children }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const [projects, setProjects] = useState([]);
+  
   const [project, setProject] = useState({
     id: 0,
     userId: 0,
