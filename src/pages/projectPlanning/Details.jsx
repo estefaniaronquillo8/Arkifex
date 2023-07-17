@@ -10,7 +10,7 @@ import {
 import { handleDelete as handleDeleteRA } from "../../services/resourceAssignment.api.routes";
 import { getAllResources } from "../../services/resource.api.routes";
 import { getAllResourceAssignments } from "../../services/resourceAssignment.api.routes";
-
+import Swal from "sweetalert2";
 const ProjectPlanningDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -169,13 +169,38 @@ const ProjectPlanningDetails = () => {
             >
               Editar
             </Link>
-
             <button
+                  onClick={async () => {
+                    const result = await Swal.fire({
+                      title: "¿Estás seguro de eliminar tu planificacion?",
+                      text: "¡No podrás revertir esto!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Sí, eliminarlo",
+                      cancelButtonText: "Cancelar",
+                    });
+
+                    if (result.isConfirmed) {
+                      await deleteHandler(projectPlanning.id);
+                      Swal.fire(
+                        "¡Eliminado!",
+                        "Tu proyecto ha sido eliminado.",
+                        "success"
+                      );
+                    }
+                  }}
+                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
+            {/* <button
               onClick={async () => await deleteHandler(projectPlanning.id)}
               className="inline-block bg-red-500 text-white px-4 py-2 rounded"
             >
               Eliminar
-            </button>
+            </button> */}
 
             <h1 className="text-4xl font-semibold mb-6">
               Asignación de Recursos
@@ -227,7 +252,7 @@ const ProjectPlanningDetails = () => {
                           <td className="pl-3">
                             {resource ? resource.name : "Desconocido"}
                           </td>
-                          <td>{resource.description}</td>
+                          <td>{resource && resource.description}</td>
                           {showRoleColumn && <td>{resource?.role}</td>}
                           <td>{resourceAssignment.quantity}</td>
                           <td>{resourceAssignment.estimatedCost}</td>
@@ -240,14 +265,35 @@ const ProjectPlanningDetails = () => {
                             >
                               Editar
                             </Link>
+
+
                             <button
-                              onClick={async () =>
-                                await deleteHandlerRA(resourceAssignment.id)
-                              }
-                              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                            >
-                              Eliminar
-                            </button>
+                  onClick={async () => {
+                    const result = await Swal.fire({
+                      title: "¿Estás seguro de eliminar tu asignacion?",
+                      text: "¡No podrás revertir esto!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Sí, eliminarlo",
+                      cancelButtonText: "Cancelar",
+                    });
+
+                    if (result.isConfirmed) {
+                      await deleteHandler(resourceAssignment.id);
+                      Swal.fire(
+                        "¡Eliminado!",
+                        "Tu proyecto ha sido eliminado.",
+                        "success"
+                      );
+                    }
+                  }}
+                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                >
+                  Eliminar
+                </button>
+                           
                           </td>
                         </tr>
                       );

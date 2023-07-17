@@ -184,7 +184,7 @@ const ProjectIndex = () => {
                 key={id}
                 className="bg-white shadow-md rounded-lg p-4"
                 style={{
-                 backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
+                  backgroundImage: `linear-gradient(rgba(1, 1, 1, 0.6), rgba(1, 2, 5, 0.5)), url(/src/assets/map.png)`,
                   backgroundPosition: "center",
                 }}
               >
@@ -198,13 +198,12 @@ const ProjectIndex = () => {
                 </h5>
                 <h3 className="font-bold mb-2 text-white">Fin: {endDate}</h3>
                 <div>
-                <Link
-    to={`/projects/details/${id}`}
-    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
-  
-  >
-    Detalles
-  </Link>
+                  <Link
+                    to={`/projects/details/${id}`}
+                    className="inline-block bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Detalles
+                  </Link>
                   <Link
                     to={`/projects/dashboards/${id}`}
                     className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
