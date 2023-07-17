@@ -595,9 +595,9 @@ const ProjectDetails = () => {
                               Detalles1
                             </Link>
                             <Link
-                              to={`/projects/dashboards/${id}`}
+                              to={`/projects/dashboards/${project.id}`}
                               className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
-                              onClick={() => handleCreateReport(id)}
+                              onClick={() => handleCreateReport(project.id)}
                             >
                               Dashboards
                             </Link>
