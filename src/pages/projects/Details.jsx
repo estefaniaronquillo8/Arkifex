@@ -143,9 +143,8 @@ const ProjectDetails = () => {
       setCurrentSection("details"); // Cambiar la sección actual a "Detalles Generales"
     }
   };
-  /// para mostrar boton 
+  /// para mostrar boton
   const [showDuplicateButton, setShowDuplicateButton] = useState(false);
-
 
   const deleteHandler = async (id) => {
     console.log("IDDDDDDDDDDD", id);
@@ -192,7 +191,7 @@ const ProjectDetails = () => {
       project.id,
       updatedProject
     );
-  
+
     if (success) {
       setProject(updatedProject);
       //setIsTemplateProject(updatedProject.isTemplate); // Actualizar el estado de isTemplateProject
@@ -201,7 +200,6 @@ const ProjectDetails = () => {
       showNotification(error, notificationType);
     }
   };
-
 
   let isTemplateText = "Hacer Plantilla";
   if (project && project.isTemplate) {
@@ -255,17 +253,18 @@ const ProjectDetails = () => {
       user = users.find((user) => user.id === project.userId);
     }
 
-
-    /// new method 
+    /// new method
     useEffect(() => {
-      setShowDuplicateButton(isTemplateText === "Dejar de ser plantilla" && isTemplateProject);
+      setShowDuplicateButton(
+        isTemplateText === "Dejar de ser plantilla" && isTemplateProject
+      );
     }, [isTemplateText, isTemplateProject]);
     //
     // const handleCreateReport = async (projectid) => {
     //   const { response, success, error, notificationType } = await createReport(
     //     projectid
     //   );
-      
+
     return (
       <div className="bg-white shadow-md rounded-lg p-6">
         <div className="space-y-6">
@@ -320,16 +319,17 @@ const ProjectDetails = () => {
               >
                 {isTemplateText}
               </button>
-         
-              {isTemplateText === "Dejar de ser plantilla" && isTemplateProject && (
-  <button
-    onClick={handleDuplicateProject}
-    className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-  >
-    Duplicar Proyecto
-  </button>
-)}
-              
+
+              {isTemplateText === "Dejar de ser plantilla" &&
+                isTemplateProject && (
+                  <button
+                    onClick={handleDuplicateProject}
+                    className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                  >
+                    Duplicar Proyecto
+                  </button>
+                )}
+
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
                   onClick={async () => {
@@ -383,27 +383,28 @@ const ProjectDetails = () => {
                   <h2 className="font-bold text-lg mb-2">Area</h2>
                   <p>{locationForThisProject.area}</p>
                 </div>
-
-               
               </div>
 
               <div className="flex-1 bg-white rounded-lg shadow p-4">
                 <h2 className="font-bold text-lg mb-2">Mapa</h2>
-                <LocationDetails locationId={locationForThisProject.id} mode="show" />
+                <LocationDetails
+                  locationId={locationForThisProject.id}
+                  mode="show"
+                />
               </div>
             </div>
           )}
 
-{roleInSession && roleInSession.name !== "client" && (
-                  <div className="mt-4 flex-1 bg-white  p-4">
-                    <button
-                      onClick={handleLocationClick}
-                      className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-                    >
-                      {locationButtonText}
-                    </button>
-                  </div>
-                )}
+          {roleInSession && roleInSession.name !== "client" && (
+            <div className="mt-4 flex-1 bg-white  p-4">
+              <button
+                onClick={handleLocationClick}
+                className="bg-green-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+              >
+                {locationButtonText}
+              </button>
+            </div>
+          )}
 
           <button
             onClick={handleBack}
@@ -458,9 +459,8 @@ const ProjectDetails = () => {
           >
             Crear Nueva Tarea
           </button>
-          
         )}
-         {/* <button
+        {/* <button
             onClick={handleBackButton}
             className="inline-flex-1  mx-80 py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
@@ -531,7 +531,6 @@ const ProjectDetails = () => {
             </tbody>
           </table>
         </div>
-       
       </div>
     );
   };
@@ -559,59 +558,56 @@ const ProjectDetails = () => {
                 Crear desde plantilla
               </button>
             )}
-            
-            
+
             <div className="bg-white shadow-md rounded-lg">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Descripción</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Fecha de Inicio</th>
-                  <th scope="col">Fecha de Fin</th>
-                  <th scope="col" colSpan="2">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {projects &&
-                  projects.map((project) => {
-                    return (
-                      <tr key={project.id}>
-                        <td>{project.name}</td>
-                        <td>{project.description}</td>
-                        <td>{project.status}</td>
-                        <td>{project.startDate}</td>
-                        <td>{project.endDate}</td>
-                        <td>
-                          <Link
-                            to={`/projects/details/${project.id}`}
-                            onClick={() => {
-                              setShowSubprojectsButton(false);
-                              setCurrentSection("details");
-                            }}
-                            className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
-                          >
-                            Detalles1
-                          </Link>
-                          <Link
-                    to={`/projects/dashboards/${id}`}
-                    className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
-                    onClick={() => handleCreateReport(id)}
-                  >
-                    Dashboards
-                  </Link>
-                        </td>
-                       
-                        
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-          
-          
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Descripción</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Fecha de Inicio</th>
+                    <th scope="col">Fecha de Fin</th>
+                    <th scope="col" colSpan="2">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects &&
+                    projects.map((project) => {
+                      return (
+                        <tr key={project.id}>
+                          <td>{project.name}</td>
+                          <td>{project.description}</td>
+                          <td>{project.status}</td>
+                          <td>{project.startDate}</td>
+                          <td>{project.endDate}</td>
+                          <td>
+                            <Link
+                              to={`/projects/details/${project.id}`}
+                              onClick={() => {
+                                setShowSubprojectsButton(false);
+                                setCurrentSection("details");
+                              }}
+                              className="bg-blue-500 text-white px-4 py-2 mr-2 rounded mb-4 inline-block"
+                            >
+                              Detalles1
+                            </Link>
+                            <Link
+                              to={`/projects/dashboards/${id}`}
+                              className="inline-block bg-[#FFBD0D] text-black font-bold px-4 py-2 rounded mr-2"
+                              onClick={() => handleCreateReport(id)}
+                            >
+                              Dashboards
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>

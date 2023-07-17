@@ -235,7 +235,7 @@ function ProjectDashboards() {
       doc.setFontSize(12);
       doc.setFont("helvetica", "normal");
 
-      const descriptionGeneral = `El proyecto actualmente tiene un presupuesto estimado de $${reportData.estimatedBudget} USD, que se calcula mediante el valor de mercado de los recursos y personal utilizado por cada tarea en el proyecto. Por otro lado el presupeusto actual, que se calcula mediante el calculo de costos por tarea se encuentra en los $${reportData.actualBudget} `;
+      const descriptionGeneral = `El proyecto actualmente tiene un presupuesto estimado de $${reportData.estimatedBudget} USD, que se calcula mediante el valor de mercado de los recursos y personal utilizado por cada tarea en el proyecto. Por otro lado, el presupuesto actual que se calcula mediante el cálculo de costos por tarea se encuentra en los $${reportData.actualBudget} `;
 
       // Dividir la descripción en palabras
       const wordsGeneral = descriptionGeneral.split(" ");
@@ -338,8 +338,8 @@ function ProjectDashboards() {
 
       const reportDataValue3Description =
         reportData.estimatedBudget - reportData.actualBudget < 0
-          ? `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor negativo siendo ${reportDataValue3}, por lo que esté valor se sobresale de lo que se pensó desde un inicio que iba a valer el proyecto en su totalidad. Siendo una pérdida.`
-          : `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor positivo siendo ${reportDataValue3}, por lo que este valor es un ahorro en comparación a lo que se creía que se iba a pagar del proyecto en su totalidad. Siendo una ganancia`;
+          ? `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor negativo siendo ${reportDataValue3}, por lo que este valor se sobresale de lo que se pensó desde un inicio que iba a valer el proyecto en su totalidad, figurando como pérdida.`
+          : `Como se puede observar, la diferencia que existe entre el presupuesto estimado del proyecto y el presupuesto actual del mismo es de un valor positivo siendo ${reportDataValue3}, por lo que este valor es un ahorro en comparación a lo que se creía que se iba a pagar del proyecto en su totalidad, figurando como ganancia.`;
 
       // Dividir la descripción en palabras
       const wordsReportDataValue3Description =
@@ -509,12 +509,12 @@ function ProjectDashboards() {
             y = doc.autoTable.previous.finalY + margin;
 
             const personalTotalsDescription = `
-              - Costo Total:                           ${personalTotals[3]}
-              - Costo Total Estimado:                  ${personalTotals[4]}
-              - Variación con Total Estimado:          ${personalTotals[5]}
+              - Costo Total:                                ${personalTotals[3]}
+              - Costo Total Estimado:                     ${personalTotals[4]}
+              - Variación con Total Estimado:            ${personalTotals[5]}
               - Variación con Costo Unitario Estimado: ${personalTotals[6]}`;
 
-            y += 10;
+            //y += 10;
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
             doc.text(
@@ -616,7 +616,7 @@ function ProjectDashboards() {
             - Diferencia con Total Estimado:          ${regularTotals[7]}
             - Diferencia con Costo Unitario Estimado: ${regularTotals[8]}`;
 
-          y += 10;
+          //y += 10;
           doc.setFontSize(12);
           doc.setFont("helvetica", "bold");
           doc.text(
@@ -637,9 +637,6 @@ function ProjectDashboards() {
           );
 
           y+=25;
-
-
-          
 
           // Set font size and style for the description
           
@@ -668,7 +665,7 @@ function ProjectDashboards() {
         doc.addPage([pageWidth, pageHeight], "landscape");
         doc.setFontSize(20);
         const titleWidth =
-          (doc.getStringUnitWidth("Dasboard Proyecto") *
+          (doc.getStringUnitWidth("Dashboard Proyecto") *
             doc.internal.getFontSize()) /
           doc.internal.scaleFactor;
         const titleX = (pageHeight - titleWidth) / 2;

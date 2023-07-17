@@ -82,12 +82,8 @@ const TemplateSub = () => {
   }, [success, error, notificationType, showNotification]);
 
   const handleBack = () => {
-    setShowSubprojectsButton(true); // Restablecer el estado de showSubprojectsButton a true
-    if (projects.parentId) {
-      navigate(`/templates/details/${projects.parentId}`);
-    } else {
-      navigate("/templates");
-    }
+    //setShowSubprojectsButton(true); 
+    navigate(`/projects/details/${selectedProjectId}`);
   };
 
   const TemplatesSection = ({ project }) => {
@@ -203,7 +199,6 @@ const TemplateSub = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <h2 className="text-4xl font-semibold mb-6">Plantillas</h2>
-
       <div>
         <nav className="navtemp">
           <button
@@ -236,6 +231,13 @@ const TemplateSub = () => {
           <SubprojectsSection project={projects} />
         )}
       </div>
+
+      <button
+        onClick={handleBack}
+        className="inline-flex justify-center py-2 px-4 mr-20 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        Volver
+      </button>
     </div>
   );
 };

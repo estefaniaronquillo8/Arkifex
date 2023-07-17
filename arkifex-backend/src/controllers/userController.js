@@ -40,6 +40,17 @@ exports.delete = async (req, res) => {
   return res.status(response.status).json(response);
 };
 
+exports.validatePassword = async (req, res) => {
+  const { email, password } = req.body;
+  const response = await validatePassword(email, password);
+
+  if (response.status !== 200) {
+    return res.status(response.status).json({ message: response.message });
+  }
+
+  return res.status(response.status).json({ message: "Valid password!" });
+};
+
 exports.login = async (req, res) => {
   const { email, password } = req.body;
   const response = await validatePassword(email, password);
@@ -52,13 +63,11 @@ exports.login = async (req, res) => {
   const role = user.Role;
   const token = createToken(user, role);
 
-  return res
-    .status(response.status)
-    .json({ 
-      token, 
-      user: user.get({ plain: true }), 
-      message: "Ingreso exitoso!" 
-    });
+  return res.status(response.status).json({
+    token,
+    user: user.get({ plain: true }),
+    message: "Ingreso exitoso!",
+  });
 };
 
 exports.register = async (req, res) => {

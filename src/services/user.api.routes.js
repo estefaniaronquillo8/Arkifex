@@ -38,3 +38,6 @@ export const handleDelete = async (id) => {
   return { response, success, error, notificationType };
 }
 
+export const handleValidatePassword = (data) => {
+  return requestHandler('post', '/users/validatePassword', data);
+}

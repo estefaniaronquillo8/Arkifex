@@ -59,6 +59,10 @@ const updateUser = async (id, userData) => {
         };
       }
     }
+    // encrypt password before updating
+    if (userData.password) {
+      userData.password = encryptPassword(userData.password);
+    }
     await User.update(userData, { where: { id }, transaction });
     await transaction.commit();
     const updatedUser = await findById(id);

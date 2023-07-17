@@ -176,7 +176,7 @@ const TemplateDetails = () => {
       await duplicateProject(project.id);
 
     if (success) {
-      navigate(`/projects`);
+      navigate(`/projects/edit/${response.project.id}`);
       showNotification(success, notificationType);
     } else if (error) {
       showNotification(error, notificationType);
