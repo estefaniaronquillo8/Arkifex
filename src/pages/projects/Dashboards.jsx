@@ -2,13 +2,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAllProjects } from "../../services/project.api.routes";
+import { getAllProjects, handleEdit, } from "../../services/project.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
 import {
   getLastReport,
   getAllReports,
   getDetailReport,
 } from "../../services/report.api.routes";
+
 import { routesProtection } from "../../assets/routesProtection";
 import DashboardStateGrid from "./DashboardStatsGrid";
 import Navbar from "../../components/Navbar";
@@ -23,9 +24,8 @@ function ProjectDashboards() {
   const graphPageRef = useRef(null);
   const navigate = useNavigate();
   const {
-    projects,
     project,
-    setProjects,
+    setProject,
     users,
     setUsers,
     userInSession,
@@ -44,10 +44,30 @@ function ProjectDashboards() {
   const [notificationType, setNotificationType] = useState();
 
   useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const { response, error, notificationType } = await handleEdit(
+          id
+        );
+        if (response?.project) {
+          setProject(response.project);
+        }
+        setError(error);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchProject();
+  }, [id]);
+
+
+  useEffect(() => {
     //console.log(report?.id)
     //if(report?.actualBudget === 0) navigate("/projects");
     if (!routesProtection()) navigate("/login");
   }, []);
+
 
   useEffect(() => {
     const fetchProjectsAndUsers = async () => {
@@ -64,7 +84,7 @@ function ProjectDashboards() {
       }
 
       if (projectResponse?.projects) {
-        setProjects(projectResponse.projects);
+        setProject(projectResponse.projects);
       }
 
       setError(error);
@@ -74,6 +94,9 @@ function ProjectDashboards() {
 
     fetchProjectsAndUsers();
   }, []);
+
+  
+  
 
   useEffect(() => {
     if (success) {
@@ -97,6 +120,7 @@ function ProjectDashboards() {
     fetchData();
   }, []);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -112,11 +136,11 @@ function ProjectDashboards() {
 
   // useEffect(() => {
   //   if (report !== null) {
-  //     console.log("PROJECTIDSSSS", detailReports);
+  //     console.log("PROyecto", project);
   //   } else {
   //     console.log("EXISTE");
   //   }
-  // }, [detailReports]);
+  // }, [project]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -701,6 +725,11 @@ function ProjectDashboards() {
     <div className="min-h-full bg-[#eaf0f0] flex justify-center">
       <div className="container mx-auto px-4 py-6 mt-5">
         <Navbar />
+        <div>
+        <h2 className="mt-4 text-4xl font-semibold mb-6">
+        Detalles del {report.projectName}
+      </h2>
+        </div>
         <div className="mt-6 flex justify-center">
           <button
             id="generate-report-button"
