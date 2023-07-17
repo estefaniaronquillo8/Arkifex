@@ -66,7 +66,12 @@ const LocationCreate = () => {
   };
 
   return (
-    <div className="min-h-screen bg-red-100 py-6 flex flex-col justify-center sm:py-12">
+    <div className="min-h-screen bg-white py-6 flex flex-col justify-center items-center sm:py-12">
+    <div>
+    <h1 className="text-4xl font-semibold mb-6">
+        Creacion de Localización
+      </h1>
+    </div>
       {/* <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 w-[450px]"> */}
       <form onSubmit={handleSubmit(async (data) => await createHandler(data))}>
@@ -90,7 +95,7 @@ const LocationCreate = () => {
               htmlFor="address"
               className="block text-sm font-medium text-gray-700"
             >
-              Address:
+              Ubicacion punto exacto:
             </label>
             <input
               id="address"
@@ -98,8 +103,7 @@ const LocationCreate = () => {
               {...register("address")}
               onChange={(e) => setAddress(e.target.value)}
               readOnly
-              className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-            />
+              className="mt-1 block w-80 h-10 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"            />
           </div>
 
           <div>
@@ -107,15 +111,14 @@ const LocationCreate = () => {
               htmlFor="displayArea"
               className="block text-sm font-medium text-gray-700"
             >
-              Area del polígono:
+              Area marcada:
             </label>
             <input
               id="displayArea"
               type="text"
               {...register("displayArea")}
               readOnly
-              className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-            />
+              className="mt-1 block w-80 h-10 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"            />
           </div>
 
           <div>
@@ -123,7 +126,7 @@ const LocationCreate = () => {
               htmlFor="area"
               className="block text-sm font-medium text-gray-700"
             >
-              Area del proyecto:
+              Area referencial del proyecto:
             </label>
             <input
               id="area"
@@ -132,8 +135,7 @@ const LocationCreate = () => {
               {...register("area", {
                 required: "Ingrese el área del proyecto del mapa.",
               })}
-              className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-            />
+              className="mt-1 block w-80 h-10 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"            />
             {errors.area && (
               <p className="text-red-800">{errors.area.message}</p>
             )}
@@ -153,8 +155,8 @@ const LocationCreate = () => {
               required: "Ingrese un marcador en el mapa.",
             })}
             readOnly
-            className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-          />
+            className="mt-1 block w-80 h-10 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"            />
+
           {errors.lat && <p className="text-red-800">{errors.lat.message}</p>}
         </div>
         {/* <div>
@@ -184,24 +186,28 @@ const LocationCreate = () => {
             {...register("polygon", {
               required: "Ingrese el polígono en el mapa.",
             })}
-            className="mt-1 block w-full shadow-sm focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md"
-          />
+            className="mt-1 block w-80 h-10 border border-gray-600 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"            />
+
           {errors.polygon && (
             <p className="text-red-800">{errors.polygon.message}</p>
           )}
         </div>
+        <div className="mt-4">
         <button
           type="submit"
           className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           Crear
         </button>
+        </div>
       </form>
+      
       <LocationDetails
         mode="create"
         setLocationData={setLocationData}
         address={address}
       />
+   
     </div>
   );
 };
