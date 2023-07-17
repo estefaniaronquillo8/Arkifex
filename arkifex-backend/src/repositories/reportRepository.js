@@ -70,11 +70,14 @@ const createReport = async (projectId) => {
     const results = await ResourceAssignment.findAll({
       attributes: [
         "ProjectPlanning.projectId",
-        [sequelize.fn("SUM", sequelize.col("actualCost")), "ActualBudget"],
         [
-          sequelize.fn("SUM", sequelize.col("estimatedCost")),
-          "EstimatedBudget",
+          sequelize.literal("SUM(actualCost*quantity)"),
+          "ActualBudget",
         ],
+        [
+          sequelize.literal("SUM(estimatedCost*quantity)"),
+          "EstimatedBudget",
+        ],      
         [
           sequelize.literal("SUM(estimatedCost)-SUM(actualCost)"),
           "CostVariance",

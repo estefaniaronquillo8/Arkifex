@@ -120,7 +120,7 @@ const createDetailReportPlanning = async (projectId, reportId) => {
           "ResourcesCount",
         ],
         [
-          sequelize.literal("SUM(actualCost) - SUM(estimatedCost)"),
+          sequelize.literal("SUM(estimatedCost)-SUM(actualCost)"),
           "CostVariance",
         ],
       ],
@@ -162,11 +162,11 @@ const createDetailReportPlanning = async (projectId, reportId) => {
       // Assign values to variables or perform any other operations
       const formattedId = ProjectPlanningId.toString();
       const formattedName = ProjectPlanningName.toUpperCase();
-      const UnitaryActualCostOfTask = ActualCostOfResource / ResourcesCount;
+      const UnitaryActualCostOfTask = ActualCostOfResource;
       const UnitaryEstimatedTotalCostOfTask =
-        EstimatedCostOfResource / ResourcesCount;
+        EstimatedCostOfResource;
       const costDifference =
-        UnitaryActualCostOfTask - UnitaryEstimatedTotalCostOfTask;
+      UnitaryEstimatedTotalCostOfTask-UnitaryActualCostOfTask;
       //console.log(UnitaryActualCostOfTask);
 
       const newDetailResourceReport = await DetailReport.create({
@@ -179,11 +179,11 @@ const createDetailReportPlanning = async (projectId, reportId) => {
         resourceType: resourceType,
         actualUnitaryCost: UnitaryActualCostOfTask,
         estimatedUnitaryCost: UnitaryEstimatedTotalCostOfTask,
-        actualTotalCost: ActualCostOfResource,
-        estimatedTotalCost: EstimatedCostOfResource,
+        actualTotalCost: ActualCostOfResource*ResourcesCount,
+        estimatedTotalCost: EstimatedCostOfResource*ResourcesCount,
         countOfResources: ResourcesCount,
-        totalCostVariance: CostVariance,
-        unitaryCostVariance: costDifference,
+        totalCostVariance: EstimatedCostOfResource*ResourcesCount-ActualCostOfResource*ResourcesCount,
+        unitaryCostVariance: CostVariance,
         //timeVariance: dateVariance,
         date: new Date(),
       });
