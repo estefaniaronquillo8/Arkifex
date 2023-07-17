@@ -79,7 +79,7 @@ const createReport = async (projectId) => {
           "EstimatedBudget",
         ],      
         [
-          sequelize.literal("SUM(estimatedCost)-SUM(actualCost)"),
+          sequelize.literal("SUM(estimatedCost*quantity)-SUM(actualCost*quantity)"),
           "CostVariance",
         ],
         [sequelize.literal('DATEDIFF(MAX(endDate), CURDATE())'), 'dateVariance']
