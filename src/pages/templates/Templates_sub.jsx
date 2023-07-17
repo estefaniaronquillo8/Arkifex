@@ -82,7 +82,7 @@ const TemplateSub = () => {
   }, [success, error, notificationType, showNotification]);
 
   const handleBack = () => {
-    //setShowSubprojectsButton(true); 
+    //setShowSubprojectsButton(true);
     navigate(`/projects/details/${selectedProjectId}`);
   };
 
@@ -92,53 +92,52 @@ const TemplateSub = () => {
         {!project.parentId && (
           <>
             <h1 className="text-4xl font-semibold mb-6">Creadas desde 0</h1>
-          
-            <div className="bg-white shadow-md rounded-lg">
-  <table className="w-full">
-    <thead>
-      <tr className="font-semibold border-b border-gray-200">
-        <th className="ml-5">Nombre</th>
-        <th>Descripción</th>
-        <th>Monto</th>
-        <th colSpan="2">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {projects &&
-        projects
-          .filter((project) => project.status === "Template")
-          .map((project) => {
-            if (!project.parentId) {
-              return (
-                <tr
-                  key={project.id}
-                  className="border-b border-gray-200"
-                >
-                  <td className="ml-5">{project.name}</td>
-                  <td>{project.description}</td>
-                  <td>$MONTO</td>
-                  <td colSpan="2">
-                    <button
-                      onClick={() =>
-                        handleDuplicateSubproject(
-                          project.id,
-                          selectedProjectId
-                        )
-                      }
-                      className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-                    >
-                      Duplicar Plantilla
-                    </button>
-                  </td>
-                </tr>
-              );
-            }
-            return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
-          })}
-    </tbody>
-  </table>
-</div>
 
+            <div className="bg-white shadow-md rounded-lg">
+              <table className="w-full">
+                <thead>
+                  <tr className="font-semibold border-b border-gray-200">
+                    <th className="ml-5">Nombre</th>
+                    <th>Descripción</th>
+                    {/* <th>Monto</th> */}
+                    <th colSpan="2">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects &&
+                    projects
+                      .filter((project) => project.status === "Template")
+                      .map((project) => {
+                        if (!project.parentId) {
+                          return (
+                            <tr
+                              key={project.id}
+                              className="border-b border-gray-200"
+                            >
+                              <td className="ml-5">{project.name}</td>
+                              <td>{project.description}</td>
+                              {/* <td>$MONTO</td> */}
+                              <td colSpan="2">
+                                <button
+                                  onClick={() =>
+                                    handleDuplicateSubproject(
+                                      project.id,
+                                      selectedProjectId
+                                    )
+                                  }
+                                  className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                                >
+                                  Duplicar Plantilla
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        }
+                        return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
+                      })}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </div>
@@ -151,47 +150,51 @@ const TemplateSub = () => {
       <div>
         <h1 className="text-4xl font-semibold mb-6">Subproyectos</h1>
         <div className="bg-white shadow-md rounded-lg">
-  <table className="table-fixed w-full">
-    <thead>
-      <tr className="font-semibold">
-        <th className="w-1/6 ml-5">Nombre</th>
-        <th className="w-1/6">Descripción</th>
-        <th className="w-1/6">Monto</th>
-        <th className="w-2/6">Acción</th>
-      </tr>
-    </thead>
-    <tbody>
-      {projects &&
-        projects.map((project) => {
-          if (project.parentId) {
-            const user = users.find((user) => user.id === project.userId);
-            return (
-              <tr
-                key={project.id}
-                className="py-2 border-b border-gray-200"
-              >
-                <td className="w-1/6 ml-5">{project.name}</td>
-                <td className="w-1/6">{project.endDate}</td>
-                <td className="w-1/6">$MONTO</td>
-                <td className="w-2/6">
-                  <button
-                    onClick={() =>
-                      handleDuplicateSubproject(project.id, selectedProjectId)
-                    }
-                    className="inline-block bg-green-500 text-white px-4 py-2 rounded"
-                  >
-                    Duplicar Sub-proyecto
-                  </button>
-                </td>
+          <table className="table-fixed w-full">
+            <thead>
+              <tr className="font-semibold">
+                <th className="w-1/6 ml-5">Nombre</th>
+                <th className="w-1/6">Descripción</th>
+                {/* <th className="w-1/6">Monto</th> */}
+                <th className="w-2/6">Acción</th>
               </tr>
-            );
-          }
-          return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
-        })}
-    </tbody>
-  </table>
-</div>
-
+            </thead>
+            <tbody>
+              {projects &&
+                projects.map((project) => {
+                  if (project.parentId) {
+                    const user = users.find(
+                      (user) => user.id === project.userId
+                    );
+                    return (
+                      <tr
+                        key={project.id}
+                        className="py-2 border-b border-gray-200"
+                      >
+                        <td className="w-1/6 ml-5">{project.name}</td>
+                        <td className="w-1/6">{project.description}</td>
+                        {/* <td className="w-1/6">$MONTO</td> */}
+                        <td className="w-2/6">
+                          <button
+                            onClick={() =>
+                              handleDuplicateSubproject(
+                                project.id,
+                                selectedProjectId
+                              )
+                            }
+                            className="inline-block bg-green-500 text-white px-4 py-2 rounded"
+                          >
+                            Duplicar Sub-proyecto
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return null; // En caso de que `project.parentId` exista, retornamos null para que no se muestre nada en el renderizado.
+                })}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   };

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAllProjects, handleEdit, } from "../../services/project.api.routes";
+import { getAllProjects, handleEdit } from "../../services/project.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
 import {
   getLastReport,
@@ -46,9 +46,7 @@ function ProjectDashboards() {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const { response, error, notificationType } = await handleEdit(
-          id
-        );
+        const { response, error, notificationType } = await handleEdit(id);
         if (response?.project) {
           setProject(response.project);
         }
@@ -61,13 +59,11 @@ function ProjectDashboards() {
     fetchProject();
   }, [id]);
 
-
   useEffect(() => {
     //console.log(report?.id)
     //if(report?.actualBudget === 0) navigate("/projects");
     if (!routesProtection()) navigate("/login");
   }, []);
-
 
   useEffect(() => {
     const fetchProjectsAndUsers = async () => {
@@ -95,9 +91,6 @@ function ProjectDashboards() {
     fetchProjectsAndUsers();
   }, []);
 
-  
-  
-
   useEffect(() => {
     if (success) {
       showNotification(success, notificationType);
@@ -112,14 +105,13 @@ function ProjectDashboards() {
       try {
         const response = await getDetailReport(id);
         setDetailReports(response.response.report);
-        console.log("DETAILGET",response.response);
+        console.log("DETAILGET", response.response);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
   }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -197,7 +189,7 @@ function ProjectDashboards() {
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(8, 4, 87); // Define el color del texto en rojo RGB
-     doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
+      doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
       // Calculate the width of the title
       const title = "Reporte Detallado del Proyecto";
       const titleWidth = doc.getTextWidth(title);
@@ -327,12 +319,12 @@ function ProjectDashboards() {
         valueWidth3
       );
 
-      doc.text(reportDataLabel1, margin + 15, y);
-      doc.text(reportDataValue1, margin + maxWidth, y);
-      y += 7;
-
       doc.text(reportDataLabel2, margin + 15, y);
       doc.text(reportDataValue2, margin + maxWidth, y);
+      y += 7;
+
+      doc.text(reportDataLabel1, margin + 15, y);
+      doc.text(reportDataValue1, margin + maxWidth, y);
       y += 7;
 
       doc.line(margin + 15, y, 2 * margin - 5 + maxWidth, y);
@@ -406,7 +398,7 @@ function ProjectDashboards() {
       doc.setFont("helvetica", "normal");
 
       const description =
-        "A continuación se muestra información detallada sobre diferentes tipos de recursos y persona asignado por cada tarea en el proyecto, incluyendo su costo unitario, costo total, cantidad y diferencias entre los valores reales y estimados. Proporciona una visión general de los recursos utilizados y sus características financieras en el proyecto.";
+        "A continuación se muestra información detallada sobre diferentes tipos de recursos y personal asignado por cada tarea en el proyecto, incluyendo su costo unitario, costo total, cantidad y diferencias entre los valores reales y estimados. Proporciona una visión general de los recursos utilizados y sus características financieras en el proyecto.";
 
       // Dividir la descripción en palabras
       const words = description.split(" ");
@@ -611,7 +603,6 @@ function ProjectDashboards() {
           );
 
           // Add a description of the totals
-          
 
           // Add the regular table with totals
           doc.autoTable({
@@ -660,10 +651,9 @@ function ProjectDashboards() {
             doc.autoTable.previous.finalY + margin + 10
           );
 
-          y+=25;
+          y += 25;
 
           // Set font size and style for the description
-          
 
           // Check if the remaining content can fit within the page height
           if (y + 20 >= pageHeight - margin) {
@@ -694,7 +684,7 @@ function ProjectDashboards() {
           doc.internal.scaleFactor;
         const titleX = (pageHeight - titleWidth) / 2;
         const titleY = margin;
-        doc.text("Dasboard Proyecto", titleX, titleY);
+        doc.text("Dashboard Proyecto", titleX, titleY);
         doc.addImage(imgData, "JPEG", xOffset, yOffset, imgWidth, imgHeight);
 
         // Save the PDF
@@ -726,9 +716,9 @@ function ProjectDashboards() {
       <div className="container mx-auto px-4 py-6 mt-5">
         <Navbar />
         <div>
-        <h2 className="mt-4 text-4xl font-semibold mb-6">
-        Detalles del {report.projectName}
-      </h2>
+          <h2 className="mt-4 text-4xl font-semibold mb-6">
+            Detalles del {report && report.projectName}
+          </h2>
         </div>
         <div className="mt-6 flex justify-center">
           <button

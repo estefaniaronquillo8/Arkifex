@@ -248,7 +248,7 @@ const ResourceAssignmentCreate = () => {
               htmlFor="estimatedCost"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Costo Estimado
+              Costo Estimado Unitario
             </label>
             <input
               type="number"
@@ -268,7 +268,7 @@ const ResourceAssignmentCreate = () => {
               htmlFor="actualCost"
               className="block text-gray-700 text-sm font-bold mb-2"
             >
-              Costo Actual
+              Costo Actual Unitario
             </label>
             <input
               type="number"

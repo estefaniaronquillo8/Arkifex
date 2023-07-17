@@ -227,7 +227,7 @@ const ProjectPlanningDetails = () => {
                           <td className="pl-3">
                             {resource ? resource.name : "Desconocido"}
                           </td>
-                          <td>{resource.description}</td>
+                          <td>{resource && resource.description}</td>
                           {showRoleColumn && <td>{resource?.role}</td>}
                           <td>{resourceAssignment.quantity}</td>
                           <td>{resourceAssignment.estimatedCost}</td>
