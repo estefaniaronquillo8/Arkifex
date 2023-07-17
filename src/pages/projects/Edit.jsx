@@ -4,6 +4,7 @@ import { useGlobalContext } from "../../contexts/GlobalContext";
 import { handleEdit, handleUpdate } from "../../services/project.api.routes";
 import { getAllUsers } from "../../services/user.api.routes";
 import { routesProtection } from "../../assets/routesProtection";
+import { createReport } from "../../services/report.api.routes";
 
 function ProjectEdit() {
   const { id } = useParams();
@@ -16,7 +17,7 @@ function ProjectEdit() {
 
   useEffect(() => {
     if (project !== null) {
-      console.log("INDEX", id);
+      console.log("INDEX", project);
     } else {
       console.log("INDEX");
     }
@@ -70,11 +71,27 @@ function ProjectEdit() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const { success, error, notificationType } = await handleUpdate(
-      id,
-      project
-    );
-console.log("EVEENT", id)
+    
+    if(project.status === "Completado" || project.status === "Cancelado"){
+      const response = await createReport(project.id);
+      const { success, error, notificationType } = await handleUpdate(
+        id,
+        project
+      );
+      console.log("CREADOOOOOOOO", response);
+      console.log("UPDATE", id)
+      setError(error);
+      setSuccess(success);
+      setNotificationType(notificationType);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      navigate(`/projects/details/${id}`);
+    }else{
+      const { success, error, notificationType } = await handleUpdate(
+        id,
+        project
+      );
+
+      console.log("UPDATE", id)
     setError(error);
     setSuccess(success);
     setNotificationType(notificationType);
@@ -82,11 +99,17 @@ console.log("EVEENT", id)
     navigate(`/projects/details/${id}`);
   };
 
+    };
+    
+     
+
+
   const handleChange = (event) => {
     setProject({
       ...project,
       [event.target.name]: event.target.value,
     });
+
   };
 
   return (

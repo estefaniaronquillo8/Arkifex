@@ -122,6 +122,8 @@ const createReport = async (projectId) => {
       //dateVariance = result.getDataValue("dateVariance");
     });
 
+    console.log("STATUSSSSSSSSSSSSS",project.status);
+    if(project.status !== "Completado" && project.status !== "Cancelado"){
     const report = await Report.create(
       {
         projectId: projectId,
@@ -141,13 +143,25 @@ const createReport = async (projectId) => {
 
     await transaction.commit();
 
-    await createDetailReportPlanning(projectId, report.id);
-    //console.log (tasksActualCost);
     return {
       status: 200,
       message: "Report Created Successfully",
       report: report,
     };
+
+    }else{
+      await transaction.rollback();
+
+      return {
+        status: 409,
+        message: "Project status completed or finished",
+        notificationType: "info",
+        //return: response.toJSON(),
+      };
+    }
+    await createDetailReportPlanning(projectId, report.id);
+    //console.log (tasksActualCost);
+   
   } catch (error) {
     await transaction.rollback();
     console.log("ERROR DEL CREATE PROJECT", error);

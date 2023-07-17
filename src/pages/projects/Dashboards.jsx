@@ -134,13 +134,13 @@ function ProjectDashboards() {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   if (report !== null) {
-  //     console.log("PROyecto", project);
-  //   } else {
-  //     console.log("EXISTE");
-  //   }
-  // }, [project]);
+  useEffect(() => {
+    if (report !== null) {
+      console.log("PROyecto", project);
+    } else {
+      console.log("EXISTE");
+    }
+  }, [project]);
 
   useEffect(() => {
     const fetchData = async () => {
