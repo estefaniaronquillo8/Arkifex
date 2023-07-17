@@ -345,12 +345,22 @@ const ProjectDetails = () => {
                     });
 
                     if (result.isConfirmed) {
-                      await deleteHandler(project.id);
-                      Swal.fire(
-                        "¡Eliminado!",
-                        "Tu proyecto ha sido eliminado.",
-                        "success"
-                      );
+                      const deletionResult = await deleteHandler(project.id);
+
+                      if (deletionResult.success) {
+                        Swal.fire(
+                          "¡Eliminado!",
+                          "Tu proyecto ha sido eliminado.",
+                          "success"
+                        );
+                      } else {
+                        Swal.fire(
+                          "Error",
+                          "Ha ocurrido un error al eliminar el proyecto: " +
+                            deletionResult.error,
+                          "error"
+                        );
+                      }
                     }
                   }}
                   className="inline-block bg-red-500 text-white px-4 py-2 rounded"
