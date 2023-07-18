@@ -122,7 +122,7 @@ const createReport = async (projectId) => {
       //dateVariance = result.getDataValue("dateVariance");
     });
 
-    console.log("STATUSSSSSSSSSSSSS",project.status);
+    //console.log("STATUSSSSSSSSSSSSS",project.status);
     if(project.status !== "Completado" && project.status !== "Cancelado"){
     const report = await Report.create(
       {
@@ -140,6 +140,10 @@ const createReport = async (projectId) => {
       },
       //{ transaction }
     );
+
+    
+
+    await createDetailReportPlanning(projectId, report.id);
 
     await transaction.commit();
 
@@ -159,7 +163,7 @@ const createReport = async (projectId) => {
         //return: response.toJSON(),
       };
     }
-    await createDetailReportPlanning(projectId, report.id);
+    
     //console.log (tasksActualCost);
    
   } catch (error) {
