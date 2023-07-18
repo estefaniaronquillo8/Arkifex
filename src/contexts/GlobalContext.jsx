@@ -27,29 +27,28 @@ export const GlobalProvider = ({ children }) => {
   const [roleInSession, setRoleInSession] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
-  
+
         // Verificamos la expiración del token
         const currentTime = Date.now().valueOf() / 1000;
 
         if (decodedToken.exp < currentTime) {
-          console.error('Sesión Expirada');
-          localStorage.removeItem('token');
-          navigate('/login');
+          console.error("Sesión Expirada");
+          localStorage.removeItem("token");
+          navigate("/login");
         } else {
           setUserInSession(decodedToken.user);
           setRoleInSession(decodedToken.role);
         }
-        
       } catch (error) {
-        console.error('error', error);
+        console.error("error", error);
       }
     }
   }, []);
-  
+
   const setAuthData = (token) => {
     localStorage.setItem("token", token);
     const decodedToken = jwtDecode(token);
@@ -76,7 +75,7 @@ export const GlobalProvider = ({ children }) => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const [projects, setProjects] = useState([]);
-  
+
   const [project, setProject] = useState({
     id: 0,
     userId: 0,
@@ -125,28 +124,28 @@ export const GlobalProvider = ({ children }) => {
 
   const [reports, setReports] = useState([]);
   const [report, setReport] = useState({
-    id:0,
+    id: 0,
     projectId: 0,
     userId: 1,
     actualBudget: 0,
     estimatedBudget: 0,
     numberOfTasks: 0,
     taskCompleted: 0,
-    budgetVariance:0,
-    timeVariance: 0,  
+    budgetVariance: 0,
+    timeVariance: 0,
     latePlanningRatio: 0,
-    date:  '',    
+    date: "",
   });
 
   const [detailReports, setDetailReports] = useState([]);
   const [detailReport, setDetailReport] = useState({
     projectPlanningId: 0,
-            projectPlanningName: "",
-            
-            actualTotalCost: 0,
-            estimatedTotalCost: 0,
-            countOfResources: 0,
-            totalCostVariance: 0
+    projectPlanningName: "",
+
+    actualTotalCost: 0,
+    estimatedTotalCost: 0,
+    countOfResources: 0,
+    totalCostVariance: 0,
   });
 
   const [lastNotification, setLastNotification] = useState(null);
@@ -184,9 +183,9 @@ export const GlobalProvider = ({ children }) => {
     user,
     setUser,
 
-    userInSession, 
+    userInSession,
     setUserInSession,
-    roleInSession, 
+    roleInSession,
     setRoleInSession,
     setAuthData,
     clearAuthData,
@@ -205,7 +204,7 @@ export const GlobalProvider = ({ children }) => {
 
     selectedProjectId,
     setSelectedProjectId,
-    
+
     // Locations
     locations,
     setLocations,
@@ -237,8 +236,6 @@ export const GlobalProvider = ({ children }) => {
     setDetailReports,
 
     showNotification,
-
-
   };
 
   return (

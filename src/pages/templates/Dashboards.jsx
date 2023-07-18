@@ -1,5 +1,5 @@
 // src/pages/projects.js
-import React, {useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAllProjects } from "../../services/project.api.routes";
@@ -17,7 +17,6 @@ import "jspdf-autotable";
 import html2canvas from "html2canvas";
 import logo from "/src/assets/logo.png";
 import Swal from "sweetalert2";
-
 
 function TemplateDashboards() {
   const { id } = useParams();
@@ -90,7 +89,7 @@ function TemplateDashboards() {
       try {
         const response = await getDetailReport(id);
         setDetailReports(response.response.report);
-        console.log("DETAILGET",response.response);
+        console.log("DETAILGET", response.response);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -174,7 +173,7 @@ function TemplateDashboards() {
       doc.setFontSize(20);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(8, 4, 87); // Define el color del texto en rojo RGB
-     doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
+      doc.addImage(logo, "PNG", logoX, logoY, logoWidth, logoHeight);
       // Calculate the width of the title
       const title = "Reporte Detallado del Proyecto";
       const titleWidth = doc.getTextWidth(title);
@@ -588,7 +587,6 @@ function TemplateDashboards() {
           );
 
           // Add a description of the totals
-          
 
           // Add the regular table with totals
           doc.autoTable({
@@ -637,13 +635,9 @@ function TemplateDashboards() {
             doc.autoTable.previous.finalY + margin + 10
           );
 
-          y+=25;
-
-
-          
+          y += 25;
 
           // Set font size and style for the description
-          
 
           // Check if the remaining content can fit within the page height
           if (y + 20 >= pageHeight - margin) {

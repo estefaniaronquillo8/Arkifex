@@ -71,45 +71,40 @@ function ProjectEdit() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
-    if(project.status === "Completado" || project.status === "Cancelado"){
+
+    if (project.status === "Completado" || project.status === "Cancelado") {
       const response = await createReport(project.id);
       const { success, error, notificationType } = await handleUpdate(
         id,
         project
       );
       console.log("CREADOOOOOOOO", response);
-      console.log("UPDATE", id)
+      console.log("UPDATE", id);
       setError(error);
       setSuccess(success);
       setNotificationType(notificationType);
       await new Promise((resolve) => setTimeout(resolve, 100));
       navigate(`/projects/details/${id}`);
-    }else{
+    } else {
       const { success, error, notificationType } = await handleUpdate(
         id,
         project
       );
 
-      console.log("UPDATE", id)
-    setError(error);
-    setSuccess(success);
-    setNotificationType(notificationType);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    navigate(`/projects/details/${id}`);
+      console.log("UPDATE", id);
+      setError(error);
+      setSuccess(success);
+      setNotificationType(notificationType);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      navigate(`/projects/details/${id}`);
+    }
   };
-
-    };
-    
-     
-
 
   const handleChange = (event) => {
     setProject({
       ...project,
       [event.target.name]: event.target.value,
     });
-
   };
 
   return (

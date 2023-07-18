@@ -15,4 +15,3 @@ export const getDetailReport = (projectId) => {
 export const createReport = (projectId) => {
   return requestHandler("post", `/reports/create/${projectId}`);
 };
-

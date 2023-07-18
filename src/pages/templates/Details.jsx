@@ -184,8 +184,6 @@ const TemplateDetails = () => {
   };
   const [currentSection, setCurrentSection] = useState("details");
 
-  
-
   //Detalles
   const ProjectDetailsSection = ({ project }) => {
     return (
@@ -314,7 +312,6 @@ const TemplateDetails = () => {
                     >
                       Detalles
                     </Link>
-                    
                   </div>
                 </div>
               );

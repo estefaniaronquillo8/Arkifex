@@ -1,7 +1,10 @@
 // src/pages/locations/index.jsx
 import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { getAllLocations, handleDelete } from "../../services/location.api.routes";
+import {
+  getAllLocations,
+  handleDelete,
+} from "../../services/location.api.routes";
 import { Link } from "react-router-dom";
 import { routesProtection } from "../../assets/routesProtection";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +22,8 @@ const LocationIndex = () => {
 
   useEffect(() => {
     const fetchLocations = async () => {
-      const { response, success, error, notificationType } = await getAllLocations();
+      const { response, success, error, notificationType } =
+        await getAllLocations();
       if (response?.locations) {
         setLocations(response.locations);
       }
@@ -42,7 +46,9 @@ const LocationIndex = () => {
   }, [success, error, notificationType, showNotification]);
 
   const deleteHandler = async (id) => {
-    const { response, success, error, notificationType } = await handleDelete(id);
+    const { response, success, error, notificationType } = await handleDelete(
+      id
+    );
     if (response?.status === 200) {
       setLocations(response.locations);
     }
@@ -65,16 +71,15 @@ const LocationIndex = () => {
         className="grid grid-cols-2 gap-8 py-2 border-b-2 border-gray-200"
       >
         {group.map((location) => (
-          <div
-            key={location.id}
-            className="border p-4"
-          >
+          <div key={location.id} className="border p-4">
             <div className="font-semibold text-blue-800">
               Proyecto: {location.projectId}
             </div>
             <div className="mt-2">Dirección: {location.address}</div>
             <div className="mt-2">Area: {location.area}</div>
-            <div className="mt-2">Puntos de polígono: {location.polygon.length}</div>
+            <div className="mt-2">
+              Puntos de polígono: {location.polygon.length}
+            </div>
             <div className="mt-7">
               <Link
                 to={`/locations/edit/${location.id}`}
@@ -104,7 +109,9 @@ const LocationIndex = () => {
       >
         Crear Localización de Proyecto
       </Link>
-      <div className="bg-white shadow-md rounded-lg">{renderLocationGrid()}</div>
+      <div className="bg-white shadow-md rounded-lg">
+        {renderLocationGrid()}
+      </div>
     </div>
   );
 };

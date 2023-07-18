@@ -81,11 +81,8 @@ const TemplateCreate = () => {
   }
 
   const handleBack = () => {
-   
-      navigate(`/templates/`);
-    
+    navigate(`/templates/`);
   };
-
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -145,7 +142,7 @@ const TemplateCreate = () => {
                 <p className="text-red-800">{errors.description.message}</p>
               )}
             </div>
-            
+
             <div className="flex flex-col items-center justify-center">
               <button
                 type="submit"

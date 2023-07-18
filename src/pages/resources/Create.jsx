@@ -51,7 +51,7 @@ const ResourceCreate = () => {
       data
     );
     if (success) {
-      window.location.reload()
+      window.location.reload();
       showNotification(success, notificationType);
     }
 
@@ -205,18 +205,12 @@ const ResourceCreate = () => {
             <br />
             <br />
             {resourceType === "Material" && (
-              <button
-                type="submit"
-                className="btn-custom btn-primary"
-              >
+              <button type="submit" className="btn-custom btn-primary">
                 Crear Material
               </button>
             )}
             {resourceType === "Personal" && (
-              <button
-               type="submit" 
-               className="btn-custom btn-primary"
-               >
+              <button type="submit" className="btn-custom btn-primary">
                 Crear Personal
               </button>
             )}

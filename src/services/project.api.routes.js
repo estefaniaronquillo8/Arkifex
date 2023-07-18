@@ -30,4 +30,3 @@ export const handleDelete = async (id) => {
   }
   return { response, success, error, notificationType };
 }
-

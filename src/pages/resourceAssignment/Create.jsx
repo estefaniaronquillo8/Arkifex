@@ -86,10 +86,14 @@ const ResourceAssignmentCreate = () => {
 
   const createHandler = async (data) => {
     data.projectPlanningId = selectedProjectId;
-    
+
     let currentDate = new Date();
-    data.associatedDate = new Date(currentDate.getTime() - (currentDate.getTimezoneOffset() * 60000)).toISOString().slice(0,10); // Asigna la fecha actual local en formato YYYY-MM-DD
-    
+    data.associatedDate = new Date(
+      currentDate.getTime() - currentDate.getTimezoneOffset() * 60000
+    )
+      .toISOString()
+      .slice(0, 10); // Asigna la fecha actual local en formato YYYY-MM-DD
+
     if (data.type === "Personal") {
       data.quantity = 1;
     }
@@ -125,13 +129,12 @@ const ResourceAssignmentCreate = () => {
       setValue("estimatedCost", selectedResource.marketPrice);
     }
   };
-  
+
   const [tipoSeleccionado, setTipoSeleccionado] = useState("");
 
   const handleTipoSeleccionado = (tipo) => {
     setTipoSeleccionado(tipo);
     setShowQuantity(tipo !== "Personal");
-  
   };
 
   const [showQuantity, setShowQuantity] = useState(true);
@@ -177,7 +180,7 @@ const ResourceAssignmentCreate = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   onChange={(e) => {
                     // Mantienes el comportamiento original
-                    
+
                     field.onChange(e);
                     const selectedResource = resources.find(
                       (resource) => resource.id === Number(e.target.value)
@@ -292,7 +295,6 @@ const ResourceAssignmentCreate = () => {
           <div className="flex flex-col items-center justify-center">
             <button
               type="submit"
-
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
             >
               Asignar Recurso

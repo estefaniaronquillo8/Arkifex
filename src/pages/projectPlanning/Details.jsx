@@ -106,6 +106,7 @@ const ProjectPlanningDetails = () => {
     // Por ahora solo redirigiré cuando se elimine el proyecto
     navigate(`/projects/details/${projectPlanning.projectId}`);
 
+    console.log("RESPONSE STATUS", response?.status);
     if (response?.status === 200) {
       setProjectPlanning(response.projectPlanning);
     }
@@ -118,9 +119,11 @@ const ProjectPlanningDetails = () => {
       id
     );
     // Por ahora solo redirigiré cuando se elimine el proyecto
-
-    if (success) {
-      navigate("/projects");
+    console.log("SUCCESS RA", success);
+    console.log("ERROR RA", error);
+    console.log("RESPONSE RA", response);
+    if (response?.status === 200) {
+      window.location.reload();
     }
     setSuccess(success);
     setError(error);
@@ -170,31 +173,31 @@ const ProjectPlanningDetails = () => {
               Editar
             </Link>
             <button
-                  onClick={async () => {
-                    const result = await Swal.fire({
-                      title: "¿Estás seguro de eliminar tu planificacion?",
-                      text: "¡No podrás revertir esto!",
-                      icon: "warning",
-                      showCancelButton: true,
-                      confirmButtonColor: "#3085d6",
-                      cancelButtonColor: "#d33",
-                      confirmButtonText: "Sí, eliminarlo",
-                      cancelButtonText: "Cancelar",
-                    });
+              onClick={async () => {
+                const result = await Swal.fire({
+                  title: "¿Estás seguro de eliminar tu planificacion?",
+                  text: "¡No podrás revertir esto!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Sí, eliminarlo",
+                  cancelButtonText: "Cancelar",
+                });
 
-                    if (result.isConfirmed) {
-                      await deleteHandler(projectPlanning.id);
-                      Swal.fire(
-                        "¡Eliminado!",
-                        "Tu proyecto ha sido eliminado.",
-                        "success"
-                      );
-                    }
-                  }}
-                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Eliminar
-                </button>
+                if (result.isConfirmed) {
+                  await deleteHandler(projectPlanning.id);
+                  Swal.fire(
+                    "¡Eliminado!",
+                    "Tu proyecto ha sido eliminado.",
+                    "success"
+                  );
+                }
+              }}
+              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+            >
+              Eliminar
+            </button>
             {/* <button
               onClick={async () => await deleteHandler(projectPlanning.id)}
               className="inline-block bg-red-500 text-white px-4 py-2 rounded"
@@ -266,34 +269,33 @@ const ProjectPlanningDetails = () => {
                               Editar
                             </Link>
 
-
                             <button
-                  onClick={async () => {
-                    const result = await Swal.fire({
-                      title: "¿Estás seguro de eliminar tu asignacion?",
-                      text: "¡No podrás revertir esto!",
-                      icon: "warning",
-                      showCancelButton: true,
-                      confirmButtonColor: "#3085d6",
-                      cancelButtonColor: "#d33",
-                      confirmButtonText: "Sí, eliminarlo",
-                      cancelButtonText: "Cancelar",
-                    });
+                              onClick={async () => {
+                                const result = await Swal.fire({
+                                  title:
+                                    "¿Estás seguro de eliminar tu asignacion?",
+                                  text: "¡No podrás revertir esto!",
+                                  icon: "warning",
+                                  showCancelButton: true,
+                                  confirmButtonColor: "#3085d6",
+                                  cancelButtonColor: "#d33",
+                                  confirmButtonText: "Sí, eliminarlo",
+                                  cancelButtonText: "Cancelar",
+                                });
 
-                    if (result.isConfirmed) {
-                      await deleteHandler(resourceAssignment.id);
-                      Swal.fire(
-                        "¡Eliminado!",
-                        "Tu proyecto ha sido eliminado.",
-                        "success"
-                      );
-                    }
-                  }}
-                  className="inline-block bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Eliminar
-                </button>
-                           
+                                if (result.isConfirmed) {
+                                  await deleteHandlerRA(resourceAssignment.id);
+                                  Swal.fire(
+                                    "¡Eliminado!",
+                                    "Tu proyecto ha sido eliminado.",
+                                    "success"
+                                  );
+                                }
+                              }}
+                              className="inline-block bg-red-500 text-white px-4 py-2 rounded"
+                            >
+                              Eliminar
+                            </button>
                           </td>
                         </tr>
                       );

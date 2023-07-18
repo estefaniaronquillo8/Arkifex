@@ -6,10 +6,10 @@ import TemplatesSubprojects from "./Templates_sub";
 import TemplateDashboards from "./Dashboards";
 
 export {
-    TemplateCreate,
-    TemplateIndex,
-    TemplateEdit,
-    TemplateDetails,
-    TemplatesSubprojects,
-    TemplateDashboards,
-}
+  TemplateCreate,
+  TemplateIndex,
+  TemplateEdit,
+  TemplateDetails,
+  TemplatesSubprojects,
+  TemplateDashboards,
+};

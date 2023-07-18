@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getAllReports, getLastReport, createReport } from "../../services/report.api.routes";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  getAllReports,
+  getLastReport,
+  createReport,
+} from "../../services/report.api.routes";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 
 function PlanningsChart() {
@@ -8,7 +22,12 @@ function PlanningsChart() {
   const [data, setData] = useState([]);
 
   const handleData = () => {
-    if (report && report.date && report.actualBudget && report.estimatedBudget) {
+    if (
+      report &&
+      report.date &&
+      report.actualBudget &&
+      report.estimatedBudget
+    ) {
       const newData = {
         name: report.date,
         PresupuestoActual: report.actualBudget,
@@ -51,7 +70,11 @@ function PlanningsChart() {
               <Tooltip />
               <Legend />
               <Bar yAxisId="left" dataKey="PresupuestoActual" fill="#8884d8" />
-              <Bar yAxisId="right" dataKey="PresupuestoEstimado" fill="#82ca9d" />
+              <Bar
+                yAxisId="right"
+                dataKey="PresupuestoEstimado"
+                fill="#82ca9d"
+              />
             </BarChart>
           </ResponsiveContainer>
         ) : (

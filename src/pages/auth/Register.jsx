@@ -40,9 +40,7 @@ const Register = () => {
           alt="Background"
         />
         <div className="absolute top-[75%] left-[38%] flex flex-col">
-          <h1 className="text-3xl text-white font-bold my-4">
-            Un paso mas...
-          </h1>
+          <h1 className="text-3xl text-white font-bold my-4">Un paso mas...</h1>
         </div>
       </div>
 
@@ -59,121 +57,123 @@ const Register = () => {
             </p>
           </div>
           <div>
-          <form
-            onSubmit={handleSubmit(async (data) => await registerHandler(data))}
-          >
-            <div className="mb-4">
-              <label
-                htmlFor="name"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Nombres
-              </label>
-              <input
-                type="text"
-                id="name"
-                placeholder="Nombres"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("name", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 3,
-                    message: "El nombre debe tener al menos 3 caracteres.",
-                  },
-                })}
-              />
-              {errors.name && (
-                <p className="text-red-800">{errors.name.message}</p>
+            <form
+              onSubmit={handleSubmit(
+                async (data) => await registerHandler(data)
               )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="lastname"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Apellidos
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                placeholder="Apellidos"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("lastname", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 2,
-                    message: "El apellido debe tener al menos 2 caracteres.",
-                  },
-                })}
-              />
-              {errors.lastname && (
-                <p className="text-red-800">{errors.lastname.message}</p>
-              )}
-            </div>
-            <div className="mb-4">
-              <label
-                htmlFor="email"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Correo Electrónico
-              </label>
-              <input
-                type="email"
-                id="email"
-                placeholder="Correo Electrónico"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("email", {
-                  required: "El campo es requerido.",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                    message: "Ingrese una dirección de correo válida.",
-                  },
-                })}
-              />
-              {errors.email && (
-                <p className="text-red-800">{errors.email.message}</p>
-              )}
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="password"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                Contraseña
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="Contraseña"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("password", {
-                  required: "El campo es requerido.",
-                  minLength: {
-                    value: 6,
-                    message: "La contraseña debe tener al menos 6 caracteres.",
-                  },
-                })}
-              />
-              {errors.password && (
-                <p className="text-red-800">{errors.password.message}</p>
-              )}
-            </div>
-            <div className="flex flex-col items-center justify-center">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
-              >
-                Registrarse
-              </button>
-              
-            </div>
-          </form>
+            >
+              <div className="mb-4">
+                <label
+                  htmlFor="name"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Nombres
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="Nombres"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  {...register("name", {
+                    required: "El campo es requerido.",
+                    minLength: {
+                      value: 3,
+                      message: "El nombre debe tener al menos 3 caracteres.",
+                    },
+                  })}
+                />
+                {errors.name && (
+                  <p className="text-red-800">{errors.name.message}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="lastname"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Apellidos
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  placeholder="Apellidos"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  {...register("lastname", {
+                    required: "El campo es requerido.",
+                    minLength: {
+                      value: 2,
+                      message: "El apellido debe tener al menos 2 caracteres.",
+                    },
+                  })}
+                />
+                {errors.lastname && (
+                  <p className="text-red-800">{errors.lastname.message}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="email"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Correo Electrónico
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Correo Electrónico"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  {...register("email", {
+                    required: "El campo es requerido.",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      message: "Ingrese una dirección de correo válida.",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <p className="text-red-800">{errors.email.message}</p>
+                )}
+              </div>
+              <div className="mb-6">
+                <label
+                  htmlFor="password"
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                >
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  placeholder="Contraseña"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  {...register("password", {
+                    required: "El campo es requerido.",
+                    minLength: {
+                      value: 6,
+                      message:
+                        "La contraseña debe tener al menos 6 caracteres.",
+                    },
+                  })}
+                />
+                {errors.password && (
+                  <p className="text-red-800">{errors.password.message}</p>
+                )}
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full mb-4"
+                >
+                  Registrarse
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
         <div className="w-full flex items-center justify-center">
           <p className="text-sm font-normal text-black">
-          ¿Ya tienes cuenta?
+            ¿Ya tienes cuenta?
             <span className="font-semibold underline underline-offset-2 cursor-pointer">
               <a
                 href="/login"
